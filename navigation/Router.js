@@ -4,12 +4,15 @@ import { createAppContainer } from 'react-navigation';
 import SplashScreen from '../screens/splash-screen';
 import LoginScreen from '../screens/login-screen';
 import HomeScreen from '../screens/home-screen';
+import PaymentScreen from '../screens/pay-screen';
 
 const AppNavigator = createStackNavigator({
 
     Splash: SplashScreen,
     Login: LoginScreen,
-    Home: HomeScreen
+    Home: HomeScreen,
+    Payment: PaymentScreen,
+
 }, {
     initialRouteName: 'Splash',
     defaultNavigationOptions: {

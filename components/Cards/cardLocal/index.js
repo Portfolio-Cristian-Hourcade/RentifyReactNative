@@ -1,9 +1,28 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Image, Button, TouchableOpacity } from 'react-native';
+import { StyleSheet,Share, Text, View, Image, Button, TouchableOpacity } from 'react-native';
 import DrawerLayout from 'react-native-gesture-handler/DrawerLayout';
 
 const CardLocal = (props) => {
     // const { text, onPress} = props;
+    shareSome = async () => {
+        try {
+            const result =  await Share.share({
+              message: 'React Native | A framework for building native apps using React',
+            });
+      
+            if (result.action === Share.sharedAction) {
+              if (result.activityType) {
+                // shared with activity type of result.activityType
+              } else {
+                // shared
+              }
+            } else if (result.action === Share.dismissedAction) {
+              // dismissed
+            }
+          } catch (error) {
+            alert(error.message);
+          }
+    }
 
     return (
         <View style={styles.card}>
@@ -15,7 +34,7 @@ const CardLocal = (props) => {
                     <Text style={styles.textStyle}>Belgica Cervecería</Text>
                 </View>
                 <View>
-                    <TouchableOpacity style={styles.btnShare}>
+                    <TouchableOpacity style={styles.btnShare} onPress={() => shareSome()}>
                     <Image source={require("../../../assets/share.png")} style={styles.share} />
 
                     </TouchableOpacity>
