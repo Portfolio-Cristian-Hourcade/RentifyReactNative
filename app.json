@@ -1,7 +1,7 @@
 {
     "expo": {
-        "name": "belgapp",
-        "slug": "belgicaApp",
+        "name": "changofree",
+        "slug": "changofreeApp",
         "privacy": "public",
         "sdkVersion": "35.0.0",
         "platforms": [
@@ -25,7 +25,6 @@
         "android": {
             "package": "com.totoapp.belgicaapp",
             "versionCode": 1,
-            "premissions": [],
             "icon": "./assets/icon.png"
         },
         "ios": {

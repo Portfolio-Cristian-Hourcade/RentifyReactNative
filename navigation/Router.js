@@ -5,6 +5,7 @@ import SplashScreen from '../screens/splash-screen';
 import LoginScreen from '../screens/login-screen';
 import HomeScreen from '../screens/home-screen';
 import PaymentScreen from '../screens/pay-screen';
+import OfertScreen from '../screens/oferts-screen';
 
 const AppNavigator = createStackNavigator({
 
@@ -12,6 +13,7 @@ const AppNavigator = createStackNavigator({
     Login: LoginScreen,
     Home: HomeScreen,
     Payment: PaymentScreen,
+    Ofert: OfertScreen
 
 }, {
     initialRouteName: 'Splash',

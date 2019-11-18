@@ -8,6 +8,8 @@
         "eject": "expo eject"
     },
     "dependencies": {
+        "@types/react": "^16.9.11",
+        "@types/react-native": "^0.60.22",
         "expo": "^35.0.0",
         "expo-barcode-scanner": "~7.0.0",
         "expo-font": "~7.0.0",

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image, ImageBackground, Button, ScrollView } from 'react-native';
 
-import { LogOut } from '../../utilities/firebaseUtility';
+import { LogOut } from '../../utilities/FirebaseModule';
 
 import CardLocal from '../../components/Cards/cardLocal';
 import CardOfertasPuntos from '../../components/Cards/cardOfertaPuntos';
@@ -19,9 +19,9 @@ export default class HomeScreen extends Component {
         LogOut(this.props.navigation);
     }
 
-    
 
-    render(props) {
+
+    render() {
         return (
             <View style={styles.bg}>
                 <ScrollView>
@@ -37,10 +37,10 @@ export default class HomeScreen extends Component {
 
                             <View style={styles.row}>
                                 <View style={styles.col6}>
-                                    <CardOfertasPuntos btnAction='Canjear puntos' />
+                                    <CardOfertasPuntos url={this.props} btnAction='Canjear puntos' />
                                 </View>
                                 <View style={styles.col6}>
-                                    <CardOfertasPuntos btnAction='Canjear ofertas' />
+                                    <CardOfertasPuntos url={this.props} btnAction='Canjear ofertas' />
                                 </View>
                             </View>
 
@@ -57,19 +57,14 @@ export default class HomeScreen extends Component {
                                     <CardProductos />
                                 </View>
                             </View>
-                            <View style={styles.row}>
-
-                                <TouchableOpacity style={styles.btnLogout}>
-                                    <Text style={styles.textButton}>Cerrar sesión</Text>
-                                </TouchableOpacity>
-
-                            </View>
-
                         </View>
                     </View>
                 </ScrollView>
 
-                <TouchableOpacity style={styles.btnPay} onPress={ () => this.props.navigation.navigate('Payment')}>
+                <TouchableOpacity style={styles.btnLogout} onPress={() => this.logout()}>
+                    <Text style={styles.textButton}>Cerrar sesión</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.btnPay} onPress={() => this.props.navigation.navigate('Payment')}>
                     <Text style={styles.textButton}>Pagar</Text>
                 </TouchableOpacity>
             </View>
@@ -112,26 +107,30 @@ const styles = StyleSheet.create({
         top: -25
     },
     btnLogout: {
-        backgroundColor: 'red',
+        backgroundColor: '#e61010',
         height: 40,
         width: null,
-        position: 'relative',
-        bottom: -25,
+        position: 'absolute',
+        top:50,
+        left:0,
         flex: 1,
+        elevation:50,
+        borderTopRightRadius:12,
+        borderBottomRightRadius:12,
         alignItems: 'center',
         justifyContent: 'center',
     },
-    btnPay:{
-      position:'absolute',
-      bottom:15,
-      elevation:15,
-      width:70,
-      height:70,
-      backgroundColor:'#3C7FFF',
-      alignSelf:'center',
-      alignItems:'center',
-      justifyContent:'center',
-      borderRadius:100
+    btnPay: {
+        position: 'absolute',
+        bottom: 15,
+        elevation: 15,
+        width: 70,
+        height: 70,
+        backgroundColor: '#3C7FFF',
+        alignSelf: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 100
     },
     textButton: {
         color: 'white',

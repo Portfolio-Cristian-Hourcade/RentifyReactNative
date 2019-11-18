@@ -52,7 +52,7 @@ export default class CardProductos extends Component {
                     <View style={styles.col12}>
 
                         <View style={styles.col4}>
-                            <Image source={require("../../../assets/burger.png")} style={styles.icono} />
+                            <Image source={require("../../../assets/news.png")} style={styles.icono} />
                         </View>
 
                         <View style={styles.col6}>
@@ -102,10 +102,10 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     col4: {
-        flex: 0.3
+        flex: 0.2
     },
     col6: {
-        flex: 0.7,
+        flex: 0.8,
         alignItems: "flex-start",
         justifyContent: "center",
     },
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     },
     fontTitle: {
         fontSize: 18,
-        fontWeight: '700'
+        fontWeight: '700',
+        paddingLeft:15
     }
-
 });

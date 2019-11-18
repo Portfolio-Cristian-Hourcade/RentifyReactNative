@@ -5,7 +5,7 @@ import StylesGlobal from '../../styles/styles';
 import * as Font from "expo-font";
 import ButtonPrimary from '../../components/Buttons/buttonPrimary';
 import ButtonSecondary from '../../components/Buttons/buttonSecondary';
-import { SingIn, SingUp} from '../../utilities/firebaseUtility';
+import { SingIn, SingUp} from '../../utilities/FirebaseModule';
 
 
 export default class LoginScreen extends Component {

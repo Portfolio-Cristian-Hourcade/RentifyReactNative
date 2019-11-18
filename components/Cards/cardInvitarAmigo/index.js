@@ -9,7 +9,7 @@ const CardInvitarAmigo = (props) => {
         <View style={styles.card}>
             <View style={styles.column}>
                 <View style={styles.col12, styles.centerTop}>
-                    <Image source={require("../../../assets/burger.png")} style={styles.icono} />
+                    <Image source={require("../../../assets/friendship.png")} style={styles.icono} />
                 </View>
                 <View style={styles.col12, styles.centerTop, styles.mTop}>
                     <Text style={styles.textWeight}>¡Referí a un amigo y ganá!</Text>

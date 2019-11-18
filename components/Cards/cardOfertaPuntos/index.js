@@ -2,33 +2,53 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, Image, Button, TouchableOpacity } from 'react-native';
 import DrawerLayout from 'react-native-gesture-handler/DrawerLayout';
 
-const CardOfertasPuntos = (props) => {
-    const { btnAction } = props;
 
-    return (
-        <View style={styles.card}>
-            <View style={styles.row}>
-                <View style={styles.col6}>
-                    <Image source={require("../../../assets/burger.png")} style={styles.logo} />
+export default class CardOfertasPuntos extends Component {
+    
+    constructor(props) {
+        super(props);
+        this.state = {
+            isShow: true,
+        };
+    }
+    
+    cangeNavigate(){
+        this.props.url.navigation.navigate('Ofert');
+    }
+    
+    render() {
+        const data = (this.props.btnAction === 'Canjear puntos')?'../../../assets/tag.png':'../../../assets/payment.png';
+        
+        return (
+            <View style={styles.card}>
+                <View style={styles.row}>
+                    <View style={styles.col6}> 
+                    {
+                        (this.props.btnAction === 'Canjear puntos')?
+                        <Image source={require('../../../assets/tag.png')} style={styles.logo} />:
+                        <Image source={require('../../../assets/payment.png')} style={styles.logo} />
+                    }
+                        
+                    </View>
+                    <View style={styles.pullTop}>
+                        <View style={styles.w10}>
+                            <Text style={styles.textStyle}>{(this.props.btnAction == 'Canjear puntos') ? 'Puntos' : 'Ofertas'}</Text>
+                        </View>
+                        <View style={styles.w10}>
+                            <Text style={styles.textStylePoint}>0</Text>
+                        </View>
+                    </View>
                 </View>
-                <View style={styles.pullTop}>
-                    <View style={styles.w10}>
-                        <Text style={styles.textStyle}>{(btnAction == 'Canjear puntos') ? 'Puntos' : 'Ofertas'}</Text>
-                    </View>
-                    <View style={styles.w10}>
-                        <Text style={styles.textStylePoint}>0</Text>
-                    </View>
+                <View style={styles.w100}>
+                    <TouchableOpacity style={styles.btnShare} onPress={() => this.cangeNavigate()}>
+                        <Text style={styles.btnShareData}>{this.props.btnAction}</Text>
+                    </TouchableOpacity> 
                 </View>
             </View>
-            <View style={styles.w100}>
-                <TouchableOpacity style={styles.btnShare}>
-                    <Text style={styles.btnShareData}>{btnAction}</Text>
-                </TouchableOpacity>
-            </View>
-        </View>
-    )
+        )
+    }
 };
-
+ 
 const styles = StyleSheet.create({
     card: {
         backgroundColor: '#fff',
@@ -42,8 +62,8 @@ const styles = StyleSheet.create({
         color: "black",
         fontWeight: "bold"
     },
-    w10:{
-        flex:1
+    w10: {
+        flex: 1
     },
     row: {
         flex: 1,
@@ -89,11 +109,10 @@ const styles = StyleSheet.create({
         alignSelf: "stretch",
         justifyContent: "center"
     },
-    textStylePoint:{
+    textStylePoint: {
         fontSize: 20,
         color: "black",
         fontWeight: "bold"
     }
 
 });
-export default CardOfertasPuntos;
