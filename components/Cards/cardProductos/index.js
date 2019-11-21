@@ -10,8 +10,8 @@ const screenWidth = Math.round(Dimensions.get('window').width);
 export default class CardProductos extends Component {
 
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             carouselItems: [
                 {
@@ -36,7 +36,7 @@ export default class CardProductos extends Component {
     _renderItem({ item, index }) {
         return (
             <View style={{flex:1}}>
-                <Image source={require('../../../assets/bg-login.jpg')} style={{ flex:1, width: null, height: null,  borderBottomRightRadius:12, borderBottomLeftRadius:12 }} />
+                <Image source={require('../../../assets/ff.png')} style={{ flex:1, width: null, height: null,  borderBottomRightRadius:12, borderBottomLeftRadius:12 }} />
             </View>
         )
     }

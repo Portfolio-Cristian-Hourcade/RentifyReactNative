@@ -16,7 +16,7 @@ const AppNavigator = createStackNavigator({
     Ofert: OfertScreen
 
 }, {
-    initialRouteName: 'Splash',
+    initialRouteName: 'Login',
     defaultNavigationOptions: {
         header: null
 

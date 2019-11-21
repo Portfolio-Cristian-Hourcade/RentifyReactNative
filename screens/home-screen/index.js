@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Image, ImageBackground, Button, ScrollView } from 'react-native';
+import { StyleSheet, Platform, Text, TextInput, View, TouchableOpacity, Image, ImageBackground, Button, ScrollView } from 'react-native';
 
 import { LogOut } from '../../utilities/FirebaseModule';
 
-import CardLocal from '../../components/Cards/cardLocal';
-import CardOfertasPuntos from '../../components/Cards/cardOfertaPuntos';
-import CardInvitarAmigo from '../../components/Cards/cardInvitarAmigo';
+import StylesGlobal from '../../styles/styles';
+import Carousel from 'react-native-snap-carousel';
+
+import Constants from 'expo-constants';
+import { Dimensions } from "react-native";
+import MyCarousel from ' ../../../components/BannersCarrousel';
 import CardProductos from '../../components/Cards/cardProductos';
-
-
+var width = Dimensions.get('window').width - 30; //full width
 
 
 export default class HomeScreen extends Component {
@@ -23,50 +25,28 @@ export default class HomeScreen extends Component {
 
     render() {
         return (
-            <View style={styles.bg}>
-                <ScrollView>
-                    <ImageBackground source={require('../../assets/bg-login.jpg')} style={styles.logo}>
-
-                    </ImageBackground>
-                    <View style={styles.container}>
-
-                        <View style={styles.cardlocal}>
-                            <CardLocal />
-                        </View>
-                        <View style={styles.contenedor}>
-
-                            <View style={styles.row}>
-                                <View style={styles.col6}>
-                                    <CardOfertasPuntos url={this.props} btnAction='Canjear puntos' />
-                                </View>
-                                <View style={styles.col6}>
-                                    <CardOfertasPuntos url={this.props} btnAction='Canjear ofertas' />
-                                </View>
-                            </View>
-
-                            <View style={styles.row}>
-                                <View style={styles.col12}>
-
-                                    <CardInvitarAmigo />
-                                </View>
-                            </View>
-
-                            <View style={styles.row}>
-                                <View style={styles.col12}>
-
-                                    <CardProductos />
-                                </View>
-                            </View>
-                        </View>
+            <View style={styles.container}>
+                <TouchableOpacity style={styles.actionLeft}>
+                    <Image source={require('../../assets/menu.png')} style={styles.icon} />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.actionRight}>
+                    <Image source={require('../../assets/gps.png')} style={styles.icon2} />
+                </TouchableOpacity>
+                <View style={styles.containerData}>
+                    <View style={styles.logoCont}>
+                        <Text style={styles.textLogo}>Space</Text>
                     </View>
-                </ScrollView>
-
-                <TouchableOpacity style={styles.btnLogout} onPress={() => this.logout()}>
-                    <Text style={styles.textButton}>Cerrar sesión</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.btnPay} onPress={() => this.props.navigation.navigate('Payment')}>
-                    <Text style={styles.textButton}>Pagar</Text>
-                </TouchableOpacity>
+                    <View style={styles.buscadorGroup}>
+                        <Image source={require('../../assets/lupa.png')} style={styles.searchIcon} />
+                        <TextInput style={styles.inputBuscador} />
+                    </View>
+                    <View style={styles.arrayAnuncios}>
+                        
+                        {/* <Image source={require('../../assets/dog.jpg')} style={styles.anuncio1} /> */}
+                        {/* <Image source={require('../../assets/dog.jpg')} style={styles.anuncio2} /> */}
+                    </View>
+                    <MyCarousel/>
+                </View>
             </View>
         );
     }
@@ -74,66 +54,96 @@ export default class HomeScreen extends Component {
 
 
 const styles = StyleSheet.create({
-
-    logo: {
-        height: 275,
-        backgroundColor: "black",
-        alignSelf: 'stretch',
-        textAlign: 'center',
-    },
-    cardlocal: {
-        position: 'relative',
-        top: -50,
-        margin: 8
-    },
-    bg: {
-        backgroundColor: "#eee",
-        flex: 1
-    },
-    row: {
+    container: {
         flex: 1,
-        flexDirection: 'row'
+        backgroundColor: '#F8F8F8',
+        flexDirection: 'column',
     },
-    col6: {
-        flex: 0.5,
-        margin: 8
-    },
-    col12: {
-        flex: 1,
-        margin: 8
-    },
-    contenedor: {
-        position: 'relative',
-        top: -25
-    },
-    btnLogout: {
-        backgroundColor: '#e61010',
-        height: 40,
-        width: null,
+    actionLeft: {
+        height: 60,
+        width: 60,
         position: 'absolute',
-        top:50,
-        left:0,
-        flex: 1,
-        elevation:50,
-        borderTopRightRadius:12,
-        borderBottomRightRadius:12,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    btnPay: {
-        position: 'absolute',
-        bottom: 15,
+        backgroundColor: 'white',
         elevation: 15,
-        width: 70,
-        height: 70,
-        backgroundColor: '#3C7FFF',
-        alignSelf: 'center',
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: 100
+        left: 0,
+        top: Platform.OS === 'ios' ? 0 : Constants.statusBarHeight,
+        borderBottomRightRadius: 50
     },
-    textButton: {
-        color: 'white',
-        fontSize: 16
+    actionRight: {
+        height: 60,
+        width: 60,
+        position: 'absolute',
+        backgroundColor: 'white',
+        elevation: 15,
+        right: 0,
+        top: Platform.OS === 'ios' ? 0 : Constants.statusBarHeight,
+        borderBottomLeftRadius: 50,
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    icon: {
+        width: 25,
+        height: 25,
+        position: 'relative',
+        top: 13,
+        left: 11
+    },
+    icon2: {
+        width: 25,
+        height: 25,
+        position: 'relative',
+        top: -3,
+        right: -4
+    },
+    containerData: {
+        marginTop: Platform.OS === 'ios' ? 0 : Constants.statusBarHeight,
+        flexDirection: 'column',
+    },
+    logoCont: {
+        height: 60,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    buscadorGroup: {
+        marginTop: 20,
+        height: 60,
+        justifyContent: 'center',
+
+        alignItems: 'center',
+    },
+    textLogo: {
+        fontSize: 28,
+        fontFamily: 'font2'
+    },
+    inputBuscador: {
+        height: 50,
+        width: width,
+        padding: 15,
+        backgroundColor: 'white',
+        borderRadius: 8,
+        elevation: 15
+    },
+    searchIcon: {
+        position: 'absolute',
+        right: 20,
+        top: 17,
+        elevation: 20,
+        height: 25,
+        width: 25
+    },
+    anuncio1: {
+        marginLeft: 10,
+        marginRight: 10,
+        width: width,
+        height: 200,
+        borderRadius: 8,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.5,
+        shadowRadius: 2,
+    },
+    arrayAnuncios: {
+        marginTop: 30
     }
 });

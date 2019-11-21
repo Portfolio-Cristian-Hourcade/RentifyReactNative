@@ -1,67 +1,61 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TextInput, Image } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Image, ImageBackground, TouchableOpacity } from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
 import StylesGlobal from '../../styles/styles';
 import * as Font from "expo-font";
 import ButtonPrimary from '../../components/Buttons/buttonPrimary';
 import ButtonSecondary from '../../components/Buttons/buttonSecondary';
-import { SingIn, SingUp} from '../../utilities/FirebaseModule';
+import { SingIn, SingUp } from '../../utilities/FirebaseModule';
+import { Dimensions } from "react-native";
+var width = Dimensions.get('window').width; //full width
 
 
-export default class LoginScreen extends Component {
+export default class LoginScreen extends Component<any> {
     state = {
         fontsLoaded: false,
         isLogin: true,
-        user:{
-            email:'',
-            name:'',
-            password:''
+        user: {
+            email: '',
+            name: '',
+            password: ''
         }
     };
 
-    // componentWillMount() {
-        // const resetAction = StackActions.reset({
-        //     index: 0, 
-        //     actions: [NavigationActions.navigate({ routeName: 'Login' })],
-        // });
-        // this.props.navigation.dispatch(resetAction);
-    // }
-
     singUp = () => {
-        if(this.state.user.password.length < 6) {
+        if (this.state.user.password.length < 6) {
             alert("Por favor, escribí una contraseña de más de 6 caracteres.");
-        }else if(this.state.user.name.length < 2){
+        } else if (this.state.user.name.length < 2) {
             alert("¡Upps! No te olvides de escribir tu nombre.");
-        }else if(this.state.user.email < 4){
+        } else if (this.state.user.email.length < 4) {
             alert("¡Uppps! Necesitas escribir tu email para poder iniciar sesión en un futuro.");
-            
-        }else{
-            var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            if(re.test(String(this.state.user.email).toLowerCase())){
-                try{
-                  SingUp(this.state.user.email,this.state.user.password, this.state.user.name, this.props.navigation);
 
-                } catch(err) {
+        } else {
+            var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            if (re.test(String(this.state.user.email).toLowerCase())) {
+                try {
+                    SingUp(this.state.user.email, this.state.user.password, this.state.user.name, this.props.navigation);
+
+                } catch (err) {
                     alert(err);
                 }
-            }else{
-                alert('Ingresaste un email invalido, por favor ingresá uno válido');   
+            } else {
+                alert('Ingresaste un email invalido, por favor ingresá uno válido');
             }
         }
     };
 
     singIn = () => {
-        if(this.state.user.email.length < 4){
+        if (this.state.user.email.length < 4) {
             alert("¡Upps! Ingresaste un email invalido, por favor verificá que lo hayas escrito bien");
-        }else{
-            if(re.test(String(this.state.user.email).toLowerCase())){
-                if(this.state.user.password < 6){
+        } else {
+            if (re.test(String(this.state.user.email).toLowerCase())) {
+                if (this.state.user.password.length < 6) {
                     alert("¡Upps! La contraseña ingresada es incorrecta");
-                }else{
-                    SingIn(this.state.user.email,this.state.user.password,this.props.navigation);
+                } else {
+                    SingIn(this.state.user.email, this.state.user.password, this.props.navigation);
                 }
-            }else{
-            alert("¡Upps! Ingresaste un email invalido, por favor verificá que lo hayas escrito bien");
+            } else {
+                alert("¡Upps! Ingresaste un email invalido, por favor verificá que lo hayas escrito bien");
 
             }
         }
@@ -70,7 +64,10 @@ export default class LoginScreen extends Component {
 
     async componentDidMount() {
         await Font.loadAsync({
-            font1: require("../../assets/fonts/SourceSansPro-Regular.ttf"),
+            font1: require("../../assets/fonts/Poppins-Regular.ttf"),
+            font2: require("../../assets/fonts/Poppins-Bold.ttf"),
+            font3: require("../../assets/fonts/Poppins-Medium.ttf"),
+
         });
         this.setState({ fontsLoaded: true });
     }
@@ -78,31 +75,33 @@ export default class LoginScreen extends Component {
     render() {
         if (this.state.fontsLoaded) {
             return (
-                <View style={StylesGlobal.container}>
-                    <View style={styles.viewTitle}>
-                        <Image source={require('../../assets/burger.png')} style={styles.logo} />
-                        <Text style={styles.title}>¡Bienvenido a Belgica App! </Text>
-                    </View>
-                    <View style={styles.viewInputs}>
-                        
-                        {
-                            (!this.state.isLogin) ? <TextInput style={styles.Input} placeholder="Escribí tu nombre" value={this.state.user.name} onChangeText={text => this.setState({ user:{name:text, email:this.state.user.email, password:this.state.user.password} })}/> : null
-                        }
-                        
-                        <TextInput style={styles.Input} placeholder="Escribí tu email" value={this.state.user.email} onChangeText={text => this.setState({ user:{email:text,name:this.state.user.name, password:this.state.user.password} })} />
+                <View style={styles.container}>
+                    <ImageBackground source={require('../../assets/bg_app.jpg')} style={styles.backgroundImage} />
 
-                        <TextInput style={styles.Input} placeholder="Escribí tu contraseña" secureTextEntry={true} value={this.state.user.password} onChangeText={text => this.setState({ user:{password:text,email:this.state.user.email, name:this.state.user.name} })}/>
-                        
-                        <View style={styles.btnDistance}>
-                            {
-                                (this.state.isLogin) ? <ButtonPrimary text="Iniciar sesión" onPress={() => alert("Iniciando sesion")} /> : <ButtonPrimary text=" Registrate" onPress={() => this.singUp(this.state.user)} />
-                            }
+                    <View style={styles.containerData}>
+                        <View style={StylesGlobal.container}>
+                            <View style={styles.contTitle}>
+                                <Text style={styles.title}>¡Bienvenido a Space! </Text>
+                                <Text style={styles.hash}>#SomosSpace</Text>
+                            </View>
+
                         </View>
 
-                        <View style={styles.btnDistance}>
-                            {
-                                (this.state.isLogin) ? <ButtonSecondary text="Registrate" onPress={() => this.setState({ isLogin: false })} /> : <ButtonSecondary text="Iniciar Sesion" onPress={() => this.setState({ isLogin: true })} />
-                            }
+                    </View>
+
+                    <View style={styles.btnPosition}>
+                        <View style={styles.rowAll}>
+
+                            <TouchableOpacity style={styles.btnGoogle} onPress={() => this.props.navigation.navigate('Home')}>
+                                <Image source={require('../../assets/gg.png')} style={styles.logoPos}/>
+                                <Text style={styles.btnGoogleTxt}>Iniciar Sesión</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.rowAll}>
+                            <TouchableOpacity style={styles.btnFB}>
+                            <Image source={require('../../assets/ff.png')} style={styles.logoPosff} onPress={() => this.props.navigation.navigate('Home')}/>
+                                <Text style={styles.btnFBTxt}>Iniciar Sesion</Text>
+                            </TouchableOpacity>
                         </View>
                     </View>
                 </View>
@@ -120,48 +119,102 @@ export default class LoginScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-    viewInputs: {
-        paddingLeft: 15,
-        paddingRight: 15,
-        paddingTop: 30
+    container: {
+        flex: 1,
     },
-    logo: {
-        width: 60,
-        height: 60,
-        alignSelf: "center",
-        marginBottom: 20
+    backgroundImage: {
+        flex: 1,
+        resizeMode: 'cover', // or 'stretch'
+        backgroundColor:'rgba(255,0,0,0.9)',
+
     },
-    Input: {
-
-        fontFamily: "font1",
-        fontSize: 18,
-        margin: 20,
-        marginBottom: 0,
-        height: 45,
-        paddingHorizontal: 10,
-        borderRadius: 4,
-        borderColor: '#ccc',
-        borderWidth: 1,
+    containerData: {
+        position: 'absolute',
+        flex: 1,
+        flexDirection: 'row',
     },
-
-    viewTitle: {
-        marginTop: 125,
-
+    rowAll:{
+        flex:1
+    },
+    logoPos:{
+        position:'absolute',
+        left:15,
+        width:40,
+        height:40,
+    },
+    logoPosff:{
+        position:'absolute',
+        left:7,
+        width:50,
+        height:50,
     },
     title: {
-        fontSize: 24,
-        textAlign: "center",
-        fontFamily: "font1"
+        fontFamily: 'font2',
+        fontSize: 32,
+        paddingTop: 45,
+        color: 'white',
+        textAlign: 'center',
+        textShadowColor: 'rgba(0, 0, 0, 0.75)',
+        textShadowOffset: { width: -1, height: 1 },
+        textShadowRadius: 10
     },
-    btnDistance: {
-        paddingTop: 15,
-        marginBottom: 10,
-        paddingLeft: 15,
-        paddingRight: 15
+    hash: {
+        fontFamily: 'font2',
+        fontSize: 42,
+        color: 'white',
+        textAlign: 'center',
+        textShadowColor: 'rgba(0, 0, 0, 0.75)',
+        textShadowOffset: { width: -1, height: 1 },
+        textShadowRadius: 10,
+        marginTop: 15
     },
-    splash: {
+    contTitle: {
         flex: 1,
-        resizeMode: 'cover',
-    }
+        alignSelf: 'stretch',
+        justifyContent: 'center',
+        textAlign: 'center',
+    },
+    btnPosition: {
+        position: 'absolute',
+        flex: 1,
+        flexDirection: 'column',
+        width: width,
+        bottom: 15
+    },
+    btnGoogle: {
+        backgroundColor: 'white',
+        borderRadius: 50,
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginLeft: 40,
+        marginRight: 40,
+        elevation: 15,
+        height: 60,
+    },
+    btnGoogleTxt:{
+        fontSize:22,
+        fontFamily:'font2',
+        marginTop:5
 
+    },
+    btnFB: {
+        backgroundColor: '#2D5BC1',
+        borderRadius: 50,
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginLeft: 40,
+        marginRight: 40,
+        elevation: 15,
+        height: 60,
+        marginTop:30,
+        marginBottom:30
+    },
+    btnFBTxt:{
+        fontSize:22,
+        fontFamily:'font2',
+        color:'white',
+        marginTop:5
+    }
 }); 

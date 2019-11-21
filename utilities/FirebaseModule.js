@@ -6,20 +6,20 @@ import { Product } from '../models/Product';
 
 export function initializeApp() {
     const firebaseConfig = {
-        apiKey: "AIzaSyC3odGDZkUWJtY-38wC37HKcSYUfSc47x0",
-        authDomain: "changoapp-43e87.firebaseapp.com",
-        databaseURL: "https://changoapp-43e87.firebaseio.com",
-        projectId: "changoapp-43e87",
-        storageBucket: "changoapp-43e87.appspot.com",
-        messagingSenderId: "145058948439",
-        appId: "1:145058948439:web:1ade7d9d1e2bd4e1904a12",
-        measurementId: "G-0TB6YF2WVQ"
+        apiKey: "AIzaSyBb352VEWRyi8Ol24fbmEkS8IBx-tDdDFo",
+        authDomain: "myspace-632e9.firebaseapp.com",
+        databaseURL: "https://myspace-632e9.firebaseio.com",
+        projectId: "myspace-632e9",
+        storageBucket: "myspace-632e9.appspot.com",
+        messagingSenderId: "998862870360",
+        appId: "1:998862870360:web:8cce7e0ea60f7298a3772d",
+        measurementId: "G-FGHFDNY8K8"
     };
-   firebase.initializeApp(firebaseConfig);
+    firebase.initializeApp(firebaseConfig);
     // firebase.analytics(app);
 }
 
-export function getProducts(){
+export function getProducts() {
     const dbFirestore = firebase.firestore();
     var docRef = dbFirestore.collection('productos');
     const arrayProducts = [];
@@ -44,25 +44,25 @@ export function getProducts(){
 /**
  * Clave autogenerada con firebase
  */
-export function addProduct( product: Product ) {
+export function addProduct(product: Product) {
     const dbFirestore = firebase.firestore();
     dbFirestore.collection("productos").add(product).catch(error => { alert(error) })
 }
 
 /** Tomar producto segun una key **/
-export function getProductsByKey( key: string ){
+export function getProductsByKey(key: string) {
     let auxProducts = {};
 
     const dbFirestore = firebase.firestore();
-    var docRef = dbFirestore.collection('productos').doc( key )
+    var docRef = dbFirestore.collection('productos').doc(key)
     docRef.get().then((doc) => {
         return new Promise((resolve) => {
             if (doc.exists) {
                 alert("Sin datos");
             } else {
-                    let aux = doc.data;
-                    aux['$key'] = doc.id;
-                    auxProducts = aux;
+                let aux = doc.data;
+                aux['$key'] = doc.id;
+                auxProducts = aux;
             }
             resolve(auxProducts);
         });
@@ -71,19 +71,19 @@ export function getProductsByKey( key: string ){
     });
 }
 
-export function getChatByKey( key: string ){
+export function getChatByKey(key: string) {
     let auxChat = {};
 
     const dbFirestore = firebase.firestore();
-    var docRef = dbFirestore.collection('chat').doc( key )
+    var docRef = dbFirestore.collection('chat').doc(key)
     docRef.get().then((doc) => {
         return new Promise((resolve) => {
             if (doc.exists) {
                 alert("Sin datos");
             } else {
-                    let aux = doc.data;
-                    aux['$key'] = doc.id;
-                    auxChat = aux;
+                let aux = doc.data;
+                aux['$key'] = doc.id;
+                auxChat = aux;
             }
             resolve(auxChat);
         });
@@ -92,19 +92,19 @@ export function getChatByKey( key: string ){
     });
 }
 
-export function getTransactionByKey( key: string ){
+export function getTransactionByKey(key: string) {
     let auxChat = {};
 
     const dbFirestore = firebase.firestore();
-    var docRef = dbFirestore.collection('transacciones').doc( key )
+    var docRef = dbFirestore.collection('transacciones').doc(key)
     docRef.get().then((doc) => {
         return new Promise((resolve) => {
             if (doc.exists) {
                 alert("Sin datos");
             } else {
-                    let aux = doc.data;
-                    aux['$key'] = doc.id;
-                    auxChat = aux;
+                let aux = doc.data;
+                aux['$key'] = doc.id;
+                auxChat = aux;
             }
             resolve(auxChat);
         });
@@ -114,7 +114,7 @@ export function getTransactionByKey( key: string ){
 }
 
 
-export function getCategory(  ){
+export function getCategory() {
     let auxCategory = [];
 
     const dbFirestore = firebase.firestore();
