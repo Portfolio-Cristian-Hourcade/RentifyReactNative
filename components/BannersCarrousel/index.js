@@ -7,36 +7,47 @@ const { width: screenWidth } = Dimensions.get('window')
 
 export default class MyCarousel extends Component {
 
-    _renderItem (item: string, parallaxProps) {
-        // alert(index);
-        const someLocalImage = require(item);
-
-
-        return (
-            <View style={styles.item}>
-                <ParallaxImage
-                    source={someLocalImage}
-                    containerStyle={styles.imageContainer}
-                    style={styles.image}
-                    parallaxFactor={0.4}
-                    {...parallaxProps}
-                />
-            </View>
-        );
+  _renderItem({item, index}, parallaxProps) {
+    let someLocalImage;
+    switch (item) {
+      case '1':
+        someLocalImage = require('../../assets/dog.jpg');
+        break;
+      case '2':
+        someLocalImage = require('../../assets/bg_app.jpg');
+        break;
+      default:
+        someLocalImage = require('../../assets/bg-login.jpg');
+        break;
     }
 
-    render () {
-        return (
-            <Carousel
-                sliderWidth={screenWidth}
-                sliderHeight={screenWidth}
-                itemWidth={screenWidth - 60}
-                data={['1','2','3','3']}
-                renderItem={this._renderItem}
-                hasParallaxImages={true}
-            />
-        );
-    }
+
+    return (
+      <View style={styles.item}>
+        <ParallaxImage
+          source={someLocalImage}
+          containerStyle={styles.imageContainer}
+          style={styles.image}
+          parallaxFactor={0.4}
+          {...parallaxProps}
+        />
+      </View>
+    );
+  }
+
+  render() {
+    return (
+      <Carousel
+        sliderWidth={screenWidth}
+        sliderHeight={screenWidth}
+        itemWidth={screenWidth - 60}
+        data={['1', '2', '3', '3']}
+        firstItem={1}
+        renderItem={this._renderItem}
+        hasParallaxImages={true}
+      />
+    );
+  }
 }
 
 const styles = StyleSheet.create({
