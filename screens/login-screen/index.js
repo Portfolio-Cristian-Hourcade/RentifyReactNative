@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TextInput, Image, ImageBackground, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Image, ImageBackground, TouchableOpacity, StatusBar } from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
 import StylesGlobal from '../../styles/styles';
 import * as Font from "expo-font";
@@ -76,11 +76,13 @@ export default class LoginScreen extends Component<any> {
         if (this.state.fontsLoaded) {
             return (
                 <View style={styles.container}>
+
                     <ImageBackground source={require('../../assets/bg_app.jpg')} style={styles.backgroundImage} />
 
                     <View style={styles.containerData}>
                         <View style={StylesGlobal.container}>
                             <View style={styles.contTitle}>
+                                <Image source={require('../../assets/logo.png')} style={{width:130,height:130,paddingTop:20, alignSelf:'center'}}/>
                                 <Text style={styles.title}>¡Bienvenido a Space! </Text>
                                 <Text style={styles.hash}>#SomosSpace</Text>
                             </View>
@@ -151,7 +153,6 @@ const styles = StyleSheet.create({
     title: {
         fontFamily: 'font2',
         fontSize: 32,
-        paddingTop: 45,
         color: 'white',
         textAlign: 'center',
         textShadowColor: 'rgba(0, 0, 0, 0.75)',

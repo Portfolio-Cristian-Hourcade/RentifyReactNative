@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Platform, Text, TextInput, View, TouchableOpacity, Image, ImageBackground, Button, ScrollView } from 'react-native';
+import { StyleSheet, Platform, Text, TextInput, View, TouchableOpacity, Image, ImageBackground, Button, ScrollView, StatusBar } from 'react-native';
 
 import { LogOut } from '../../utilities/FirebaseModule';
 
@@ -11,6 +11,7 @@ import { Dimensions } from "react-native";
 import MyCarousel from ' ../../../components/BannersCarrousel';
 import CardPropiedadList from '../../components/Cards/cardPropiedadList';
 import CardPropiedadHome from '../../components/Cards/cardPropiedadHome';
+import Sidebar from '../../components/Sidebar';
 var width = Dimensions.get('window').width - 30; //full width
 
 
@@ -19,6 +20,8 @@ export default class HomeScreen extends Component {
     render() {
         return (
             <View>
+                <Sidebar/>
+
                 <TouchableOpacity style={styles.actionLeft}>
                     <Image source={require('../../assets/menu.png')} style={styles.icon} />
                 </TouchableOpacity>
@@ -27,11 +30,12 @@ export default class HomeScreen extends Component {
                 </TouchableOpacity>
                 <View style={styles.containerData}>
                     <View style={styles.logoCont}>
-                        <Text style={styles.textLogo}>Space</Text>
+                        <Image style={{width:80, height:80, position:'relative',
+                    top:2}} source={require('../../assets/logo.png')}/>
                     </View>
                     <View style={styles.buscadorGroup}>
                         <Image source={require('../../assets/lupa.png')} style={styles.searchIcon} />
-                        <TextInput style={styles.inputBuscador} />
+                        <TextInput style={styles.inputBuscador} placeholder="¿Qué estás buscando?"/>
                     </View>
                 </View>
 
@@ -144,7 +148,7 @@ const styles = StyleSheet.create({
         fontSize: 32
     },
     btnVerMas: {
-        backgroundColor: '#FFAE54',
+        backgroundColor: '#b43d4c',
         marginLeft: 15,
         marginRight: 15,
         height: 45,

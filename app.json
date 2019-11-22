@@ -12,7 +12,7 @@
         "orientation": "portrait",
         "icon": "./assets/icon.png",
         "splash": {
-            "image": "./assets/splash.png",
+            "image": "./assets/logo.png",
             "resizeMode": "contain",
             "backgroundColor": "#ffffff"
         },
@@ -26,6 +26,7 @@
             "package": "com.totoapp.belgicaapp",
             "versionCode": 1,
             "icon": "./assets/icon.png"
+
         },
         "ios": {
             "bundleIdentifier": "com.apk.belgicaxa"

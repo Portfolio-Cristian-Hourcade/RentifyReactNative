@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Image } from 'react-native';
+import { StyleSheet, Image, StatusBar } from 'react-native';
 import { Dimensions } from 'react-native';
 import { VerifiyAuth } from '../../utilities/FirebaseModule';
 
@@ -10,7 +10,9 @@ export default class SplashScreen extends Component {
     }
     render() {
         return (
-            <Image source={require('../../assets/background.png')} />
+            <View>
+                <Image source={require('../../assets/background.png')} />
+            </View>
         );
     }
 };
