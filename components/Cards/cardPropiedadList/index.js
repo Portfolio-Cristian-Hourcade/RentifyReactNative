@@ -50,16 +50,16 @@ export default class CardPropiedadList extends Component<any> {
         return (
             <View style={styles.card}>
                 <View style={styles.column}>
-                        <Carousel
-                            sliderWidth={screenWidth}
-                            sliderHeight={275}
-                            itemWidth={screenWidth}
-                            data={['1', '2', '3', '3']}
-                            renderItem={this._renderItem}
-                            hasParallaxImages={true}
-                        />
+                    <Carousel
+                        sliderWidth={screenWidth}
+                        sliderHeight={275}
+                        itemWidth={screenWidth}
+                        data={['1', '2', '3', '3']}
+                        renderItem={this._renderItem}
+                        hasParallaxImages={true}
+                    />
                     <View style={styles.col12}>
-                        <Text style={styles.textWeight}> 20 Reseñas - Belgrano</Text>
+                        <Text style={styles.textWeight}> 22 Reseñas - Belgrano</Text>
                         <Text style={styles.titleCard}>Excelente dpto en belgrano muy luminoso</Text>
                         <Text style={styles.textWeight}> $750 por noche</Text>
                     </View>
@@ -76,10 +76,17 @@ export default class CardPropiedadList extends Component<any> {
 const styles = StyleSheet.create({
     card: {
         backgroundColor: '#fff',
-        borderRadius: 5,
+
         borderColor: 'transparent',
-        elevation: 5,
-        flex: 1
+        flex: 1,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 5,
+        },
+        shadowOpacity: 0.22,
+        shadowRadius: 2.22,
+        elevation: 7,
     },
     item: {
         width: screenWidth - 30,
@@ -89,17 +96,17 @@ const styles = StyleSheet.create({
         ...StyleSheet.absoluteFillObject,
         resizeMode: 'cover',
     },
-    titleCard:{
-        fontFamily:'font2',
-        fontSize:22,
+    titleCard: {
+        fontFamily: 'font2',
+        fontSize: 22,
     },
     imageContainer: {
         flex: 1,
         marginBottom: Platform.select({ ios: 0, android: 1 }), // Prevent a random Android rendering issue
         backgroundColor: 'white',
-        borderRadius: 5,
-        borderBottomRightRadius:0,
-        borderBottomLeftRadius:0
+        borderRadius: 3,
+        borderBottomRightRadius: 0,
+        borderBottomLeftRadius: 0
     },
     row: {
         flex: 1,
@@ -115,7 +122,7 @@ const styles = StyleSheet.create({
     },
     col12: {
         flex: 1,
-        padding:15
+        padding: 15
     },
     centerTop: {
         alignItems: "center",
@@ -140,8 +147,8 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
     textWeight: {
-        fontFamily:'font1',
-        fontSize:16
+        fontFamily: 'font1',
+        fontSize: 16
     }
 
 });

@@ -76,10 +76,18 @@ export default class CardPropiedadHome extends Component<any> {
 const styles = StyleSheet.create({
     card: {
         backgroundColor: '#fff',
-        borderRadius: 4,
+        borderRadius: 3,
         borderColor: 'transparent',
-        elevation: 5,
-        flex: 1
+        borderColor: 'transparent',
+        flex: 1,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.22,
+        shadowRadius: 2.22,
+        elevation: 4,
     },
     item: {
         width: (screenWidth/2) - 22,
@@ -97,7 +105,7 @@ const styles = StyleSheet.create({
         flex: 1,
         marginBottom: Platform.select({ ios: 0, android: 1 }), // Prevent a random Android rendering issue
         backgroundColor: 'white',
-        borderRadius: 8,
+        borderRadius: 3,
         borderBottomRightRadius:0,
         borderBottomLeftRadius:0
     },

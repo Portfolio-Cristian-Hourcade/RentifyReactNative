@@ -12,6 +12,7 @@ import MyCarousel from ' ../../../components/BannersCarrousel';
 import CardPropiedadList from '../../components/Cards/cardPropiedadList';
 import CardPropiedadHome from '../../components/Cards/cardPropiedadHome';
 import Sidebar from '../../components/Sidebar';
+import NavbarComponent from '../../navigation/Navbar';
 var width = Dimensions.get('window').width - 30; //full width
 
 
@@ -19,29 +20,40 @@ export default class HomeScreen extends Component {
 
     render() {
         return (
-            <View>
-                <Sidebar/>
+            <View style={{ backgroundColor: 'white', position: 'relative' }}>
+                <NavbarComponent />
 
-                <TouchableOpacity style={styles.actionLeft}>
-                    <Image source={require('../../assets/menu.png')} style={styles.icon} />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.actionRight}>
-                    <Image source={require('../../assets/gps.png')} style={styles.icon2} />
-                </TouchableOpacity>
-                <View style={styles.containerData}>
-                    <View style={styles.logoCont}>
-                        <Image style={{width:80, height:80, position:'relative',
-                    top:2}} source={require('../../assets/logo.png')}/>
+                <ScrollView>
+                    <View style={styles.containerData}>
+                        <View style={{ marginTop: 15, marginLeft: 30, marginRight: 30 }}>
+                            <Text style={{ fontSize: 28, fontFamily: 'font2', textAlign: 'center' }}>Encontrá el alquiler</Text>
+                            <Text style={{ fontSize: 28, fontFamily: 'font2', textAlign: 'center' }}> de tus sueños</Text>
+                        </View>
+                        <View style={styles.buscadorGroup}>
+                            <Image source={require('../../assets/lupa.png')} style={styles.searchIcon} />
+                            <TextInput style={styles.inputBuscador} placeholderTextColor="#000000" placeholder="¿Dondé estás buscando vivir?" />
+                        </View>
                     </View>
-                    <View style={styles.buscadorGroup}>
-                        <Image source={require('../../assets/lupa.png')} style={styles.searchIcon} />
-                        <TextInput style={styles.inputBuscador} placeholder="¿Qué estás buscando?"/>
+                    <View style={{ flex: 1, flexDirection: 'row' }}>
+                        <View style={{ flex: 0.5 }}>
+                            <TouchableOpacity style={styles.btnGuardados}>
+                                <View style={styles.btnIcons}>
+                                    <Image source={require('../../assets/icons/heart.png')}
+                                        style={{ width: 15, height: 15, marginRight: 8, position: 'relative', top: 0.5 }} />
+                                    <Text style={{ color: 'white', fontFamily: 'font2', position: 'relative', top: 1 }}>GUARDADOS</Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={{ flex: 0.5 }}>
+                            <TouchableOpacity style={styles.btnMapa}>
+                                <View style={styles.btnIcons}>
+                                    <Image source={require('../../assets/icons/placeholder.png')} style={{ width: 15, height: 15, marginRight: 8 }} />
+                                    <Text style={{ color: '#ff5d5a', fontFamily: 'font2', position: 'relative', top: 1 }}>BUSCAR EN EL MAPA</Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
                     </View>
-                </View>
-
-
-                <ScrollView >
-                    <View style={{ paddingBottom: 235 }}>
+                    <View style={{ paddingBottom: 175 }}>
                         <View style={{ marginTop: 30 }}>
                             <MyCarousel />
                         </View>
@@ -51,8 +63,14 @@ export default class HomeScreen extends Component {
                             <Text style={styles.descriptionSection}>Estos son algunos de los alquileres que están cerca de tu ubicación.</Text>
                         </View>
 
-                        <View style={styles.titleSectionContent}>
-                            <CardPropiedadList />
+
+                        <View style={{ flex: 1, flexDirection: 'row', marginLeft: 15, marginRight: 15, marginTop: 20 }}>
+                            <View style={{ flex: 0.5, marginRight: 15, }}>
+                                <CardPropiedadHome />
+                            </View>
+                            <View style={{ flex: 0.5 }}>
+                                <CardPropiedadHome />
+                            </View>
                         </View>
                         <View style={{ flex: 1, flexDirection: 'row', marginLeft: 15, marginRight: 15, marginTop: 30 }}>
                             <View style={{ flex: 0.5, marginRight: 15, }}>
@@ -64,59 +82,37 @@ export default class HomeScreen extends Component {
                         </View>
                         <View>
                             <TouchableOpacity style={styles.btnVerMas}>
-                                <Text style={{ color: 'white' }}>VER MÁS ALQUILERES EN MI ZONA</Text>
+                                <Text style={{ color: 'white', fontFamily: 'font2', position: 'relative', top: 1 }}>VER MÁS ALQUILERES EN MI ZONA</Text>
                             </TouchableOpacity>
                         </View>
+
                         <View style={styles.titleSectionContent}>
-                            <Text style={styles.titleSection2}>Encontrá tu compañero de cuarto</Text>
-                            <Text style={styles.descriptionSection2}>
-                                Compartí los gatos del alquiler con otra
-                                 persona que comparta tu misma situación
-                            </Text>
+                            <Text style={styles.titleSection}>Encontrá tu compañero de cuarto</Text>
+                            <Text style={styles.descriptionSection}>Compartí los gatos del alquiler con otra
+                                 persona que comparta tu misma situación</Text>
                         </View>
                         <View>
 
                             <Image resizeMode="contain" source={require('../../assets/student.jpg')}
                                 style={{ width: width + 30, height: 300 }} />
                             <TouchableOpacity style={styles.btnMatch}>
-                                <Text style={{ color: 'black',fontFamily:'font1' }}>
-                                BUSCAR ACOMPAÑANTES
+                                <Text style={{ color: 'black', fontFamily: 'font1' }}>
+                                    BUSCAR ACOMPAÑANTES
                                 </Text>
                             </TouchableOpacity>
                         </View>
-
                         <View style={styles.titleSectionContent}>
-                            <Text style={styles.titleSection3}>Alquileres más recomendados</Text>
-                            <Text style={styles.descriptionSection}>Estos son los alquileres más recomendados por los usuarios de la comunidad.</Text>
-                        </View>
-                        <View style={styles.titleSectionContent}>
-                            <CardPropiedadList />
-                        </View>
-                        <View style={{ flex: 1, flexDirection: 'row', marginLeft: 15, marginRight: 15, marginTop: 30 }}>
-                            <View style={{ flex: 0.5, marginRight: 15, }}>
-                                <CardPropiedadHome />
-                            </View>
-                            <View style={{ flex: 0.5 }}>
-                                <CardPropiedadHome />
-                            </View>
-                        </View>
-                        <View style={{ flex: 1, flexDirection: 'row', marginLeft: 15, marginRight: 15, marginTop: 30 }}>
-                            <View style={{ flex: 0.5, marginRight: 15, }}>
-                                <CardPropiedadHome />
-                            </View>
-                            <View style={{ flex: 0.5 }}>
-                                <CardPropiedadHome />
-                            </View>
+                            <Text style={styles.titleSection}>¿Tenés una propiedad?</Text>
+                            <Text style={styles.descriptionSection}>Alquilá tu propiedad con Rentify y generá una ganancia mensual de hasta $36.000 / Mes</Text>
                         </View>
                         <View>
-                            <TouchableOpacity style={styles.btnVerMas}>
-                                <Text style={{ color: 'white' }}>VER MÁS ALQUILERES RECOMENDADOS</Text>
+                            <TouchableOpacity style={styles.btnOutline}>
+                                <Text style={{ color: '#ff5d5a', fontFamily: 'font2', position: 'relative', top: 1 }}>PUBLICAR MI PROPIEDAD</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
                 </ScrollView>
             </View>
-
         );
     }
 }
@@ -128,12 +124,41 @@ const styles = StyleSheet.create({
         backgroundColor: '#F8F8F8',
         flexDirection: 'row',
     },
+    btnGuardados: {
+        backgroundColor: '#ff5d5a',
+        marginLeft: 15,
+        marginRight: 5,
+        height: 50,
+        flex: 1,
+        borderRadius: 5,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 8
+    },
+    btnIcons: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    btnMapa: {
+        borderColor: '#ff5d5a',
+        borderWidth: 2,
+        marginRight: 15,
+        marginLeft: 5,
+        height: 50,
+        flex: 1,
+        borderRadius: 5,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 8
+    },
     titleSection2: {
         fontFamily: 'font2',
         fontSize: 22,
         textAlign: 'center'
     },
-    titleSection3:{
+    titleSection3: {
         fontSize: 25,
         fontFamily: 'font2',
 
@@ -145,61 +170,52 @@ const styles = StyleSheet.create({
     },
     titleSection: {
         fontFamily: 'font2',
-        fontSize: 32
+        fontSize: 28
     },
     btnVerMas: {
-        backgroundColor: '#b43d4c',
+        backgroundColor: '#ff5d5a',
         marginLeft: 15,
         marginRight: 15,
-        height: 45,
+        height: 50,
+        flex: 1,
         borderRadius: 5,
         justifyContent: 'center',
         alignItems: 'center',
         elevation: 3,
         marginTop: 30
     },
-    btnMatch:{
+    btnOutline: {
+        borderColor: '#ff5d5a',
+        borderWidth: 2,
+        marginLeft: 15,
+        marginRight: 15,
+        height: 50,
+        flex: 1,
+        borderRadius: 5,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 8
+    },
+    btnMatch: {
         backgroundColor: '#FFF',
         height: 45,
-        marginLeft:40,
-        marginRight:40,
-        width:270,
-        paddingLeft:30,
-        paddingRight:30,
-        borderRadius:5,
-        left:width/2 - 135 - 28,
-        position:'absolute',
-        bottom:25,
+        marginLeft: 40,
+        marginRight: 40,
+        width: 270,
+        paddingLeft: 30,
+        paddingRight: 30,
+        borderRadius: 5,
+        left: width / 2 - 135 - 28,
+        position: 'absolute',
+        bottom: 25,
         justifyContent: 'center',
         alignItems: 'center',
     },
     descriptionSection: {
         fontFamily: 'font1',
-        fontSize: 16
+        fontSize: 14
     },
-    actionLeft: {
-        height: 60,
-        width: 60,
-        position: 'absolute',
-        backgroundColor: 'white',
-        elevation: 15,
-        left: 0,
-        top: Platform.OS === 'ios' ? 0 : Constants.statusBarHeight,
-        borderBottomRightRadius: 50
-    },
-    actionRight: {
-        height: 60,
-        width: 60,
-        position: 'absolute',
-        backgroundColor: 'white',
-        elevation: 15,
-        right: 0,
-        top: Platform.OS === 'ios' ? 0 : Constants.statusBarHeight,
-        borderBottomLeftRadius: 50,
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
+
     icon: {
         width: 25,
         height: 25,
@@ -224,10 +240,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     buscadorGroup: {
-        marginTop: 10,
+        marginTop: 8,
         height: 60,
         justifyContent: 'center',
-
         alignItems: 'center',
     },
     textLogo: {
@@ -238,9 +253,8 @@ const styles = StyleSheet.create({
         height: 50,
         width: width,
         padding: 15,
-        backgroundColor: 'white',
+        backgroundColor: '#eee',
         borderRadius: 5,
-        elevation: 15
     },
     searchIcon: {
         position: 'absolute',

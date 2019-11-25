@@ -11,7 +11,8 @@ export default class SplashScreen extends Component {
     render() {
         return (
             <View>
-                <Image source={require('../../assets/background.png')} />
+      <StatusBar backgroundColor="#ffffff" barStyle="dark-content" />
+
             </View>
         );
     }

@@ -83,8 +83,8 @@ export default class LoginScreen extends Component<any> {
                         <View style={StylesGlobal.container}>
                             <View style={styles.contTitle}>
                                 <Image source={require('../../assets/logo.png')} style={{width:130,height:130,paddingTop:20, alignSelf:'center'}}/>
-                                <Text style={styles.title}>¡Bienvenido a Space! </Text>
-                                <Text style={styles.hash}>#SomosSpace</Text>
+                                <Text style={styles.title}>¡Bienvenido a Rentify! </Text>
+                                <Text style={styles.hash}>#SomosRentify</Text>
                             </View>
 
                         </View>
