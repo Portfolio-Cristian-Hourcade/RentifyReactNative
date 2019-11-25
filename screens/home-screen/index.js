@@ -87,21 +87,6 @@ export default class HomeScreen extends Component {
                         </View>
 
                         <View style={styles.titleSectionContent}>
-                            <Text style={styles.titleSection}>Encontrá tu compañero de cuarto</Text>
-                            <Text style={styles.descriptionSection}>Compartí los gatos del alquiler con otra
-                                 persona que comparta tu misma situación</Text>
-                        </View>
-                        <View>
-
-                            <Image resizeMode="contain" source={require('../../assets/student.jpg')}
-                                style={{ width: width + 30, height: 300 }} />
-                            <TouchableOpacity style={styles.btnMatch}>
-                                <Text style={{ color: 'black', fontFamily: 'font1' }}>
-                                    BUSCAR ACOMPAÑANTES
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                        <View style={styles.titleSectionContent}>
                             <Text style={styles.titleSection}>¿Tenés una propiedad?</Text>
                             <Text style={styles.descriptionSection}>Alquilá tu propiedad con Rentify y generá una ganancia mensual de hasta $36.000 / Mes</Text>
                         </View>
