@@ -20,7 +20,9 @@ export default class NavbarComponent extends Component {
         return (
             <View style={styles.navbar}>
                 <View style={styles.itemNav}>
-                    <Image source={require('../../assets/icons/home.png')} style={{ width: 30, height: 30 }} />
+                    <View>
+                        <Image source={require('../../assets/icons/home.png')} style={{ width: 30, height: 30 }} />
+                    </View>
                 </View>
                 <View style={styles.itemNav}>
                     <Image source={require('../../assets/icons/favorites.png')} style={{ width: 30, height: 30 }} />

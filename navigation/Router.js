@@ -6,6 +6,8 @@ import LoginScreen from '../screens/login-screen';
 import HomeScreen from '../screens/home-screen';
 import PaymentScreen from '../screens/pay-screen';
 import OfertScreen from '../screens/oferts-screen';
+import MapsScreen from '../screens/maps-screen';
+import AddRentScreen from '../screens/add-rent-screen';
 
 const AppNavigator = createStackNavigator({
 
@@ -13,10 +15,12 @@ const AppNavigator = createStackNavigator({
     Login: LoginScreen,
     Home: HomeScreen,
     Payment: PaymentScreen,
-    Ofert: OfertScreen
+    Ofert: OfertScreen,
+    Maps: MapsScreen,
+    AddProducto:AddRentScreen
 
 }, {
-    initialRouteName: 'Login',
+    initialRouteName: 'AddProducto',
     defaultNavigationOptions: {
         header: null
 

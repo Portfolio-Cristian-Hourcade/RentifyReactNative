@@ -16,7 +16,7 @@ import NavbarComponent from '../../navigation/Navbar';
 var width = Dimensions.get('window').width - 30; //full width
 
 
-export default class HomeScreen extends Component {
+export default class HomeScreen extends Component<any> {
 
     render() {
         return (
@@ -48,12 +48,12 @@ export default class HomeScreen extends Component {
                             <TouchableOpacity style={styles.btnMapa}>
                                 <View style={styles.btnIcons}>
                                     <Image source={require('../../assets/icons/placeholder.png')} style={{ width: 15, height: 15, marginRight: 8 }} />
-                                    <Text style={{ color: '#ff5d5a', fontFamily: 'font2', position: 'relative', top: 1 }}>BUSCAR EN EL MAPA</Text>
+                                    <Text style={{ color: '#ff5d5a', fontFamily: 'font2', position: 'relative', top: 1 }} onPress={() => this.props.navigation.navigate('Maps')}>BUSCAR EN EL MAPA</Text>
                                 </View>
                             </TouchableOpacity>
                         </View>
                     </View>
-                    <View style={{ paddingBottom: 175 }}>
+                    <View style={{ paddingBottom: 95 }}>
                         <View style={{ marginTop: 30 }}>
                             <MyCarousel />
                         </View>
@@ -91,7 +91,7 @@ export default class HomeScreen extends Component {
                             <Text style={styles.descriptionSection}>Alquilá tu propiedad con Rentify y generá una ganancia mensual de hasta $36.000 / Mes</Text>
                         </View>
                         <View>
-                            <TouchableOpacity style={styles.btnOutline}>
+                            <TouchableOpacity style={styles.btnOutline} onPress={() => this.props.navigation.navigate('AddProducto')}>
                                 <Text style={{ color: '#ff5d5a', fontFamily: 'font2', position: 'relative', top: 1 }}>PUBLICAR MI PROPIEDAD</Text>
                             </TouchableOpacity>
                         </View>
@@ -245,7 +245,6 @@ const styles = StyleSheet.create({
         position: 'absolute',
         right: 20,
         top: 17,
-        elevation: 20,
         height: 25,
         width: 25
     },

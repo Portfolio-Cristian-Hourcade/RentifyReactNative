@@ -17,7 +17,7 @@
             "backgroundColor": "#ffffff"
         },
         "androidStatusBar": {
-            "backgroundColor": "#ffffff"
+            "backgroundColor": "#000000"
         },
         "updates": {
             "fallbackToCacheTimeout": 0
@@ -28,8 +28,12 @@
         "android": {
             "package": "com.totoapp.belgicaapp",
             "versionCode": 1,
-            "icon": "./assets/icon.png"
-
+            "icon": "./assets/icon.png",
+            "config": {
+                "googleMaps": {
+                    "apiKey": "AIzaSyDA0NuvPpBCOw5WIOiZ4VS64Od1LocV0XA"
+                }
+            }
         },
         "ios": {
             "bundleIdentifier": "com.apk.belgicaxa"

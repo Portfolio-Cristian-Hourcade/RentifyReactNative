@@ -3,9 +3,7 @@ import { Platform, NativeModules } from 'react-native';
 import { StyleSheet, Text, View } from 'react-native';
 import AppNavigator from './navigation/Router';
 import { createAppContainer } from 'react-navigation';
-import { StatusBar } from 'react-native';
 import { initializeApp } from './utilities/FirebaseModule';
-
 const AppContainer = createAppContainer(AppNavigator);
 
 

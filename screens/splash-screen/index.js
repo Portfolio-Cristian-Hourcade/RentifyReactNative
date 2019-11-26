@@ -11,7 +11,7 @@ export default class SplashScreen extends Component {
     render() {
         return (
             <View>
-      <StatusBar backgroundColor="#ffffff" barStyle="dark-content" />
+                <StatusBar backgroundColor="#000000" barStyle="light-content" />
 
             </View>
         );
