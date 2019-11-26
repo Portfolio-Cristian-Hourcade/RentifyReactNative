@@ -93,7 +93,12 @@ export default class AddRentScreen extends Component<any> {
     }
 
     reloadComponent = () => {
-        this.setState({image: this.state.saveTemp[0].uri});
+        if(this.state.saveTemp[0] !== undefined){
+            this.setState({image: this.state.saveTemp[0].uri});
+        }else{
+            this.setState({image: null});
+        }
+
         this.setState({ saveTemp: this.state.saveTemp, images: this.state.images });
     }
 
@@ -168,11 +173,12 @@ export default class AddRentScreen extends Component<any> {
                 </View>
 
                 <View style={{}}>
-                    {image &&
-                        <Image source={{ uri: image }} style={{ width: width, height: width}} />}
+                    {(image && this.state.saveTemp[0] !== undefined)?
+                        <Image source={{ uri: image }} style={{ width: width, height: width}} />:null}
+
                     <View style={{ paddingLeft: 15, paddingRight: 15, paddingTop: 15, flex: 1, flexDirection: 'row' }}>
 
-                        <ScrollView style={{ width: width, height: height - ((this.state.image)?width+180:180) }} onScroll={(e) => {
+                        <ScrollView style={{ width: width, height: height - ((this.state.image || this.state.saveTemp[0] !== undefined)?width+180:180) }} onScroll={(e) => {
                             var windowHeight = Dimensions.get('window').height,
                                 height = e.nativeEvent.contentSize.height,
                                 offset = e.nativeEvent.contentOffset.y;
@@ -204,10 +210,12 @@ export default class AddRentScreen extends Component<any> {
 
 
 
-                                <Button
-                                    title="Ver más fotos"
+                                <TouchableOpacity
                                     onPress={this._pickImage}
-                                />
+                                    style={styles.btnVerMas}
+                                >
+                                    <Text style={{color:'white'}}>VER MÁS FOTOS</Text>
+                                </TouchableOpacity>
                             </View>
 
                         </ScrollView>
@@ -235,6 +243,14 @@ const styles = StyleSheet.create({
         bottom: 0,
         backgroundColor: '#ff5d5a',
         justifyContent: 'center',
+        alignItems: 'center',
+    },
+    btnVerMas:{
+        height: 55,
+        width: width-30,
+        backgroundColor: '#3483fa',
+        justifyContent: 'center',
+        borderRadius:5,
         alignItems: 'center',
     },
     title: {
