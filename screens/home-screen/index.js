@@ -45,10 +45,10 @@ export default class HomeScreen extends Component<any> {
                             </TouchableOpacity>
                         </View>
                         <View style={{ flex: 0.5 }}>
-                            <TouchableOpacity style={styles.btnMapa}>
+                            <TouchableOpacity style={styles.btnMapa} onPress={() => this.props.navigation.navigate('Maps')}>
                                 <View style={styles.btnIcons}>
                                     <Image source={require('../../assets/icons/placeholder.png')} style={{ width: 15, height: 15, marginRight: 8 }} />
-                                    <Text style={{ color: '#ff5d5a', fontFamily: 'font2', position: 'relative', top: 1 }} onPress={() => this.props.navigation.navigate('Maps')}>BUSCAR EN EL MAPA</Text>
+                                    <Text style={{ color: '#ff5d5a', fontFamily: 'font2', position: 'relative', top: 1 }} >BUSCAR EN EL MAPA</Text>
                                 </View>
                             </TouchableOpacity>
                         </View>

@@ -20,7 +20,7 @@ const AppNavigator = createStackNavigator({
     AddProducto:AddRentScreen
 
 }, {
-    initialRouteName: 'AddProducto',
+    initialRouteName: 'Splash',
     defaultNavigationOptions: {
         header: null
 
