@@ -25,7 +25,7 @@ export default class AddRentScreen extends Component<any> {
         photos: null,
         images: [],
         saveTemp: [],
-        imageToSee: 60,
+        imageToSee: 40,
         hasCameraPermission: null,
         type: Camera.Constants.Type.back,
         imagenList: [],
@@ -35,19 +35,6 @@ export default class AddRentScreen extends Component<any> {
     };
     constructor(props) {
         super(props);
-        // this.state = {
-        //     photos: null,
-        //     images: [],
-        //     saveTemp: [],
-        //     imageToSee: 60,
-        //     hasCameraPermission: null,
-        //     type: Camera.Constants.Type.back,
-        //     imagenList: [],
-        //     auxList: [],
-        //     image: null,
-        //     step: 1
-
-        // };
     }
 
     async _pickImage() {
@@ -60,7 +47,8 @@ export default class AddRentScreen extends Component<any> {
             aspect: [4, 3],
             quality: 1
         }).then(resulta => {
-            images.push(resulta);
+            if (!resulta.cancelled)
+                images.push(resulta);
             saves.push(resulta);
             this.setState({ images: images, saveTemp: saves, image: resulta.uri });
         });
@@ -68,6 +56,10 @@ export default class AddRentScreen extends Component<any> {
 
 
     getPermissionAsync = async () => {
+        // if (status !== 'granted') {
+        //     alert('Hey! You heve not enabled selected permissions');
+        // }
+
         if (Constants.platform.ios) {
             const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
             if (status !== 'granted') {
@@ -75,20 +67,28 @@ export default class AddRentScreen extends Component<any> {
             }
         }
     }
-    // constructor(props) {
-    //     super(props);
-    //     this.state.saveTemp = [];
-    // }
+
 
 
     async _renderPhotos(photos) {
         let images = [];
 
-        for (let { node: photo } of photos.edges) {
-            if (photo.type === 'image/jpeg' || photo.type === 'image/jpg' || photo.type === 'image/png') {
-                images.push(photo.image);
+        if (Platform.OS !== 'ios') {
+            for (let { node: photo } of photos.edges) {
+
+                if (photo.type === 'image/jpeg' || photo.type === 'image/jpg' || photo.type === 'image/png') {
+                    images.push(photo.image);
+                }
+            }
+        } else {
+            for (let { node: photo } of photos.edges) {
+
+                if (photo.type === 'image') {
+                    images.push(photo.image);
+                }
             }
         }
+        alert(JSON.stringify(images));
 
         this.setState({ images: images });
     }
@@ -108,15 +108,34 @@ export default class AddRentScreen extends Component<any> {
         this._getPhotosAsync().catch(error => {
             console.error(error);
         });
-        const { status } = await Permissions.askAsync(Permissions.CAMERA);
-        this.setState({ hasCameraPermission: status === 'granted' });
     }
 
 
     async _getPhotosAsync() {
-        let photos = await CameraRoll.getPhotos({ first: this.state.imageToSee });
-        this.setState({ photos });
-        this._renderPhotos(photos);
+        let photos
+        if (Platform.OS === 'ios') {
+            CameraRoll.getPhotos({ first: this.state.imageToSee, assetType: 'All', groupTypes: 'All' }).then(data => {
+                this.setState({ data });
+                this._renderPhotos(data);
+            }).catch((e) => {
+                alert(JSON.stringify(e));
+            });
+        } else {
+            CameraRoll.getPhotos({ first: this.state.imageToSee }).then(data => {
+                this.setState({ data });
+                this._renderPhotos(data);
+            }).catch((e) => {
+                alert(JSON.stringify(e));
+            });
+        }
+        // CameraRoll.getPhotos({ first: this.state.imageToSee, assetType: 'All', groupTypes: 'All' }).then(data => {
+        //     this.setState({ data });
+        //     this._renderPhotos(data);
+        // }).catch((e) => {
+        //     alert(JSON.stringify(e));
+        // });
+
+
     }
 
     addMoreImages() {
@@ -140,13 +159,15 @@ export default class AddRentScreen extends Component<any> {
                             (this.state.images.length !== 0) ?
                                 this.state.images.map((element) => {
                                     return (
-
                                         <PhotoComponent image={element} saves={this.state.saveTemp} handler={this.reloadComponent} />
                                     )
-                                }) : <Spinner
-                                    visible={true}
-                                    textContent={''}
-                                />}
+                                }) :
+                                (Platform.OS !== 'ios') ?
+                                    <Spinner
+                                        visible={true}
+                                        textContent={''} />
+                                    : null
+                        }
 
                         <TouchableOpacity
                             onPress={() => this._pickImage()}
@@ -155,7 +176,11 @@ export default class AddRentScreen extends Component<any> {
                             <Text style={{ color: 'white' }}>VER MÁS FOTOS</Text>
                         </TouchableOpacity>
                     </View>)
-                break;
+            case 2:
+                return (
+                    <View>
+                        <Text>Datos de tu propiedad</Text>
+                    </View>);
         }
     }
 
@@ -216,6 +241,7 @@ export default class AddRentScreen extends Component<any> {
                         <Text style={styles.title}>{titleText}</Text>
                     </View>
                     <View style={{ position: 'relative' }}>
+                    <View style={styles.barraProgresBg}></View>
                         {(step !== undefined) ?
                             < View style={{
                                 width: widthProgress,
@@ -223,27 +249,33 @@ export default class AddRentScreen extends Component<any> {
                                 backgroundColor: '#ff5d5a',
                                 borderRadius: 50,
                                 elevation: 2,
-                                position: 'relative',
-                                bottom: -15
+                                position: 'absolute',
+                                bottom: 0
                             }} />
                             :
                             null
                         }
-                        <View style={styles.barraProgresBg}></View>
                     </View>
                 </View>
 
                 <View style={{}}>
 
-                        {(image && this.state.saveTemp[0] !== undefined) ?
-                            <Image source={{ uri: image }} style={{
-                                width: (step === 1) ? width : width / 2, height: (step === 1) ? width : width / 2,
-                                borderRadius: 3,
-                            }} /> : null}
+                    {(image && this.state.saveTemp[0] !== undefined) ?
+
+                        <Image source={{ uri: image }} style={{
+                            width: (step === 1) ? width : width - 60,
+                            height: (step === 1) ? width : width - 60,
+                            maxHeight: 500,
+                            maxWidth: 500,
+                            marginLeft: 0,
+                            alignSelf: 'center',
+                            borderRadius: 3,
+                        }} />
+                        : null}
 
                     <View style={{ paddingLeft: 15, paddingRight: 15, paddingTop: 15, flex: 1, flexDirection: 'row' }}>
 
-                        <ScrollView style={{ width: width, height: height - ((this.state.image || this.state.saveTemp[0] !== undefined) ? width + 180 : 180) }} onScroll={(e) => { }}>
+                        <ScrollView style={{ width: width, height: height - ((this.state.image || this.state.saveTemp[0] !== undefined) ? (width > 500) ? 680 : (width + 180) : 180) }}>
                             {this.calculateStep()}
 
                         </ScrollView>

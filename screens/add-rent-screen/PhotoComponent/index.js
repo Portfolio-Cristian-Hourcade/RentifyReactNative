@@ -85,6 +85,11 @@ export default class PhotoComponent extends Component<any>{
     render() {
         return (
             <TouchableOpacity style={{ position: 'relative' }} onPress={() => this.selectImage()}>
+
+                {(this.state.image) ?
+                    (<Image source={this.state.image} style={{ margin: 2, height: (width - 30) / 4 - 4, width: (width - 30) / 4 - 4 }} resizeMode="cover" />)
+                    : <View style={{ margin: 2, height: (width - 30) / 4 - 4, width: (width - 30) / 4 - 4, backgroundColor: '#eee' }}></View>
+                }
                 {(this.state.isSelected) ?
                     <View style={{ width: 20, height: 20, backgroundColor: '#ff5d5a', borderRadius: 50, position: 'absolute', elevation: 10, top: 4, left: 4 }}>
                         <Text style={{ color: 'white', position: 'relative', top: 2, left: 6 }}>
@@ -92,10 +97,6 @@ export default class PhotoComponent extends Component<any>{
                         </Text>
                     </View>
                     : <View />
-                }
-                {(this.state.image) ?
-                    (<Image source={this.state.image} style={{ margin: 2, height: (width - 30) / 4 - 4, width: (width - 30) / 4 - 4 }} resizeMode="cover" />)
-                    : <View style={{margin: 2, height: (width - 30) / 4 - 4, width: (width - 30) / 4 - 4, backgroundColor:'#eee'}}></View>
                 }
             </TouchableOpacity>
         );
