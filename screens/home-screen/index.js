@@ -31,7 +31,7 @@ export default class HomeScreen extends Component<any> {
                         </View>
                         <View style={styles.buscadorGroup}>
                             <Image source={require('../../assets/lupa.png')} style={styles.searchIcon} />
-                            <TextInput style={styles.inputBuscador} placeholderTextColor="#000000" placeholder="¿Dondé estás buscando vivir?" />
+                            <TextInput style={styles.inputBuscador} placeholderTextColor="#000000" placeholder="¿Dondé estás buscando alojarte?" />
                         </View>
                     </View>
                     <View style={{ flex: 1, flexDirection: 'row' }}>

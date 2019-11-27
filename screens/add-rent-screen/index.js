@@ -21,50 +21,51 @@ var height = Dimensions.get('window').height; //full width
 
 export default class AddRentScreen extends Component<any> {
     camera = React.createRef();
-
     state = {
         photos: null,
-        images: null,
-        saveTemp: null,
+        images: [],
+        saveTemp: [],
         imageToSee: 60,
         hasCameraPermission: null,
         type: Camera.Constants.Type.back,
         imagenList: [],
         auxList: [],
         image: null,
-
+        step: 1
     };
-    _pickImage = async () => {
+    constructor(props) {
+        super(props);
+        // this.state = {
+        //     photos: null,
+        //     images: [],
+        //     saveTemp: [],
+        //     imageToSee: 60,
+        //     hasCameraPermission: null,
+        //     type: Camera.Constants.Type.back,
+        //     imagenList: [],
+        //     auxList: [],
+        //     image: null,
+        //     step: 1
+
+        // };
+    }
+
+    async _pickImage() {
+        const images = this.state.images;
+        const saves = this.state.saveTemp;
+
         let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
             aspect: [4, 3],
             quality: 1
+        }).then(resulta => {
+            images.push(resulta);
+            saves.push(resulta);
+            this.setState({ images: images, saveTemp: saves, image: resulta.uri });
         });
-
-        console.log(result);
-
-        if (!result.cancelled) {
-            // @ts-ignore
-            this.setState({ image: result.uri });
-        }
     };
-    // selectPicture = async () => {
-    //     await Permissions.askAsync(Permissions.CAMERA_ROLL);
-    //     const { cancelled, uri } = await ImagePicker.launchImageLibraryAsync({
-    //         aspect: [1,1],
-    //         allowsEditing: true,
-    //     });
-    //     if (!cancelled) this.setState({ image: uri });
-    // };
 
-    // takePicture = async () => {
-    //     await Permissions.askAsync(Permissions.CAMERA);
-    //     const { cancelled, uri } = await ImagePicker.launchCameraAsync({
-    //         allowsEditing: false,
-    //     });
-    //     this.setState({ image: uri });
-    // };
 
     getPermissionAsync = async () => {
         if (Constants.platform.ios) {
@@ -74,10 +75,10 @@ export default class AddRentScreen extends Component<any> {
             }
         }
     }
-    constructor(props) {
-        super(props);
-        this.state.saveTemp = [];
-    }
+    // constructor(props) {
+    //     super(props);
+    //     this.state.saveTemp = [];
+    // }
 
 
     async _renderPhotos(photos) {
@@ -93,10 +94,10 @@ export default class AddRentScreen extends Component<any> {
     }
 
     reloadComponent = () => {
-        if(this.state.saveTemp[0] !== undefined){
-            this.setState({image: this.state.saveTemp[0].uri});
-        }else{
-            this.setState({image: null});
+        if (this.state.saveTemp[0] !== undefined) {
+            this.setState({ image: this.state.saveTemp[0].uri });
+        } else {
+            this.setState({ image: null });
         }
 
         this.setState({ saveTemp: this.state.saveTemp, images: this.state.images });
@@ -122,6 +123,43 @@ export default class AddRentScreen extends Component<any> {
         this.setState({ photos: this.state.photos.push() })
     }
 
+    changeStep() {
+        if (this.state.saveTemp.length > 0) {
+            this.setState({ step: this.state.step + 1 });
+        }
+    }
+
+    calculateStep = () => {
+        switch (this.state.step) {
+            case 1:
+                return (
+                    <View style={{ flex: 1, flexDirection: "row", flexWrap: 'wrap' }}>
+
+
+                        {
+                            (this.state.images.length !== 0) ?
+                                this.state.images.map((element) => {
+                                    return (
+
+                                        <PhotoComponent image={element} saves={this.state.saveTemp} handler={this.reloadComponent} />
+                                    )
+                                }) : <Spinner
+                                    visible={true}
+                                    textContent={''}
+                                />}
+
+                        <TouchableOpacity
+                            onPress={() => this._pickImage()}
+                            style={styles.btnVerMas}
+                        >
+                            <Text style={{ color: 'white' }}>VER MÁS FOTOS</Text>
+                        </TouchableOpacity>
+                    </View>)
+                break;
+        }
+    }
+
+
     reloadImages() {
         if (this.state.auxList.length !== 0) {
             if (this.state.auxList.length !== this.state.images.length) {
@@ -146,83 +184,77 @@ export default class AddRentScreen extends Component<any> {
         } else {
             return (
                 <Spinner
-                    //visibility of Overlay Loading Spinner
                     visible={true}
-                    //Text with the Spinner
                     textContent={'Cargando'}
-                //Text style of the Spinner Text
                 />);
         }
     }
 
 
     render() {
+        let widthProgress;
+        let titleText;
+        let { image, step } = this.state;
+        switch (step) {
+            case 1:
+                widthProgress = 40;
+                titleText = "¡Seleccioná las fotos de tu propiedad!"
+                break;
+            case 2:
+                widthProgress = 140
+                titleText = "Contanos un poco sobre tu propiedad"
 
-        let { image } = this.state;
-
+                break;
+            case 3:
+                widthProgress = 190;
+                break;
+        }
         return (
             <View style={styles.splash}>
                 <View style={styles.bar}>
                     <View>
-                        <Text style={styles.title}>¡Seleccioná las fotos de tu propiedad!</Text>
+                        <Text style={styles.title}>{titleText}</Text>
                     </View>
                     <View style={{ position: 'relative' }}>
-                        <View style={styles.barraProgres}></View>
+                        {(step !== undefined) ?
+                            < View style={{
+                                width: widthProgress,
+                                height: 15,
+                                backgroundColor: '#ff5d5a',
+                                borderRadius: 50,
+                                elevation: 2,
+                                position: 'relative',
+                                bottom: -15
+                            }} />
+                            :
+                            null
+                        }
                         <View style={styles.barraProgresBg}></View>
                     </View>
                 </View>
 
                 <View style={{}}>
-                    {(image && this.state.saveTemp[0] !== undefined)?
-                        <Image source={{ uri: image }} style={{ width: width, height: width}} />:null}
+
+                        {(image && this.state.saveTemp[0] !== undefined) ?
+                            <Image source={{ uri: image }} style={{
+                                width: (step === 1) ? width : width / 2, height: (step === 1) ? width : width / 2,
+                                borderRadius: 3,
+                            }} /> : null}
 
                     <View style={{ paddingLeft: 15, paddingRight: 15, paddingTop: 15, flex: 1, flexDirection: 'row' }}>
 
-                        <ScrollView style={{ width: width, height: height - ((this.state.image || this.state.saveTemp[0] !== undefined)?width+180:180) }} onScroll={(e) => {
-                            var windowHeight = Dimensions.get('window').height,
-                                height = e.nativeEvent.contentSize.height,
-                                offset = e.nativeEvent.contentOffset.y;
-                            if (windowHeight + offset >= height) {
-                                // this.setState({ imageToSee: this.state.imageToSee + 120 });
-                                // this._getPhotosAsync();
-                            }
-                        }}>
-                            <View style={{ flex: 1, flexDirection: "row", flexWrap: 'wrap' }}>
-
-                                {
-                                    (this.state.images !== null) ?
-                                        this.state.images.map((element) => {
-                                            return (
-
-                                                <PhotoComponent image={element} saves={this.state.saveTemp} handler={this.reloadComponent} />
-                                            )
-                                        }) : <Spinner
-                                            //visibility of Overlay Loading Spinner
-                                            visible={true}
-                                            //Text with the Spinner
-                                            textContent={'Cargando'}
-                                        //Text style of the Spinner Text
-                                        />}
-
-
-                                {/* {this.reloadImages()} */}
-
-
-
-
-                                <TouchableOpacity
-                                    onPress={this._pickImage}
-                                    style={styles.btnVerMas}
-                                >
-                                    <Text style={{color:'white'}}>VER MÁS FOTOS</Text>
-                                </TouchableOpacity>
-                            </View>
+                        <ScrollView style={{ width: width, height: height - ((this.state.image || this.state.saveTemp[0] !== undefined) ? width + 180 : 180) }} onScroll={(e) => { }}>
+                            {this.calculateStep()}
 
                         </ScrollView>
                     </View>
                 </View>
-                <TouchableOpacity style={styles.btnSiguiente}>
-                    <Text style={{ color: 'white', fontSize: 20, fontFamily: 'font3', borderTopLeftRadius: 5, borderTopRightRadius: 5 }}>
+                <TouchableOpacity style={styles.btnSiguiente} onPress={() => this.setState({ step: step + 1 })}>
+                    <Text style={{
+                        color: 'white', fontSize: 20, fontFamily: 'font3', borderTopLeftRadius: 5,
+                        borderTopRightRadius: 5
+                    }}
+                    >
                         Siguiente
                     </Text>
                 </TouchableOpacity>
@@ -245,12 +277,12 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    btnVerMas:{
+    btnVerMas: {
         height: 55,
-        width: width-30,
+        width: width - 30,
         backgroundColor: '#3483fa',
         justifyContent: 'center',
-        borderRadius:5,
+        borderRadius: 5,
         alignItems: 'center',
     },
     title: {
@@ -258,7 +290,7 @@ const styles = StyleSheet.create({
         fontFamily: 'font2'
     },
     barraProgres: {
-        width: 45,
+        // width: this.state.step,
         height: 15,
         backgroundColor: '#ff5d5a',
         borderRadius: 50,
