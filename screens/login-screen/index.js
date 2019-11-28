@@ -82,7 +82,7 @@ export default class LoginScreen extends Component<any> {
                     <View style={styles.containerData}>
                         <View style={StylesGlobal.container}>
                             <View style={styles.contTitle}>
-                                <Image source={require('../../assets/logo.png')} style={{width:130,height:130,paddingTop:20, alignSelf:'center'}}/>
+                                <Image source={require('../../assets/logo.png')} style={{ width: 130, height: 130, paddingTop: 20, alignSelf: 'center' }} />
                                 <Text style={styles.title}>¡Bienvenido a Rentify! </Text>
                                 <Text style={styles.hash}>#SomosRentify</Text>
                             </View>
@@ -95,13 +95,13 @@ export default class LoginScreen extends Component<any> {
                         <View style={styles.rowAll}>
 
                             <TouchableOpacity style={styles.btnGoogle} onPress={() => this.props.navigation.navigate('Home')}>
-                                <Image source={require('../../assets/gg.png')} style={styles.logoPos}/>
+                                <Image source={require('../../assets/gg.png')} style={styles.logoPos} />
                                 <Text style={styles.btnGoogleTxt}>Iniciar Sesión</Text>
                             </TouchableOpacity>
                         </View>
                         <View style={styles.rowAll}>
-                            <TouchableOpacity style={styles.btnFB}>
-                            <Image source={require('../../assets/ff.png')} style={styles.logoPosff} onPress={() => this.props.navigation.navigate('Home')}/>
+                            <TouchableOpacity style={styles.btnFB} onPress={() => this.props.navigation.navigate('Home')}>
+                                <Image source={require('../../assets/ff.png')} style={styles.logoPosff} />
                                 <Text style={styles.btnFBTxt}>Iniciar Sesion</Text>
                             </TouchableOpacity>
                         </View>
@@ -127,28 +127,26 @@ const styles = StyleSheet.create({
     backgroundImage: {
         flex: 1,
         resizeMode: 'cover', // or 'stretch'
-        backgroundColor:'rgba(255,0,0,0.9)',
-
     },
     containerData: {
         position: 'absolute',
         flex: 1,
         flexDirection: 'row',
     },
-    rowAll:{
-        flex:1
+    rowAll: {
+        flex: 1
     },
-    logoPos:{
-        position:'absolute',
-        left:15,
-        width:40,
-        height:40,
+    logoPos: {
+        position: 'absolute',
+        left: 15,
+        width: 40,
+        height: 40,
     },
-    logoPosff:{
-        position:'absolute',
-        left:7,
-        width:50,
-        height:50,
+    logoPosff: {
+        position: 'absolute',
+        left: 7,
+        width: 50,
+        height: 50,
     },
     title: {
         fontFamily: 'font2',
@@ -193,10 +191,10 @@ const styles = StyleSheet.create({
         elevation: 15,
         height: 60,
     },
-    btnGoogleTxt:{
-        fontSize:22,
-        fontFamily:'font2',
-        marginTop:5
+    btnGoogleTxt: {
+        fontSize: 22,
+        fontFamily: 'font2',
+        marginTop: 5
 
     },
     btnFB: {
@@ -209,13 +207,13 @@ const styles = StyleSheet.create({
         marginRight: 40,
         elevation: 15,
         height: 60,
-        marginTop:30,
-        marginBottom:30
+        marginTop: 30,
+        marginBottom: 30
     },
-    btnFBTxt:{
-        fontSize:22,
-        fontFamily:'font2',
-        color:'white',
-        marginTop:5
+    btnFBTxt: {
+        fontSize: 22,
+        fontFamily: 'font2',
+        color: 'white',
+        marginTop: 5
     }
 }); 

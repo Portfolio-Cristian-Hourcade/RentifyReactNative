@@ -10,6 +10,8 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import { LinearGradient } from 'expo-linear-gradient';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
+import Geocoder from 'react-native-geocoding';
+import { CheckBox } from 'react-native-elements';
 
 
 var width = Dimensions.get('window').width;
@@ -21,7 +23,10 @@ export default class AddRentScreen extends Component<any> {
     state = {
         photos: null,
         images: [],
-        saveTemp: [],
+        saveTemp: [],   //add to product
+        ubication: null,   //add to product
+        ubicationGPS: null,//add to product
+        mt2: null,//add to product
         imageToSee: 40,
         hasCameraPermission: null,
         type: Camera.Constants.Type.back,
@@ -30,6 +35,7 @@ export default class AddRentScreen extends Component<any> {
         image: null,
         step: 1,
         isOpenMap: false,
+        isOpenPrestaciones: false,
         location: null,
         errorMessage: null,
         marker: null,
@@ -96,6 +102,16 @@ export default class AddRentScreen extends Component<any> {
         this.setState({ region });
     }
 
+    getAdressUbication = () => {
+        Geocoder.from(this.state.region.latitude, this.state.region.longitude)
+            .then(json => {
+                var addressComponent = json.results[0].address_components[0];
+                alert("Tu dirección aproximada es: " + json.results[0].formatted_address);
+                this.setState({ ubicationGPS: { latitude: this.state.region.latitude, longitude: this.state.region.longitude } });
+                this.setState({ ubication: json.results[0].formatted_address, isOpenMap: false });
+            })
+            .catch(error => console.warn(error));
+    }
 
     showMap = () => {
         if (this.state.isOpenMap) {
@@ -115,7 +131,7 @@ export default class AddRentScreen extends Component<any> {
                         position: 'absolute', top: height / 2 - 50, height: 100, width: 100, left: width / 2 - 60, backgroundColor: '#0080ff82', borderRadius: 50, justifyContent: 'center',
                         alignItems: 'center',
                     }}>
-                        <Text style={{ position: 'relative', color: 'white', fontFamily: 'font2',padding:5,textAlign:'center',alignSelf:'center' }}>Ubicación de tu propiedad</Text>
+                        <Text style={{ position: 'relative', color: 'white', fontFamily: 'font2', padding: 5, textAlign: 'center', alignSelf: 'center' }}>Ubicación de tu propiedad</Text>
                     </View>
 
                     <View style={{ position: 'absolute', left: 5, top: 5, padding: 10, elevation: 9 }}>
@@ -123,11 +139,44 @@ export default class AddRentScreen extends Component<any> {
                             <Image source={require('../../assets/close.png')} style={{ height: 25, width: 25, position: 'relative', left: 12, top: 12 }} />
                         </TouchableOpacity>
                     </View>
+                    <TouchableOpacity style={{
+                        position: 'absolute', height: 50, bottom: 25, width: width - 30, left: 15, backgroundColor: '#3483fa', justifyContent: 'center',
+                        borderRadius: 5,
+                        alignItems: 'center',
+                    }}
+                        onPress={() => this.getAdressUbication()}
+                    >
+                        <Text style={{ fontFamily: 'font2', color: 'white' }}>Guardar ubicación</Text>
+                    </TouchableOpacity>
                 </View>
             )
         }
     }
 
+    showPrestaciones = () => {
+        if (this.state.isOpenPrestaciones) {
+            return (
+                <View style={styles.container}>
+                    <View style={{ height: height, width: width, padding: 15, backgroundColor: 'white' }}>
+                        <TouchableOpacity>
+                            <Image source={require('../../assets/close.png')} style={{ width: 30, height: 30 }} />
+                        </TouchableOpacity>
+                        <View style={{ marginTop: 15 }}>
+                            <Text style={{ fontFamily: 'font2', fontSize: 20 }}>Seleccioná las prestaciones de tu propiedad</Text>
+                        </View>
+                        <View style={styles.card}>
+                            <Text>Hola :D</Text>
+                            <CheckBox
+                                title="Press me"
+                                checked={true}
+                                onPress={() => alert("HOLA :D")}
+                            />
+                        </View>
+                    </View>
+                </View>
+            )
+        }
+    }
 
 
     reloadComponent = () => {
@@ -147,6 +196,9 @@ export default class AddRentScreen extends Component<any> {
             });
         } else {
             this._getLocationAsync();
+
+            Geocoder.init("AIzaSyDA0NuvPpBCOw5WIOiZ4VS64Od1LocV0XA", { language: 'es' }); // use a valid API key
+
         }
     }
 
@@ -159,12 +211,7 @@ export default class AddRentScreen extends Component<any> {
         }
 
         let region = await Location.getCurrentPositionAsync({});
-
-        // this.setState({
-        //     region
-        // });
         this.setState({ region: { latitude: region.coords.latitude, longitude: region.coords.longitude, longitudeDelta: 0.01, latitudeDelta: 0.01 } })
-        // this.setState({ marker: { latitude: this.state.location.coords.latitude, longitude: this.state.location.coords.longitude } })
     };
 
     async componentDidMount() {
@@ -240,9 +287,9 @@ export default class AddRentScreen extends Component<any> {
                             <Text style={{ fontFamily: 'font1', fontSize: 18, marginTop: 40 }}>Ahora contanos donde se ubica</Text>
                         </View>
                         <View style={{ marginTop: 15, position: 'relative', }}>
-                            <TextInput style={styles.inputBuscador} placeholderTextColor="#000000" placeholder="Av. Ejemplo 1234" />
-                            <TouchableOpacity style={{ position: 'absolute', top: 13, right: 0, height: 40, width: 40 }} onPress={() => this.toggleMap()}>
-                                <Image source={require('../../assets/gps.png')} style={{ width: 25, height: 25 }} />
+                            <TouchableOpacity style={styles.inputBuscador} onPress={() => this.toggleMap()}>
+                                <Text>{this.state.ubication === null ? 'Av. Ejemplo 1234' : this.state.ubication}</Text>
+                                <Image source={require('../../assets/gps.png')} style={{ width: 25, height: 25, position: 'absolute', right: 15, top: 13 }} />
                             </TouchableOpacity>
                         </View>
 
@@ -250,7 +297,7 @@ export default class AddRentScreen extends Component<any> {
                             <Text style={{ fontFamily: 'font1', fontSize: 18 }}>¿Cuantos mt2 tiene tu propiedad?</Text>
                         </View>
                         <View style={{ marginTop: 15, position: 'relative' }}>
-                            <TextInput style={styles.inputBuscador} placeholderTextColor="#000000" placeholder="0" keyboardType='numeric' />
+                            <TextInput style={styles.inputBuscador} placeholderTextColor="#000000" placeholder="0" keyboardType='number-pad' value={this.state.mt2} onChangeText={mt2 => this.setState({ mt2: mt2 })} />
                             <Text style={{ position: 'absolute', right: 15, top: 17 }}>mt²</Text>
                         </View>
 
@@ -268,7 +315,8 @@ export default class AddRentScreen extends Component<any> {
                                 position: 'relative',
                                 elevation: 3,
                                 marginTop: 10
-                            }}>
+                            }}
+                                onPress={() => this.togglePrestaciones()}>
                                 <View style={{
                                     position: 'absolute', justifyContent: 'center',
                                     alignItems: 'center', left: 10, top: 7, height: 30, width: 30, borderRadius: 50, backgroundColor: '#ff5d5a'
@@ -340,6 +388,9 @@ export default class AddRentScreen extends Component<any> {
         }
     }
 
+    togglePrestaciones() {
+        this.setState({ isOpenPrestaciones: !this.state.isOpenPrestaciones });
+    }
 
     render() {
         let widthProgress;
@@ -430,6 +481,7 @@ export default class AddRentScreen extends Component<any> {
                     </Text>
                 </TouchableOpacity>
                 {this.showMap()}
+                {this.showPrestaciones()}
 
             </View>
         );
@@ -506,6 +558,22 @@ const styles = StyleSheet.create({
         height: 15,
         backgroundColor: '#F5F5F5',
         borderRadius: 50
+    },
+    card: {
+        marginTop: 15,
+        backgroundColor: 'white',
+        borderRadius: 8,
+        width: width - 30,
+        height: 120,
+        padding: 15,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 7,
+        },
+        shadowOpacity: 0.41,
+        shadowRadius: 9.11,
+        elevation: 7
     },
     bar: {
         backgroundColor: 'white',
