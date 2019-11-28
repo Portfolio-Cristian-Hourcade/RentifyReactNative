@@ -313,6 +313,7 @@ export default class AddRentScreen extends Component<any> {
             if (this.state.step !== 1) {
                 let aux = this.state.step - 1;
                 this.setState({ step: aux });
+                alert(this.state.step);
                 return true;
             } else {
                 this.props.navigation.navigate('Home');
@@ -397,13 +398,19 @@ export default class AddRentScreen extends Component<any> {
                                         textContent={''} />
                                     : null
                         }
+                        {
+                            (this.state.images.length !== 0) ?
 
-                        <TouchableOpacity
-                            onPress={() => this._pickImage()}
-                            style={styles.btnVerMas}
-                        >
-                            <Text style={{ color: 'white' }}>VER MÁS FOTOS</Text>
-                        </TouchableOpacity>
+                                <TouchableOpacity
+                                    onPress={() => this._pickImage()}
+                                    style={styles.btnVerMas}
+                                >
+                                    <Text style={{ color: 'white', fontFamily:'font2' }}>VER MÁS FOTOS</Text>
+                                </TouchableOpacity>
+
+                                : null
+                        }
+
                     </View>)
             case 2:
                 return (
