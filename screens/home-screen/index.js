@@ -13,15 +13,14 @@ import CardPropiedadList from '../../components/Cards/cardPropiedadList';
 import CardPropiedadHome from '../../components/Cards/cardPropiedadHome';
 import Sidebar from '../../components/Sidebar';
 import NavbarComponent from '../../navigation/Navbar';
+import { Review } from '../../models/Review';
 var width = Dimensions.get('window').width - 30; //full width
-
 
 export default class HomeScreen extends Component<any> {
 
     render() {
         return (
             <View style={{ backgroundColor: 'white', position: 'relative' }}>
-                <NavbarComponent />
 
                 <ScrollView>
                     <View style={styles.containerData}>
@@ -97,6 +96,8 @@ export default class HomeScreen extends Component<any> {
                         </View>
                     </View>
                 </ScrollView>
+                <NavbarComponent />
+
             </View>
         );
     }

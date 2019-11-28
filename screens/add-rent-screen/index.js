@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Image, StatusBar, View, Platform, Text, Button, TouchableOpacity, CameraRoll, ScrollView, TextInput } from 'react-native';
+import { StyleSheet, Image, StatusBar, View, Platform, Text, Button, TouchableOpacity, CameraRoll, ScrollView, TextInput, Picker, FlatList, BackHandler } from 'react-native';
 import { Dimensions } from 'react-native';
 import Constants from 'expo-constants';
 import * as ImagePicker from 'expo-image-picker';
@@ -12,6 +12,7 @@ import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import Geocoder from 'react-native-geocoding';
 import { CheckBox } from 'react-native-elements';
+import RNPickerSelect from 'react-native-picker-select';
 
 
 var width = Dimensions.get('window').width;
@@ -27,6 +28,37 @@ export default class AddRentScreen extends Component<any> {
         ubication: null,   //add to product
         ubicationGPS: null,//add to product
         mt2: null,//add to product
+        tipoPropiedad: null, //add to product
+        piso: null, //add to product
+        // checkin,checkout, //add to product
+        scrollRef: null,
+        toTop: false,
+        plan: 0, //add to product,
+        precio: 0,
+        prestaciones: [ // add to product
+            { name: 'Wifi', check: false },
+            { name: 'TV', check: false },
+            { name: 'Aire Acondicionado', check: false },
+            { name: 'Estrenar', check: false },
+            { name: 'Estacionamiento', check: false },
+            { name: 'Ascensor', check: false },
+            { name: 'Lavadero', check: false },
+            { name: 'Secadora', check: false },
+            { name: 'Calefacción', check: false },
+            { name: 'Patio', check: false },
+            { name: 'Balcón', check: false },
+            { name: 'Terraza', check: false },
+            { name: 'Lavavajillas', check: false },
+            { name: 'Vista exterior', check: false },
+            { name: 'Pileta', check: false },
+            { name: 'Amueblado', check: false },
+            { name: 'Encargado', check: false },
+        ],
+        normas: [
+            { name: 'No se puede fumar', check: false },
+            { name: 'No se permiten mascotas', check: false },
+            { name: 'No se permite hacer fiestas', check: false },
+        ],
         imageToSee: 40,
         hasCameraPermission: null,
         type: Camera.Constants.Type.back,
@@ -36,6 +68,7 @@ export default class AddRentScreen extends Component<any> {
         step: 1,
         isOpenMap: false,
         isOpenPrestaciones: false,
+        isOpenNormas: false,
         location: null,
         errorMessage: null,
         marker: null,
@@ -59,6 +92,7 @@ export default class AddRentScreen extends Component<any> {
             if (!resulta.cancelled) {
                 images.push(resulta);
                 saves.push(resulta);
+                // @ts-ignore
                 this.setState({ images: images, saveTemp: saves, image: resulta.uri });
             }
         });
@@ -103,6 +137,7 @@ export default class AddRentScreen extends Component<any> {
     }
 
     getAdressUbication = () => {
+        // @ts-ignore
         Geocoder.from(this.state.region.latitude, this.state.region.longitude)
             .then(json => {
                 var addressComponent = json.results[0].address_components[0];
@@ -134,11 +169,7 @@ export default class AddRentScreen extends Component<any> {
                         <Text style={{ position: 'relative', color: 'white', fontFamily: 'font2', padding: 5, textAlign: 'center', alignSelf: 'center' }}>Ubicación de tu propiedad</Text>
                     </View>
 
-                    <View style={{ position: 'absolute', left: 5, top: 5, padding: 10, elevation: 9 }}>
-                        <TouchableOpacity style={{ backgroundColor: 'white', borderRadius: 50, width: 50, height: 50 }} onPress={() => this.setState({ isOpenMap: !this.state.isOpenMap })}>
-                            <Image source={require('../../assets/close.png')} style={{ height: 25, width: 25, position: 'relative', left: 12, top: 12 }} />
-                        </TouchableOpacity>
-                    </View>
+
                     <TouchableOpacity style={{
                         position: 'absolute', height: 50, bottom: 25, width: width - 30, left: 15, backgroundColor: '#3483fa', justifyContent: 'center',
                         borderRadius: 5,
@@ -148,6 +179,11 @@ export default class AddRentScreen extends Component<any> {
                     >
                         <Text style={{ fontFamily: 'font2', color: 'white' }}>Guardar ubicación</Text>
                     </TouchableOpacity>
+                    <View style={{ position: 'absolute', left: 5, top: 5, padding: 10, elevation: 9 }}>
+                        <TouchableOpacity style={{ backgroundColor: 'white', borderRadius: 50, width: 50, height: 50 }} onPress={() => this.setState({ isOpenMap: !this.state.isOpenMap })}>
+                            <Image source={require('../../assets/close.png')} style={{ height: 25, width: 25, position: 'relative', left: 12, top: 12 }} />
+                        </TouchableOpacity>
+                    </View>
                 </View>
             )
         }
@@ -158,26 +194,83 @@ export default class AddRentScreen extends Component<any> {
             return (
                 <View style={styles.container}>
                     <View style={{ height: height, width: width, padding: 15, backgroundColor: 'white' }}>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={() => this.setState({ isOpenPrestaciones: false })}>
                             <Image source={require('../../assets/close.png')} style={{ width: 30, height: 30 }} />
                         </TouchableOpacity>
                         <View style={{ marginTop: 15 }}>
                             <Text style={{ fontFamily: 'font2', fontSize: 20 }}>Seleccioná las prestaciones de tu propiedad</Text>
                         </View>
-                        <View style={styles.card}>
-                            <Text>Hola :D</Text>
-                            <CheckBox
-                                title="Press me"
-                                checked={true}
-                                onPress={() => alert("HOLA :D")}
-                            />
-                        </View>
+                        <ScrollView style={{ height: 500, marginBottom: 75, }}>
+
+                            {this.state.prestaciones.map(element => {
+                                return (
+                                    <CheckBox
+                                        title={element.name}
+                                        checked={element.check}
+                                        onPress={() => { element.check = !element.check; this.forceUpdate() }}
+                                    />
+                                )
+                            })}
+                        </ScrollView>
+
+                        <TouchableOpacity style={{
+                            position: 'absolute', height: 50, bottom: 25, width: width - 30, left: 15, backgroundColor: '#3483fa', justifyContent: 'center',
+                            borderRadius: 5,
+                            alignItems: 'center',
+                        }}
+                            onPress={() => this.setState({ isOpenPrestaciones: false })}
+                        >
+                            <Text style={{ fontFamily: 'font2', color: 'white' }}>Guardar Prestaciones</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
             )
         }
     }
 
+
+    showNormas = () => {
+        if (this.state.isOpenNormas) {
+            return (
+                <View style={styles.container}>
+                    <View style={{ height: height, width: width, padding: 15, backgroundColor: 'white' }}>
+                        <TouchableOpacity onPress={() => this.setState({ isOpenNormas: false })}>
+                            <Image source={require('../../assets/close.png')} style={{ width: 30, height: 30 }} />
+                        </TouchableOpacity>
+                        <View style={{ marginTop: 15 }}>
+                            <Text style={{ fontFamily: 'font2', fontSize: 20 }}>Seleccioná las prestaciones de tu propiedad</Text>
+                        </View>
+                        <ScrollView style={{ height: 500, marginBottom: 75, }}>
+
+                            {this.state.normas.map(element => {
+                                return (
+                                    <CheckBox
+                                        title={element.name}
+                                        checked={element.check}
+                                        onPress={() => { element.check = !element.check; this.forceUpdate() }}
+                                    />
+                                )
+                            })}
+                        </ScrollView>
+
+                        <TouchableOpacity style={{
+                            position: 'absolute', height: 50, bottom: 25, width: width - 30, left: 15, backgroundColor: '#3483fa', justifyContent: 'center',
+                            borderRadius: 5,
+                            alignItems: 'center',
+                        }}
+                            onPress={() => this.setState({ isOpenNormas: false })}
+                        >
+                            <Text style={{ fontFamily: 'font2', color: 'white' }}>Guardar Normas</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            )
+        }
+    }
+
+    toggleNormas() {
+        this.setState({ isOpenNormas: !this.state.isOpenNormas });
+    }
 
     reloadComponent = () => {
         if (this.state.saveTemp[0] !== undefined) {
@@ -196,7 +289,7 @@ export default class AddRentScreen extends Component<any> {
             });
         } else {
             this._getLocationAsync();
-
+            // @ts-ignore
             Geocoder.init("AIzaSyDA0NuvPpBCOw5WIOiZ4VS64Od1LocV0XA", { language: 'es' }); // use a valid API key
 
         }
@@ -214,13 +307,28 @@ export default class AddRentScreen extends Component<any> {
         this.setState({ region: { latitude: region.coords.latitude, longitude: region.coords.longitude, longitudeDelta: 0.01, latitudeDelta: 0.01 } })
     };
 
-    async componentDidMount() {
+    backHandler;
+    componentDidMount() {
+        this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+            if (this.state.step !== 1) {
+                let aux = this.state.step - 1;
+                this.setState({ step: aux });
+                return true;
+            } else {
+                this.props.navigation.navigate('Home');
+                return true;
+            }
+
+        });
         this.getPermissionAsync();
         this._getPhotosAsync().catch(error => {
             console.error(error);
         });
     }
 
+    componentWillUnmount() {
+        this.backHandler.remove();
+    }
 
     async _getPhotosAsync() {
         let photos
@@ -251,6 +359,24 @@ export default class AddRentScreen extends Component<any> {
         }
     }
 
+    countPrestaciones = () => {
+        let contador = 0;
+        this.state.prestaciones.map(element => {
+            if (element.check) {
+                contador++;
+            }
+        });
+        return contador;
+    }
+    countNormas = () => {
+        let contador = 0;
+        this.state.normas.map(element => {
+            if (element.check) {
+                contador++;
+            }
+        });
+        return contador;
+    }
     calculateStep = () => {
         switch (this.state.step) {
             case 1:
@@ -281,14 +407,14 @@ export default class AddRentScreen extends Component<any> {
                     </View>)
             case 2:
                 return (
-                    <View style={{ marginTop: 15 }}>
+                    <View style={{ marginTop: 15, marginBottom: 40 }}>
                         <View>
                             <Text style={{ fontFamily: 'font3', fontSize: 21, alignSelf: 'center' }}>¡Cargaste las fotos con exito!</Text>
                             <Text style={{ fontFamily: 'font1', fontSize: 18, marginTop: 40 }}>Ahora contanos donde se ubica</Text>
                         </View>
                         <View style={{ marginTop: 15, position: 'relative', }}>
                             <TouchableOpacity style={styles.inputBuscador} onPress={() => this.toggleMap()}>
-                                <Text>{this.state.ubication === null ? 'Av. Ejemplo 1234' : this.state.ubication}</Text>
+                                <Text style={{ paddingRight: 25 }}>{this.state.ubication === null ? 'Av. Ejemplo 1234' : this.state.ubication}</Text>
                                 <Image source={require('../../assets/gps.png')} style={{ width: 25, height: 25, position: 'absolute', right: 15, top: 13 }} />
                             </TouchableOpacity>
                         </View>
@@ -297,10 +423,38 @@ export default class AddRentScreen extends Component<any> {
                             <Text style={{ fontFamily: 'font1', fontSize: 18 }}>¿Cuantos mt2 tiene tu propiedad?</Text>
                         </View>
                         <View style={{ marginTop: 15, position: 'relative' }}>
-                            <TextInput style={styles.inputBuscador} placeholderTextColor="#000000" placeholder="0" keyboardType='number-pad' value={this.state.mt2} onChangeText={mt2 => this.setState({ mt2: mt2 })} />
+                            <TextInput style={styles.inputBuscador} placeholderTextColor="#000000" placeholder="0" keyboardType='phone-pad' value={this.state.mt2} onChangeText={mt2 => this.setState({ mt2: mt2 })} />
                             <Text style={{ position: 'absolute', right: 15, top: 17 }}>mt²</Text>
                         </View>
 
+                        <View style={{ marginTop: 40 }}>
+                            <Text style={{ fontFamily: 'font1', fontSize: 18 }}>¿Que tipo de propiedad es?</Text>
+                        </View>
+                        <View style={{ marginTop: 15, position: 'relative' }}>
+                            <RNPickerSelect
+                                style={styles.inputBuscador}
+                                placeholder={{
+                                    label: 'Hacemé click para seleccionar el tipo de propiedad',
+                                    value: null,
+                                    color: '#9EA0A4',
+                                }}
+                                onValueChange={(value) => this.setState({ tipoPropiedad: value })}
+                                items={[
+                                    { label: 'Departamento', value: 'Departamento' },
+                                    { label: 'Habitacion', value: 'Habitacion' },
+                                    { label: 'PH', value: 'PH' },
+                                    { label: 'Quinta', value: 'Quinta' },
+                                    { label: 'Hotel', value: 'Hotel' },
+                                ]}
+                            />
+                        </View>
+
+                        <View style={{ marginTop: 40 }}>
+                            <Text style={{ fontFamily: 'font1', fontSize: 18 }}>Si tu propiedad esta en un edificio, ¿Que piso es?</Text>
+                        </View>
+                        <View style={{ marginTop: 15, position: 'relative' }}>
+                            <TextInput style={styles.inputBuscador} placeholderTextColor="#000000" placeholder="0" keyboardType='phone-pad' value={this.state.piso} onChangeText={data => this.setState({ piso: data })} />
+                        </View>
                         <View style={{ marginTop: 40 }}>
                             <Text style={{ fontFamily: 'font1', fontSize: 18 }}>¿Que prestaciones tiene tu propiedad?</Text>
                             <TouchableOpacity style={{
@@ -321,7 +475,9 @@ export default class AddRentScreen extends Component<any> {
                                     position: 'absolute', justifyContent: 'center',
                                     alignItems: 'center', left: 10, top: 7, height: 30, width: 30, borderRadius: 50, backgroundColor: '#ff5d5a'
                                 }}>
-                                    <Text style={{ color: 'white', fontFamily: 'font2', position: 'relative', top: 1 }}>0</Text>
+                                    <Text style={{ color: 'white', fontFamily: 'font2', position: 'relative', top: 1 }}>
+                                        {this.countPrestaciones()}
+                                    </Text>
                                 </View>
                                 <Text style={{ fontFamily: 'font3', fontSize: 16, color: '#ff5d5a', position: 'relative', top: 1 }}>Seleccionar las prestaciones </Text>
                             </TouchableOpacity>
@@ -341,12 +497,15 @@ export default class AddRentScreen extends Component<any> {
                                 position: 'relative',
                                 elevation: 3,
                                 marginTop: 10
-                            }}>
+                            }}
+                                onPress={() => this.toggleNormas()}>
                                 <View style={{
                                     position: 'absolute', justifyContent: 'center',
                                     alignItems: 'center', left: 10, top: 7, height: 30, width: 30, borderRadius: 50, backgroundColor: '#3483fa'
                                 }}>
-                                    <Text style={{ color: 'white', fontFamily: 'font2', position: 'relative', top: 1 }}>0</Text>
+                                    <Text style={{ color: 'white', fontFamily: 'font2', position: 'relative', top: 1 }}>
+                                        {this.countNormas()}
+                                    </Text>
                                 </View>
                                 <Text style={{ fontFamily: 'font3', fontSize: 16, color: '#3483fa', position: 'relative', top: 1 }}>Seleccionar las normas </Text>
                             </TouchableOpacity>
@@ -354,6 +513,126 @@ export default class AddRentScreen extends Component<any> {
                     </View>
 
                 );
+            case 3:
+                return (
+
+                    <View>
+                        <View>
+                            <Text style={{ fontFamily: 'font3', fontSize: 21, alignSelf: 'center', marginTop: 10 }}>¡Ya estás por publicar!</Text>
+                            <Text style={{ fontFamily: 'font1', fontSize: 18, marginTop: 10 }}>Falta lo más importante, ¿Cuanto cuesta por día?</Text>
+                        </View>
+                        <View style={{ marginTop: 15, position: 'relative' }}>
+                            <TextInput style={styles.inputBuscador} placeholderTextColor="#000000" placeholder="0" keyboardType='phone-pad' value={this.state.precio} onChangeText={data => this.setState({ precio: data })} />
+                            <Text style={{ position: 'absolute', right: 15, top: 17 }}>ARS</Text>
+                        </View>
+                        <View>
+                            <Text style={{ fontFamily: 'font3', fontSize: 21, alignSelf: 'center', marginTop: 40 }}>¿Qué exposicion queres?</Text>
+                        </View>
+                        <View style={{ flex: 1, flexDirection: 'row', marginTop: 20 }}>
+                            <TouchableOpacity
+                                onPress={() => this.setState({ plan: 0 })}
+                                style={{
+                                    height: 90, flex: 0.5, backgroundColor: 'white', borderRadius: 4, shadowColor: "#000",
+                                    justifyContent: 'center',
+                                    shadowOffset: {
+                                        width: 0,
+                                        height: 2,
+                                    },
+                                    shadowOpacity: 0.25,
+                                    shadowRadius: 3.84,
+                                    elevation: 5,
+                                    marginRight: 10,
+                                    marginLeft: 10,
+                                    marginBottom: 10,
+                                }}>
+                                <View style={{
+                                    position: 'absolute', left: 0, top: 0, backgroundColor: (this.state.plan === 0) ? '#3483fa' : '#eee',
+                                    width: 20, height: 90, borderTopLeftRadius: 4, borderBottomLeftRadius: 4
+                                }} />
+
+                                <View style={{ position: 'relative', left: 30 }}>
+                                    <Text style={{ fontFamily: 'font2', fontSize: 20 }} >
+                                        Plan Silver
+                                    </Text>
+                                    <Text style={{ marginTop: 2 }}>
+                                        Exposicion normal
+                                    </Text>
+                                    <Text style={{ marginTop: 5 }}>
+                                        13% Comision
+                                    </Text>
+                                </View>
+
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={() => this.setState({ plan: 1 })}
+                                style={{
+                                    height: 90, flex: 0.5, backgroundColor: 'white', borderRadius: 4, shadowColor: "#000",
+                                    shadowOffset: {
+                                        width: 0,
+                                        height: 2,
+                                    },
+                                    shadowOpacity: 0.25,
+                                    shadowRadius: 3.84,
+                                    justifyContent: 'center',
+                                    elevation: 5,
+                                    marginBottom: 10,
+                                    marginRight: 10,
+                                    marginLeft: 10
+                                }}>
+                                <View style={{
+                                    position: 'absolute', left: 0, top: 0, backgroundColor: (this.state.plan !== 0) ? '#3483fa' : '#eee',
+                                    width: 20, height: 90, borderTopLeftRadius: 4, borderBottomLeftRadius: 4
+                                }} />
+
+                                <View style={{ position: 'relative', left: 30 }}>
+                                    <Text style={{ fontFamily: 'font2', fontSize: 20 }} >
+                                        Plan Gold
+                                    </Text>
+                                    <Text style={{ marginTop: 2 }}>
+                                        Exposicion normal
+                                   </Text>
+                                    <Text style={{ marginTop: 5 }}>
+                                        17% Comision
+                                    </Text>
+                                </View>
+
+                            </TouchableOpacity>
+                        </View>
+                        <View style={{ marginTop: 20, marginBottom: 20 }}>
+                            <Text style={{ fontFamily: 'font3', fontSize: 21, alignSelf: 'center', marginTop: 40 }}>
+                                Resultados de tus beneficios
+                            </Text>
+                            <Text style={{ fontFamily: 'font3', textAlign: 'center', fontSize: 16, color: '#3b3b3b', alignSelf: 'center', marginTop: 5 }}>
+                                Utilizá los siguientes calculos para buscar el beneficio que buscas
+                            </Text>
+                        </View>
+                        <View>
+                            <View style={{ flex: 1, flexDirection: 'row' }}>
+                                <Text style={{ flex: 0.7, color: '#3483fa', fontSize: 17, fontFamily: 'font3' }}>Precio: </Text>
+                                <Text style={{ flex: 0.3, color: '#3483fa', fontSize: 17, fontFamily: 'font3' }}>${this.state.precio}</Text>
+                            </View>
+                            <View style={{ flex: 1, flexDirection: 'row' }}>
+                                <Text style={{ flex: 0.7, fontSize: 17, fontFamily: 'font3' }}>Comisión del {(this.state.plan === 0) ? '13%' : '17%'}: </Text>
+                                <Text style={{ flex: 0.3, fontSize: 17, fontFamily: 'font3' }}>${Math.round((this.state.plan === 0) ? (this.state.precio * 13 / 100) : this.state.precio * 17 / 100)}</Text>
+                            </View>
+                            <View style={{ flex: 1, flexDirection: 'row' }}>
+                                <Text style={{ flex: 0.7, fontSize: 17, fontFamily: 'font3' }}>Gastos de limpieza (Por alquiler): </Text>
+                                <Text style={{ flex: 0.3, fontSize: 17, fontFamily: 'font3' }}>$170</Text>
+                            </View>
+                            <View style={{ flex: 1, flexDirection: 'row' }}>
+
+                                <Text style={{ flex: 0.7, color: '#39b54a', fontSize: 17, fontFamily: 'font3' }}>Tu beneficio por día: </Text>
+                                <Text style={{ flex: 0.3, color: '#39b54a', fontSize: 17, fontFamily: 'font3' }}>${Math.round(this.state.precio - ((this.state.plan === 0) ? this.state.precio * 13 / 100 : this.state.precio * 17 / 100))}</Text>
+                            </View>
+                            <View style={{ flex: 1, flexDirection: 'row' }}>
+
+                                <Text style={{ flex: 0.7, color: '#39b54a', fontSize: 17, fontFamily: 'font3' }}>Tu beneficio aproximado por mes: </Text>
+                                <Text style={{ flex: 0.3, color: '#39b54a', fontSize: 17, fontFamily: 'font3' }}>${Math.round((this.state.precio - ((this.state.plan === 0) ? this.state.precio * 13 / 100 : this.state.precio * 17 / 100)) * 29)}</Text>
+                            </View>
+
+                        </View>
+                    </View>
+                )
         }
     }
 
@@ -392,22 +671,32 @@ export default class AddRentScreen extends Component<any> {
         this.setState({ isOpenPrestaciones: !this.state.isOpenPrestaciones });
     }
 
+    componentDidUpdate() {
+        // if (this.state.scrollRef !== null && this.state.toTop === false) {
+        //     console.log(this.state.scrollRef);
+        //     this.state.scrollRef.scrollTo({x:0,y:0, animated:true})
+        // }
+    }
+
     render() {
+        let listView;
         let widthProgress;
         let titleText;
         let { image, step } = this.state;
         switch (step) {
             case 1:
                 widthProgress = 40;
-                titleText = "¡Seleccioná las fotos de tu propiedad!"
+                titleText = "1. ¡Seleccioná las fotos de tu propiedad!"
                 break;
             case 2:
                 widthProgress = 140
-                titleText = "Contanos un poco sobre tu propiedad"
+                titleText = "2. Contanos un poco sobre tu propiedad"
 
                 break;
             case 3:
-                widthProgress = 190;
+                widthProgress = 230;
+                titleText = "3. Precio y beneficios"
+
                 break;
         }
         return (
@@ -458,16 +747,25 @@ export default class AddRentScreen extends Component<any> {
 
                     <View style={{ paddingLeft: 15, paddingRight: 15, paddingTop: 15, flex: 1, flexDirection: 'row' }}>
 
-                        {
-                            (step === 1) ?
-                                <ScrollView style={{ width: width, height: height - ((this.state.image || this.state.saveTemp[0] !== undefined) ? (width > 500) ? 680 : (width + 180) : 180) }}>
+                        {/* {
+                            (step === 1) ? */}
+                        <ScrollView
+                            ref={ref => listView = ref}
+                            onContentSizeChange={() => {
+                                listView.scrollTo({ y: 0 })
+                            }}
+                            style={
+                                (step === 1) ?
+                                    { width: width, height: height - ((this.state.image || this.state.saveTemp[0] !== undefined) ? (width > 500) ? 680 : (width + 180) : 180) }
+                                    : { width: width, height: height - 175 }}
+                        >
+                            {this.calculateStep()}
+                        </ScrollView>
+                        {/* :
+                                <ScrollView scrollsToTop={true} style={{ width: width, height: height - 200 }}>
                                     {this.calculateStep()}
                                 </ScrollView>
-                                :
-                                <ScrollView style={{ width: width, height: height - 200 }}>
-                                    {this.calculateStep()}
-                                </ScrollView>
-                        }
+                        } */}
                     </View>
                 </View>
 
@@ -477,13 +775,14 @@ export default class AddRentScreen extends Component<any> {
                         borderTopRightRadius: 5
                     }}
                     >
-                        Siguiente
+                        {step === 3 ? '¡Publicar!' : 'Siguiente'}
                     </Text>
                 </TouchableOpacity>
                 {this.showMap()}
                 {this.showPrestaciones()}
+                {this.showNormas()}
 
-            </View>
+            </View >
         );
     }
 };
