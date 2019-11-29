@@ -34,7 +34,9 @@ export default class AddRentScreen extends Component<any> {
         scrollRef: null,
         toTop: false,
         plan: 0, //add to product,
-        precio: 0,
+        precio: '0',
+        descripcion:'',
+        title: null,
         prestaciones: [ // add to product
             { name: 'Wifi', check: false },
             { name: 'TV', check: false },
@@ -313,7 +315,6 @@ export default class AddRentScreen extends Component<any> {
             if (this.state.step !== 1) {
                 let aux = this.state.step - 1;
                 this.setState({ step: aux });
-                alert(this.state.step);
                 return true;
             } else {
                 this.props.navigation.navigate('Home');
@@ -405,7 +406,7 @@ export default class AddRentScreen extends Component<any> {
                                     onPress={() => this._pickImage()}
                                     style={styles.btnVerMas}
                                 >
-                                    <Text style={{ color: 'white', fontFamily:'font2' }}>VER MÁS FOTOS</Text>
+                                    <Text style={{ color: 'white', fontFamily: 'font2' }}>VER MÁS FOTOS</Text>
                                 </TouchableOpacity>
 
                                 : null
@@ -447,6 +448,7 @@ export default class AddRentScreen extends Component<any> {
                                 }}
                                 onValueChange={(value) => this.setState({ tipoPropiedad: value })}
                                 items={[
+                                    { label: 'Casa', value: 'Casa' },
                                     { label: 'Departamento', value: 'Departamento' },
                                     { label: 'Habitacion', value: 'Habitacion' },
                                     { label: 'PH', value: 'PH' },
@@ -526,12 +528,26 @@ export default class AddRentScreen extends Component<any> {
                     <View>
                         <View>
                             <Text style={{ fontFamily: 'font3', fontSize: 21, alignSelf: 'center', marginTop: 10 }}>¡Ya estás por publicar!</Text>
-                            <Text style={{ fontFamily: 'font1', fontSize: 18, marginTop: 10 }}>Falta lo más importante, ¿Cuanto cuesta por día?</Text>
+                            <Text style={{ fontFamily: 'font1', fontSize: 18, marginTop: 10, textAlign: 'center' }}>Falta lo más importante, ¿Cuanto cuesta por día?</Text>
                         </View>
                         <View style={{ marginTop: 15, position: 'relative' }}>
                             <TextInput style={styles.inputBuscador} placeholderTextColor="#000000" placeholder="0" keyboardType='phone-pad' value={this.state.precio} onChangeText={data => this.setState({ precio: data })} />
                             <Text style={{ position: 'absolute', right: 15, top: 17 }}>ARS</Text>
                         </View>
+
+                        <View style={{ marginTop: 20 }}>
+                            <Text style={{ fontFamily: 'font3', fontSize: 21, alignSelf: 'center', marginTop: 10, marginBottom: 10 }}>Ponele un titulo al anuncio</Text>
+                            <TextInput style={styles.inputBuscador} placeholderTextColor="#000000" placeholder="Mi departamento iluminoso" keyboardType='default' value={this.state.title} onChangeText={data => this.setState({ title: data })} />
+                        </View>
+
+                        <View style={{ marginTop: 20 }}>
+                            <Text style={{ fontFamily: 'font3', fontSize: 21, alignSelf: 'center', marginTop: 10, marginBottom: 10 }}>Describi un poco tu alquiler</Text>
+
+                            <TextInput style={styles.inputBuscador2} placeholderTextColor="#000000" placeholder="Mi departamento iluminoso" multiline={true}
+                                numberOfLines={4}
+                                keyboardType='default' value={this.state.descripcion} onChangeText={data => this.setState({ descripcion: data })} />
+                        </View>
+
                         <View>
                             <Text style={{ fontFamily: 'font3', fontSize: 21, alignSelf: 'center', marginTop: 40 }}>¿Qué exposicion queres?</Text>
                         </View>
@@ -613,28 +629,29 @@ export default class AddRentScreen extends Component<any> {
                                 Utilizá los siguientes calculos para buscar el beneficio que buscas
                             </Text>
                         </View>
-                        <View>
+                        <View style={{
+                        }}>
                             <View style={{ flex: 1, flexDirection: 'row' }}>
                                 <Text style={{ flex: 0.7, color: '#3483fa', fontSize: 17, fontFamily: 'font3' }}>Precio: </Text>
-                                <Text style={{ flex: 0.3, color: '#3483fa', fontSize: 17, fontFamily: 'font3' }}>${this.state.precio}</Text>
+                                <Text style={{ flex: 0.3, color: '#3483fa', fontSize: 17, fontFamily: 'font3', textAlign: 'right' }}>${this.state.precio}</Text>
                             </View>
                             <View style={{ flex: 1, flexDirection: 'row' }}>
                                 <Text style={{ flex: 0.7, fontSize: 17, fontFamily: 'font3' }}>Comisión del {(this.state.plan === 0) ? '13%' : '17%'}: </Text>
-                                <Text style={{ flex: 0.3, fontSize: 17, fontFamily: 'font3' }}>${Math.round((this.state.plan === 0) ? (this.state.precio * 13 / 100) : this.state.precio * 17 / 100)}</Text>
+                                <Text style={{ flex: 0.3, fontSize: 17, fontFamily: 'font3', textAlign: 'right' }}>${Math.round((this.state.plan === 0) ? (Number(this.state.precio) * 13 / 100) : Number(this.state.precio) * 17 / 100)}</Text>
                             </View>
                             <View style={{ flex: 1, flexDirection: 'row' }}>
                                 <Text style={{ flex: 0.7, fontSize: 17, fontFamily: 'font3' }}>Gastos de limpieza (Por alquiler): </Text>
-                                <Text style={{ flex: 0.3, fontSize: 17, fontFamily: 'font3' }}>$170</Text>
+                                <Text style={{ flex: 0.3, fontSize: 17, fontFamily: 'font3', justifyContent: 'center', alignItems: 'center', textAlign: 'right' }}>$170</Text>
                             </View>
                             <View style={{ flex: 1, flexDirection: 'row' }}>
 
                                 <Text style={{ flex: 0.7, color: '#39b54a', fontSize: 17, fontFamily: 'font3' }}>Tu beneficio por día: </Text>
-                                <Text style={{ flex: 0.3, color: '#39b54a', fontSize: 17, fontFamily: 'font3' }}>${Math.round(this.state.precio - ((this.state.plan === 0) ? this.state.precio * 13 / 100 : this.state.precio * 17 / 100))}</Text>
+                                <Text style={{ flex: 0.3, color: '#39b54a', fontSize: 17, fontFamily: 'font3', textAlign: 'right' }}>${Math.round(Number(this.state.precio) - ((this.state.plan === 0) ? Number(this.state.precio) * 13 / 100 : Number(this.state.precio) * 17 / 100))}</Text>
                             </View>
                             <View style={{ flex: 1, flexDirection: 'row' }}>
 
                                 <Text style={{ flex: 0.7, color: '#39b54a', fontSize: 17, fontFamily: 'font3' }}>Tu beneficio aproximado por mes: </Text>
-                                <Text style={{ flex: 0.3, color: '#39b54a', fontSize: 17, fontFamily: 'font3' }}>${Math.round((this.state.precio - ((this.state.plan === 0) ? this.state.precio * 13 / 100 : this.state.precio * 17 / 100)) * 29)}</Text>
+                                <Text style={{ flex: 0.3, color: '#39b54a', fontSize: 17, fontFamily: 'font3', textAlign: 'right' }}>${Math.round((Number(this.state.precio) - ((this.state.plan === 0) ? Number(this.state.precio) * 13 / 100 : Number(this.state.precio) * 17 / 100)) * 29)}</Text>
                             </View>
 
                         </View>
@@ -674,6 +691,53 @@ export default class AddRentScreen extends Component<any> {
         }
     }
 
+    nextStep = () => {
+        if (this.state.step !== 3) {
+            this.setState({ step: this.state.step + 1 });
+        } else {
+            /*
+             saveTemp: [],   //add to product
+                 ubication: null,   //add to product
+                     ubicationGPS: null,//add to product
+                         mt2: null,//add to product
+                             tipoPropiedad: null, //add to product
+                                 piso: null, //add to product
+                                     // checkin,checkout, //add to product
+                                     scrollRef: null,
+                                         toTop: false,
+                                             plan: 0, //add to product,
+                                                 precio: 0,
+                                                     prestaciones: [ // add to product
+                                                         { name: 'Wifi', check: false },
+                                                         { name: 'TV', check: false },
+                                                         { name: 'Aire Acondicionado', check: false },
+                                                         { name: 'Estrenar', check: false },
+                                                         { name: 'Estacionamiento', check: false },
+                                                         { name: 'Ascensor', check: false },
+                                                         { name: 'Lavadero', check: false },
+                                                         { name: 'Secadora', check: false },
+                                                         { name: 'Calefacción', check: false },
+                                                         { name: 'Patio', check: false },
+                                                         { name: 'Balcón', check: false },
+                                                         { name: 'Terraza', check: false },
+                                                         { name: 'Lavavajillas', check: false },
+                                                         { name: 'Vista exterior', check: false },
+                                                         { name: 'Pileta', check: false },
+                                                         { name: 'Amueblado', check: false },
+                                                         { name: 'Encargado', check: false },
+                                                     ],
+                                                         normas: [
+                                                             { name: 'No se puede fumar', check: false },
+                                                             { name: 'No se permiten mascotas', check: false },
+                                                             { name: 'No se permite hacer fiestas', check: false },
+                                                         ],
+                                                         */
+            const productToSave = {
+
+            }
+        }
+
+    }
     togglePrestaciones() {
         this.setState({ isOpenPrestaciones: !this.state.isOpenPrestaciones });
     }
@@ -776,7 +840,7 @@ export default class AddRentScreen extends Component<any> {
                     </View>
                 </View>
 
-                <TouchableOpacity style={styles.btnSiguiente} onPress={() => this.setState({ step: step + 1 })}>
+                <TouchableOpacity style={styles.btnSiguiente} onPress={() => this.nextStep()}>
                     <Text style={{
                         color: 'white', fontSize: 20, fontFamily: 'font3', borderTopLeftRadius: 5,
                         borderTopRightRadius: 5
@@ -854,6 +918,13 @@ const styles = StyleSheet.create({
     },
     inputBuscador: {
         height: 50,
+        width: width - 30,
+        padding: 15,
+        backgroundColor: '#eee',
+        borderRadius: 5,
+    },
+    inputBuscador2: {
+        minHeight: 50,
         width: width - 30,
         padding: 15,
         backgroundColor: '#eee',
