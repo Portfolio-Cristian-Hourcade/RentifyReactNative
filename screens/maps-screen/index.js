@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Platform, Text, View, TextInput, Image, ImageBackground, TouchableOpacity, StatusBar } from 'react-native';
+import { StyleSheet, Platform, Text, View, TextInput, Image, ImageBackground, TouchableOpacity, StatusBar, AsyncStorage } from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
 import StylesGlobal from '../../styles/styles';
 import * as Font from "expo-font";
@@ -19,9 +19,10 @@ export default class MapsScreen extends Component<any> {
         location: null,
         errorMessage: null,
         marker: null,
+        listProducts: null,
     };
 
-    componentWillMount() {
+    async componentWillMount() {
         if (Platform.OS === 'android' && !Constants.isDevice) {
             this.setState({
                 errorMessage: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
@@ -29,6 +30,15 @@ export default class MapsScreen extends Component<any> {
         } else {
             this._getLocationAsync();
         }
+
+        let x = await AsyncStorage.getItem('Product');
+
+        console.log('Datos de storage')
+
+        this.setState({
+            listProducts: JSON.parse(x)
+        });
+
     }
 
     _getLocationAsync = async () => {
@@ -67,12 +77,18 @@ export default class MapsScreen extends Component<any> {
                         }}
                         customMapStyle={generateStyle}
                     >
-                       
-                        <Marker coordinate={{ latitude: -34.55, longitude: -58.45 }}>
-                            <View style={{ backgroundColor: '#ff5d5a', borderRadius: 3, paddingTop: 4, paddingBottom: 4, paddingLeft: 10, paddingRight: 10, elevation: 10 }}>
-                                <Text style={{ fontFamily: 'font2', color: 'white', fontSize: 12 }}>$730 / Día</Text>
-                            </View>
-                        </Marker>
+                        {
+                            (this.state.listProducts !== null) ?
+                                this.state.listProducts.map(element => {
+                                    return(<Marker coordinate={{ latitude: element.ubicacionGPS.latitude, longitude: element.ubicacionGPS.longitude }} style={{elevation: 10}} onPress={() => {alert('Hola :D')}}>
+                                        <View style={{ backgroundColor: '#ff5d5a', borderRadius: 3, paddingTop: 4, paddingBottom: 4, paddingLeft: 10, paddingRight: 10, elevation: 10 }}>
+                                            <Text style={{ fontFamily: 'font2', color: 'white', fontSize: 12 }}>${element.price} / Día</Text>
+                                        </View>
+                                    </Marker>)
+                                }) : null
+                        }
+
+
                         <Marker coordinate={this.state.marker}>
                             <View style={{ backgroundColor: '#4b96f3', borderRadius: 50, width: 20, height: 20, elevation: 10 }}>
                             </View>
@@ -81,10 +97,10 @@ export default class MapsScreen extends Component<any> {
 
 
                     <View style={{ position: 'absolute', left: 5, top: 5, padding: 10, elevation: 9 }}>
-                            <TouchableOpacity style={{ backgroundColor: 'white', borderRadius: 50, width: 50, height: 50 }} onPress={() => this.props.navigation.navigate('Home')}>
-                                <Image source={require('../../assets/close.png')} style={{ height: 25, width: 25, position: 'relative', left: 12, top: 12 }} />
-                            </TouchableOpacity>
-                        </View>
+                        <TouchableOpacity style={{ backgroundColor: 'white', borderRadius: 50, width: 50, height: 50 }} onPress={() => this.props.navigation.navigate('Home')}>
+                            <Image source={require('../../assets/close.png')} style={{ height: 25, width: 25, position: 'relative', left: 12, top: 12 }} />
+                        </TouchableOpacity>
+                    </View>
                 </View>
             );
         }

@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { StyleSheet, Platform, Text, TextInput, View, TouchableOpacity, Image, ImageBackground, Button, ScrollView, StatusBar } from 'react-native';
+import { StyleSheet, Platform, Text, TextInput, View, TouchableOpacity, Image, ImageBackground, Button, ScrollView, StatusBar, AsyncStorage } from 'react-native';
 
 import { LogOut } from '../../utilities/FirebaseModule';
+
 
 import StylesGlobal from '../../styles/styles';
 import Carousel from 'react-native-snap-carousel';
@@ -14,11 +15,36 @@ import CardPropiedadHome from '../../components/Cards/cardPropiedadHome';
 import Sidebar from '../../components/Sidebar';
 import NavbarComponent from '../../navigation/Navbar';
 import { Review } from '../../models/Review';
+import { getProducts } from '../../utilities/ProductsModule';
+import Spinner from 'react-native-loading-spinner-overlay';
 var width = Dimensions.get('window').width - 30; //full width
 
 export default class HomeScreen extends Component<any> {
 
+    state = {
+        listProducts: null,
+    }
+
+
+    async componentDidMount() {
+        await this.getListProduct();
+    }
+
+    async getListProduct() {
+        await getProducts().then(data => {
+            this.setState({ listProducts: data });
+            AsyncStorage.setItem("Product", JSON.stringify(data));
+        });
+    }
+
+
     render() {
+        if (this.state.listProducts === null) {
+            return (<Spinner
+                visible={(this.state.listProducts === null) ? true : false}
+                textContent={''} />)
+        }
+
         return (
             <View style={{ backgroundColor: 'white', position: 'relative' }}>
 
@@ -65,20 +91,33 @@ export default class HomeScreen extends Component<any> {
 
                         <View style={{ flex: 1, flexDirection: 'row', marginLeft: 15, marginRight: 15, marginTop: 20 }}>
                             <View style={{ flex: 0.5, marginRight: 15, }}>
-                                <CardPropiedadHome />
+                                <CardPropiedadHome
+                                    images={this.state.listProducts[0].images}
+                                    title={this.state.listProducts[0].name} />
+
                             </View>
                             <View style={{ flex: 0.5 }}>
-                                <CardPropiedadHome />
+                            <CardPropiedadHome
+                                    images={this.state.listProducts[1].images}
+                                    title={this.state.listProducts[1].name} />
                             </View>
                         </View>
-                        <View style={{ flex: 1, flexDirection: 'row', marginLeft: 15, marginRight: 15, marginTop: 30 }}>
+
+                        <View style={{ flex: 1, flexDirection: 'row', marginLeft: 15, marginRight: 15, marginTop: 20 }}>
                             <View style={{ flex: 0.5, marginRight: 15, }}>
-                                <CardPropiedadHome />
+                            <CardPropiedadHome
+                                    images={this.state.listProducts[2].images}
+                                    title={this.state.listProducts[2].name} />
+
                             </View>
                             <View style={{ flex: 0.5 }}>
-                                <CardPropiedadHome />
+                            <CardPropiedadHome
+                                    images={this.state.listProducts[3].images}
+                                    title={this.state.listProducts[3].name} />
                             </View>
                         </View>
+
+
                         <View>
                             <TouchableOpacity style={styles.btnVerMas}>
                                 <Text style={{ color: 'white', fontFamily: 'font2', position: 'relative', top: 1 }}>VER MÁS ALQUILERES EN MI ZONA</Text>

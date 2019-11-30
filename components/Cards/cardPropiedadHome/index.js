@@ -12,30 +12,26 @@ export default class CardPropiedadHome extends Component<any> {
     // const { text, onPress} = props;
 
     state = {
-        activateSlide: null
+        activateSlide: null,
+        images: null,
     }
     constructor(props) {
         super(props);
     }
-    _renderItem({ item, index }, parallaxProps) {
-        let someLocalImage;
-        switch (item) {
-            case '1':
-                someLocalImage = require('../../../assets/dog.jpg');
-                break;
-            case '2':
-                someLocalImage = require('../../../assets/bg_app.jpg');
-                break;
-            default:
-                someLocalImage = require('../../../assets/example.jpg');
-                break;
-        }
 
+    componentDidMount() {
+        this.setState({ images: this.props.images })
+    }
+
+    _renderItem = ({ item, index }, parallaxProps) => {
+        if (this.state.images == null) {
+            return <Text>Loading</Text>
+        }
 
         return (
             <View style={styles.item}>
                 <ParallaxImage
-                    source={someLocalImage}
+                    source={{ uri: item }}
                     containerStyle={styles.imageContainer}
                     style={styles.image}
                     parallaxFactor={0.4}
@@ -45,22 +41,36 @@ export default class CardPropiedadHome extends Component<any> {
         );
     }
 
+    getArrayData = () => {
+        let aux = 1;
+        let array = [];
+        this.state.images.map(element => {
+            array.push(aux);
+            aux++;
+        });
+        return array;
+    }
 
     render() {
+        if (this.props === undefined) {
+            return <Text>Cargando..</Text>
+        }
         return (
             <View style={styles.card}>
                 <View style={styles.column}>
-                        <Carousel
-                            sliderWidth={(screenWidth/2)-20}
-                            sliderHeight={170}
-                            itemWidth={(screenWidth)}
-                            data={['1', '2', '3', '3']}
-                            renderItem={this._renderItem}
-                            hasParallaxImages={true}
-                        />
+                    <Carousel
+                        sliderWidth={(screenWidth / 2) - 20}
+                        sliderHeight={170}
+                        itemWidth={(screenWidth)}
+                        data={this.state.images}
+                        renderItem={({ item, index }, parallaxProps) => this._renderItem({ item, index }, parallaxProps)}
+                        hasParallaxImages={true}
+                    />
                     <View style={styles.col12}>
                         <Text style={styles.textWeight}> 20 Reseñas - Belgrano</Text>
-                        <Text style={styles.titleCard}>Excelente dpto en belgrano muy luminoso</Text>
+                        <Text style={styles.titleCard}>
+                            {this.props.title}
+                        </Text>
                         <Text style={styles.textWeight}> $750 por noche</Text>
                     </View>
 
@@ -90,24 +100,24 @@ const styles = StyleSheet.create({
         elevation: 4,
     },
     item: {
-        width: (screenWidth/2) - 22,
+        width: (screenWidth / 2) - 22,
         height: 170,
     },
     image: {
         ...StyleSheet.absoluteFillObject,
         resizeMode: 'cover',
     },
-    titleCard:{
-        fontFamily:'font2',
-        fontSize:16,
+    titleCard: {
+        fontFamily: 'font2',
+        fontSize: 16,
     },
     imageContainer: {
         flex: 1,
         marginBottom: Platform.select({ ios: 0, android: 1 }), // Prevent a random Android rendering issue
         backgroundColor: 'white',
         borderRadius: 3,
-        borderBottomRightRadius:0,
-        borderBottomLeftRadius:0
+        borderBottomRightRadius: 0,
+        borderBottomLeftRadius: 0
     },
     row: {
         flex: 1,
@@ -123,7 +133,7 @@ const styles = StyleSheet.create({
     },
     col12: {
         flex: 1,
-        padding:10
+        padding: 10
     },
     centerTop: {
         alignItems: "center",
@@ -148,8 +158,8 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
     textWeight: {
-        fontFamily:'font1',
-        fontSize:12
+        fontFamily: 'font1',
+        fontSize: 12
     }
 
 });

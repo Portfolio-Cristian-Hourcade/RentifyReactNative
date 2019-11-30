@@ -13,6 +13,8 @@ import * as Location from 'expo-location';
 import Geocoder from 'react-native-geocoding';
 import { CheckBox } from 'react-native-elements';
 import RNPickerSelect from 'react-native-picker-select';
+import { Product } from '../../models/Product';
+import { addProduct } from '../../utilities/ProductsModule';
 
 
 var width = Dimensions.get('window').width;
@@ -35,7 +37,7 @@ export default class AddRentScreen extends Component<any> {
         toTop: false,
         plan: 0, //add to product,
         precio: '0',
-        descripcion:'',
+        descripcion: '',
         title: null,
         prestaciones: [ // add to product
             { name: 'Wifi', check: false },
@@ -61,6 +63,7 @@ export default class AddRentScreen extends Component<any> {
             { name: 'No se permiten mascotas', check: false },
             { name: 'No se permite hacer fiestas', check: false },
         ],
+        loading: false,
         imageToSee: 40,
         hasCameraPermission: null,
         type: Camera.Constants.Type.back,
@@ -657,6 +660,25 @@ export default class AddRentScreen extends Component<any> {
                         </View>
                     </View>
                 )
+                break;
+            case 4:
+                return (
+                    <View style={{ marginTop: 20, marginBottom: 20 }}>
+                        <Image source={require('../../assets/icons/checked.png')} style={{ alignSelf: 'center', width: width / 3, height: width / 3 }} />
+                        <Text style={{ fontFamily: 'font3', fontSize: 21, alignSelf: 'center', marginTop: 40 }}>
+                            ¡Publicaste tu alquiler con exito!
+                            </Text>
+                        <Text style={{ fontFamily: 'font3', textAlign: 'center', fontSize: 16, color: '#3b3b3b', alignSelf: 'center', marginTop: 5 }}>
+                            Tu alquiler ya está disponible para todo el mundo
+                            </Text>
+                        <View >
+
+                            <TouchableOpacity style={styles.btnGoogle} onPress={() => this.props.navigation.navigate('Home')}>
+                                <Text style={{fontFamily:'font3', fontSize:16,color:'white'}}>VOLVER AL INICIO</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                );
         }
     }
 
@@ -695,46 +717,28 @@ export default class AddRentScreen extends Component<any> {
         if (this.state.step !== 3) {
             this.setState({ step: this.state.step + 1 });
         } else {
-            /*
-             saveTemp: [],   //add to product
-                 ubication: null,   //add to product
-                     ubicationGPS: null,//add to product
-                         mt2: null,//add to product
-                             tipoPropiedad: null, //add to product
-                                 piso: null, //add to product
-                                     // checkin,checkout, //add to product
-                                     scrollRef: null,
-                                         toTop: false,
-                                             plan: 0, //add to product,
-                                                 precio: 0,
-                                                     prestaciones: [ // add to product
-                                                         { name: 'Wifi', check: false },
-                                                         { name: 'TV', check: false },
-                                                         { name: 'Aire Acondicionado', check: false },
-                                                         { name: 'Estrenar', check: false },
-                                                         { name: 'Estacionamiento', check: false },
-                                                         { name: 'Ascensor', check: false },
-                                                         { name: 'Lavadero', check: false },
-                                                         { name: 'Secadora', check: false },
-                                                         { name: 'Calefacción', check: false },
-                                                         { name: 'Patio', check: false },
-                                                         { name: 'Balcón', check: false },
-                                                         { name: 'Terraza', check: false },
-                                                         { name: 'Lavavajillas', check: false },
-                                                         { name: 'Vista exterior', check: false },
-                                                         { name: 'Pileta', check: false },
-                                                         { name: 'Amueblado', check: false },
-                                                         { name: 'Encargado', check: false },
-                                                     ],
-                                                         normas: [
-                                                             { name: 'No se puede fumar', check: false },
-                                                             { name: 'No se permiten mascotas', check: false },
-                                                             { name: 'No se permite hacer fiestas', check: false },
-                                                         ],
-                                                         */
-            const productToSave = {
-
+            let productToPush: Product;
+            productToPush = {
+                images: [],
+                imagesTemp: this.state.saveTemp,
+                name: this.state.title,
+                description: this.state.descripcion,
+                price: Number(this.state.precio),
+                ubicacionGPS: this.state.ubicationGPS,
+                ubicacion: this.state.ubication,
+                type: this.state.tipoPropiedad,
+                pisoDp: this.state.piso,
+                plan: this.state.plan,
+                views: 0,
+                prestaciones: this.state.prestaciones,
+                normas: this.state.normas,
+                sales: 0,
+                keyOwner: "HAY QUEN CAMBIAR ESTO"
             }
+            this.setState({ loading: true });
+            addProduct(productToPush).then(data => {
+                this.setState({ loading: false, step: 4 });
+            });
         }
 
     }
@@ -767,11 +771,17 @@ export default class AddRentScreen extends Component<any> {
             case 3:
                 widthProgress = 230;
                 titleText = "3. Precio y beneficios"
-
+                break;
+            case 4:
+                widthProgress = 300;
+                titleText = "4. ¡Felicitaciones!"
                 break;
         }
         return (
             <View style={styles.splash}>
+                <Spinner
+                    visible={this.state.loading}
+                    textContent={''} />
                 <View style={styles.bar}>
                     <View>
                         <Text style={styles.title}>{titleText}</Text>
@@ -840,15 +850,27 @@ export default class AddRentScreen extends Component<any> {
                     </View>
                 </View>
 
-                <TouchableOpacity style={styles.btnSiguiente} onPress={() => this.nextStep()}>
-                    <Text style={{
-                        color: 'white', fontSize: 20, fontFamily: 'font3', borderTopLeftRadius: 5,
-                        borderTopRightRadius: 5
-                    }}
-                    >
-                        {step === 3 ? '¡Publicar!' : 'Siguiente'}
-                    </Text>
-                </TouchableOpacity>
+                {step !== 4 ?
+                    <TouchableOpacity style={styles.btnSiguiente} onPress={() => this.nextStep()}>
+                        <Text style={{
+                            color: 'white', fontSize: 20, fontFamily: 'font3', borderTopLeftRadius: 5,
+                            borderTopRightRadius: 5
+                        }}
+                        >
+                            {step === 3 ? '¡Publicar!' : 'Siguiente'}
+                        </Text>
+                    </TouchableOpacity>
+                    :
+                    <TouchableOpacity style={styles.btnSiguiente} onPress={() => alert("Todavia no funciona")}>
+                        <Text style={{
+                            color: 'white', fontSize: 20, fontFamily: 'font3', borderTopLeftRadius: 5,
+                            borderTopRightRadius: 5
+                        }}
+                        >
+                            ¡Ver mi publicación!
+                        </Text>
+                    </TouchableOpacity>}
+
                 {this.showMap()}
                 {this.showPrestaciones()}
                 {this.showNormas()}
@@ -915,6 +937,18 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 0,
         left: 0
+    },
+    btnGoogle: {
+        backgroundColor: '#3483fa',
+        borderRadius: 50,
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginLeft: 70,
+        marginRight: 70,
+        height: 45,
+        elevation:2,
+        marginTop:10
     },
     inputBuscador: {
         height: 50,
