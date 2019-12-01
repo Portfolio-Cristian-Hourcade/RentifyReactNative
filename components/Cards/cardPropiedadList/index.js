@@ -12,30 +12,26 @@ export default class CardPropiedadList extends Component<any> {
     // const { text, onPress} = props;
 
     state = {
-        activateSlide: null
+        activateSlide: null,
+        images: null,
     }
     constructor(props) {
         super(props);
     }
-    _renderItem({ item, index }, parallaxProps) {
-        let someLocalImage;
-        switch (item) {
-            case '1':
-                someLocalImage = require('../../../assets/dog.jpg');
-                break;
-            case '2':
-                someLocalImage = require('../../../assets/bg_app.jpg');
-                break;
-            default:
-                someLocalImage = require('../../../assets/example.jpg');
-                break;
-        }
 
+    componentDidMount() {
+        this.setState({ images: this.props.images })
+    }
+
+    _renderItem = ({ item, index }, parallaxProps) => {
+        if (this.state.images == null) {
+            return <Text>Loading</Text>
+        }
 
         return (
             <View style={styles.item}>
                 <ParallaxImage
-                    source={someLocalImage}
+                    source={{ uri: item }}
                     containerStyle={styles.imageContainer}
                     style={styles.image}
                     parallaxFactor={0.4}
@@ -45,23 +41,37 @@ export default class CardPropiedadList extends Component<any> {
         );
     }
 
+    getArrayData = () => {
+        let aux = 1;
+        let array = [];
+        this.state.images.map(element => {
+            array.push(aux);
+            aux++;
+        });
+        return array;
+    }
 
     render() {
+        if (this.props === undefined) {
+            return <Text>Cargando..</Text>
+        }
         return (
             <View style={styles.card}>
                 <View style={styles.column}>
                     <Carousel
-                        sliderWidth={screenWidth}
-                        sliderHeight={275}
-                        itemWidth={screenWidth}
-                        data={['1', '2', '3', '3']}
-                        renderItem={this._renderItem}
+                        sliderWidth={(screenWidth ) - 60}
+                        sliderHeight={170}
+                        itemWidth={(screenWidth)}
+                        data={this.props.images}
+                        renderItem={({ item, index }, parallaxProps) => this._renderItem({ item, index }, parallaxProps)}
                         hasParallaxImages={true}
                     />
                     <View style={styles.col12}>
-                        <Text style={styles.textWeight}> 22 Reseñas - Belgrano</Text>
-                        <Text style={styles.titleCard}>Excelente dpto en belgrano muy luminoso</Text>
-                        <Text style={styles.textWeight}> $750 por noche</Text>
+                        <Text style={styles.textWeight}> 20 Reseñas - Belgrano</Text>
+                        <Text style={styles.titleCard}>
+                            {this.props.title}
+                        </Text>
+        <Text style={styles.textWeight}> ${this.props.price} por noche</Text>
                     </View>
 
 
@@ -76,21 +86,22 @@ export default class CardPropiedadList extends Component<any> {
 const styles = StyleSheet.create({
     card: {
         backgroundColor: '#fff',
-
+        borderRadius: 3,
+        borderColor: 'transparent',
         borderColor: 'transparent',
         flex: 1,
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
-            height: 5,
+            height: 2,
         },
         shadowOpacity: 0.22,
         shadowRadius: 2.22,
-        elevation: 7,
+        elevation: 4,
     },
     item: {
-        width: screenWidth - 30,
-        height: 275,
+        width: screenWidth-60,
+        height: 170,
     },
     image: {
         ...StyleSheet.absoluteFillObject,
@@ -98,11 +109,11 @@ const styles = StyleSheet.create({
     },
     titleCard: {
         fontFamily: 'font2',
-        fontSize: 22,
+        fontSize: 16,
     },
     imageContainer: {
         flex: 1,
-        marginBottom: Platform.select({ ios: 0, android: 1 }), // Prevent a random Android rendering issue
+        // marginBottom: Platform.select({ ios: 0, android: 1 }), // Prevent a random Android rendering issue
         backgroundColor: 'white',
         borderRadius: 3,
         borderBottomRightRadius: 0,
@@ -116,13 +127,12 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
     },
-    propiedad: {
-        width: 60,
-        height: 60,
-    },
+    
     col12: {
+        position: 'relative',
+        top:-35,
         flex: 1,
-        padding: 15
+        padding: 10
     },
     centerTop: {
         alignItems: "center",
@@ -148,7 +158,7 @@ const styles = StyleSheet.create({
     },
     textWeight: {
         fontFamily: 'font1',
-        fontSize: 16
+        fontSize: 12
     }
 
 });

@@ -38,8 +38,9 @@ export default class PhotoComponent extends Component<any>{
 
     componentDidMount() {
         if (!this.state.loaded) {
-            this.DataImage();
-            this.setState({ loaded: true })
+            // this.DataImage();
+
+            this.setState({ loaded: true, image:this.props.image })
         }
 
         this.verifySelected();
@@ -72,14 +73,14 @@ export default class PhotoComponent extends Component<any>{
     }
 
     async DataImage() {
-        const aux = (width);
+        // const aux = (width);
 
-        const image = await ImageManipulator.manipulateAsync(
-            this.props.image.uri,
-            [{ resize: { width: aux / 3 } }],
-            { compress: 0.5, format: ImageManipulator.SaveFormat.JPEG },
-        ).catch(e => alert(e + ''));
-        this.setState({ image: image })
+        // const image = await ImageManipulator.manipulateAsync(
+        //     this.props.image.uri,
+        //     [{ resize: { width: aux / 3 } }],
+        //     { compress: 0.5, format: ImageManipulator.SaveFormat.JPEG },
+        // ).catch(e => alert(e + ''));
+        // this.setState({ image: image })
     }
 
     render() {

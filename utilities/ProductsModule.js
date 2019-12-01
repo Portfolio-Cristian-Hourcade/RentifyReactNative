@@ -81,7 +81,7 @@ async function uploadImages(element) {
         var file;
         ImageManipulator.manipulateAsync(
             element.uri,
-            [{ resize: { width: 400 } }],
+            [{ resize: { width: 800 } }],
             { compress: 0.5, format: ImageManipulator.SaveFormat.JPEG },
         ).catch(e => alert(e + ''))
             .then(data => {

@@ -13,6 +13,11 @@ import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
 import Constants from 'expo-constants';
 import { AppLoading } from 'expo';
+import CardPropiedadHome from '../../components/Cards/cardPropiedadHome';
+import CardPropiedadList from '../../components/Cards/cardPropiedadList';
+var width = Dimensions.get('window').width; //full width
+var height = Dimensions.get('window').height; //full width
+
 
 export default class MapsScreen extends Component<any> {
     state = {
@@ -20,6 +25,7 @@ export default class MapsScreen extends Component<any> {
         errorMessage: null,
         marker: null,
         listProducts: null,
+        selectItem: null
     };
 
     async componentWillMount() {
@@ -69,7 +75,7 @@ export default class MapsScreen extends Component<any> {
                 <View style={styles.container}>
 
                     <MapView style={styles.mapStyle}
-                        region={{
+                        initialRegion={{
                             latitude: this.state.location.coords.latitude,
                             longitude: this.state.location.coords.longitude,
                             latitudeDelta: 0.01,
@@ -80,11 +86,13 @@ export default class MapsScreen extends Component<any> {
                         {
                             (this.state.listProducts !== null) ?
                                 this.state.listProducts.map(element => {
-                                    return(<Marker coordinate={{ latitude: element.ubicacionGPS.latitude, longitude: element.ubicacionGPS.longitude }} style={{elevation: 10}} onPress={() => {alert('Hola :D')}}>
-                                        <View style={{ backgroundColor: '#ff5d5a', borderRadius: 3, paddingTop: 4, paddingBottom: 4, paddingLeft: 10, paddingRight: 10, elevation: 10 }}>
-                                            <Text style={{ fontFamily: 'font2', color: 'white', fontSize: 12 }}>${element.price} / Día</Text>
-                                        </View>
-                                    </Marker>)
+                                    return (
+                                        <Marker coordinate={{ latitude: element.ubicacionGPS.latitude, longitude: element.ubicacionGPS.longitude }} style={{ elevation: 10 }} onPress={() => { this.setState({ selectItem: element }) }}>
+                                            <View style={{ backgroundColor: '#ff5d5a', borderRadius: 3, paddingTop: 4, paddingBottom: 4, paddingLeft: 10, paddingRight: 10, elevation: 10 }}>
+                                                <Text style={{ fontFamily: 'font2', color: 'white', fontSize: 12 }}>${element.price} / Día</Text>
+                                            </View>
+                                        </Marker>
+                                    )
                                 }) : null
                         }
 
@@ -101,6 +109,24 @@ export default class MapsScreen extends Component<any> {
                             <Image source={require('../../assets/close.png')} style={{ height: 25, width: 25, position: 'relative', left: 12, top: 12 }} />
                         </TouchableOpacity>
                     </View>
+
+                    {(this.state.selectItem !== null) ?
+                        <View
+                            style={{
+                                width: width - 60, height: height / 3,
+                                borderTopRightRadius: 5, borderTopLeftRadius: 5,
+                                backgroundColor: 'white', elevation: 9,
+                                position: 'absolute', bottom: 15,
+                                left: 30
+                            }}>
+
+                            <CardPropiedadList
+                                images={this.state.selectItem.images}
+                                title={this.state.selectItem.name} 
+                                price={this.state.selectItem.price}/>
+
+                        </View>
+                        : null}
                 </View>
             );
         }
