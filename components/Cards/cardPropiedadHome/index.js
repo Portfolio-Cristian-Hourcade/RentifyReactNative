@@ -71,7 +71,7 @@ export default class CardPropiedadHome extends Component<any> {
                         <Text style={styles.titleCard}>
                             {this.props.title}
                         </Text>
-                        <Text style={styles.textWeight}> $750 por noche</Text>
+                        <Text style={styles.textWeight}> ${this.props.price} por noche</Text>
                     </View>
 
 
