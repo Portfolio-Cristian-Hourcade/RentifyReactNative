@@ -60,6 +60,16 @@ export default class MapsScreen extends Component<any> {
         this.setState({ marker: { latitude: this.state.location.coords.latitude, longitude: this.state.location.coords.longitude } })
     };
 
+    lookProduct = async () => {
+        try {
+            await AsyncStorage.setItem('Selected', JSON.stringify(this.state.selectItem)).then(e => {
+                this.props.navigation.navigate('InfoProduct');
+            });
+        } catch{
+            console.warn;
+        }
+    }
+
     render() {
         if (!this.state.marker) {
             return (
@@ -111,7 +121,7 @@ export default class MapsScreen extends Component<any> {
                     </View>
 
                     {(this.state.selectItem !== null) ?
-                        <View
+                        <TouchableOpacity onPress={() => this.lookProduct()}
                             style={{
                                 width: width - 60, height: height / 3,
                                 borderTopRightRadius: 5, borderTopLeftRadius: 5,
@@ -122,10 +132,10 @@ export default class MapsScreen extends Component<any> {
 
                             <CardPropiedadList
                                 images={this.state.selectItem.images}
-                                title={this.state.selectItem.name} 
-                                price={this.state.selectItem.price}/>
+                                title={this.state.selectItem.name}
+                                price={this.state.selectItem.price} />
 
-                        </View>
+                        </TouchableOpacity>
                         : null}
                 </View>
             );

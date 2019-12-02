@@ -20,6 +20,10 @@ export default class CardPropiedadList extends Component<any> {
     }
 
     componentDidMount() {
+        this.props.images.map(element => {
+            Image.prefetch({ uri: element });
+        });
+
         this.setState({ images: this.props.images })
     }
 
@@ -31,7 +35,7 @@ export default class CardPropiedadList extends Component<any> {
         return (
             <View style={styles.item}>
                 <ParallaxImage
-                    source={{ uri: item }}
+                    source={{ uri: item, cache: 'force-cache' }}
                     containerStyle={styles.imageContainer}
                     style={styles.image}
                     parallaxFactor={0.4}
@@ -59,7 +63,7 @@ export default class CardPropiedadList extends Component<any> {
             <View style={styles.card}>
                 <View style={styles.column}>
                     <Carousel
-                        sliderWidth={(screenWidth ) - 60}
+                        sliderWidth={(screenWidth) - 60}
                         sliderHeight={170}
                         itemWidth={(screenWidth)}
                         data={this.props.images}
@@ -71,7 +75,7 @@ export default class CardPropiedadList extends Component<any> {
                         <Text style={styles.titleCard}>
                             {this.props.title}
                         </Text>
-        <Text style={styles.textWeight}> ${this.props.price} por noche</Text>
+                        <Text style={styles.textWeight}> ${this.props.price} por noche</Text>
                     </View>
 
 
@@ -100,7 +104,7 @@ const styles = StyleSheet.create({
         elevation: 4,
     },
     item: {
-        width: screenWidth-60,
+        width: screenWidth - 60,
         height: 170,
     },
     image: {
@@ -127,10 +131,10 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
     },
-    
+
     col12: {
         position: 'relative',
-        top:-35,
+        top: -35,
         flex: 1,
         padding: 10
     },

@@ -8,6 +8,7 @@ import PaymentScreen from '../screens/pay-screen';
 import OfertScreen from '../screens/oferts-screen';
 import MapsScreen from '../screens/maps-screen';
 import AddRentScreen from '../screens/add-rent-screen';
+import InfoProductScreen from '../screens/info-product-screen';
 
 const AppNavigator = createStackNavigator({
 
@@ -17,7 +18,9 @@ const AppNavigator = createStackNavigator({
     Payment: PaymentScreen,
     Ofert: OfertScreen,
     Maps: MapsScreen,
-    AddProducto:AddRentScreen
+    AddProducto:AddRentScreen,
+    InfoProduct:InfoProductScreen
+
 
 }, {
     initialRouteName: 'Splash',

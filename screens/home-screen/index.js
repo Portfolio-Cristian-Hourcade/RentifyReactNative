@@ -93,13 +93,15 @@ export default class HomeScreen extends Component<any> {
                             <View style={{ flex: 0.5, marginRight: 15, }}>
                                 <CardPropiedadHome
                                     images={this.state.listProducts[0].images}
-                                    title={this.state.listProducts[0].name} />
+                                    title={this.state.listProducts[0].name} 
+                                    price={this.state.listProducts[0].price}/>
 
                             </View>
                             <View style={{ flex: 0.5 }}>
                             <CardPropiedadHome
                                     images={this.state.listProducts[1].images}
-                                    title={this.state.listProducts[1].name} />
+                                    title={this.state.listProducts[1].name}
+                                    price={this.state.listProducts[1].price} />
                             </View>
                         </View>
 
@@ -107,13 +109,15 @@ export default class HomeScreen extends Component<any> {
                             <View style={{ flex: 0.5, marginRight: 15, }}>
                             <CardPropiedadHome
                                     images={this.state.listProducts[2].images}
-                                    title={this.state.listProducts[2].name} />
+                                    title={this.state.listProducts[2].name} 
+                                    price={this.state.listProducts[2].price}/>
 
                             </View>
                             <View style={{ flex: 0.5 }}>
                             <CardPropiedadHome
                                     images={this.state.listProducts[3].images}
-                                    title={this.state.listProducts[3].name} />
+                                    title={this.state.listProducts[3].name}
+                                    price={this.state.listProducts[3].price} />
                             </View>
                         </View>
 
