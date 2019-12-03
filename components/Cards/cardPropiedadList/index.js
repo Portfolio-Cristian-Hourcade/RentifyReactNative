@@ -20,9 +20,9 @@ export default class CardPropiedadList extends Component<any> {
     }
 
     componentDidMount() {
-        this.props.images.map(element => {
-            Image.prefetch({ uri: element });
-        });
+        // this.props.images.map(element => {
+        //     Image.prefetch({ uri: element });
+        // });
 
         this.setState({ images: this.props.images })
     }

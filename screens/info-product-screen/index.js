@@ -5,6 +5,7 @@ import { LogOut } from '../../utilities/FirebaseModule';
 
 
 import StylesGlobal from '../../styles/styles';
+import MapView, { Marker } from 'react-native-maps';
 import Carousel from 'react-native-snap-carousel';
 
 import Constants from 'expo-constants';
@@ -17,21 +18,32 @@ import NavbarComponent from '../../navigation/Navbar';
 import { Review } from '../../models/Review';
 import { getProducts } from '../../utilities/ProductsModule';
 import Spinner from 'react-native-loading-spinner-overlay';
+import { CheckBox } from 'react-native-elements';
+
 import { Asset } from 'expo-asset';
+import DialogMatch from '../../components/Cards/dialogMatch';
+import DialogMatchAdd from '../../components/Cards/dialogMatchAdd';
 var width = Dimensions.get('window').width; //full width
 var he = Dimensions.get('window').height; //full width
 
 export default class InfoProductScreen extends Component<any> {
 
     state = {
-        product: null
+        product: null,
+        isOpenMatch1: false,
+        isOpenMatch2: false,
+    }
+
+    addDaysMatch(){
+        // TODO - Agregar dias a la busqueda
+        this.setState({isOpenMatch1: false, isOpenMatch2:true});
     }
 
     async componentWillMount() {
         var data = await AsyncStorage.getItem('Selected');
         this.setState({ product: JSON.parse(data) });
         console.log(this.state.product);
-    
+
     }
 
     render() {
@@ -42,44 +54,223 @@ export default class InfoProductScreen extends Component<any> {
         return (
             <View style={{ position: 'relative', }}>
                 <ScrollView style={{ height: he }}>
-
-                    <Image style={{ width: width, height: width, borderBottomLeftRadius: 25, borderBottomRightRadius: 25 }} source={{ uri: this.state.product.images[0] , cache: 'force-cache'}} />
-                    <View style={{ elevation: 0, width: width, padding: 20 }}>
+                    <Image style={{ width: width, height: width, borderBottomLeftRadius: 25, borderBottomRightRadius: 25 }} source={{ uri: this.state.product.images[0], cache: 'force-cache' }} />
+                    <View style={{ elevation: 0, width: width, padding: 20, paddingBottom: 100 }}>
                         <Text style={{ color: 'black', fontSize: 22, fontFamily: 'font1' }}>
                             {this.state.product.name}
                         </Text>
                         <View style={{ flex: 1, flexDirection: 'row' }}>
-                            <Text style={{ color: 'black', fontSize: 26, fontFamily: 'font2', flex: 0.6 }}>
-                                ${this.state.product.price} <Text style={{ fontSize: 16, fontFamily: 'font3', color: 'orange', paddingLeft: 30 }}> %20</Text>
+                            <Text style={{ color: 'black', fontSize: 32, fontFamily: 'font2', flex: 0.6 }}>
+                                ${this.state.product.price} <Text style={{ fontSize: 17, fontFamily: 'font1', color: '#333', paddingLeft: 10 }}> / Día</Text>
                             </Text>
                             <View style={{ flex: 0.4, justifyContent: 'flex-start', alignContent: 'flex-start', position: 'relative' }}>
-                                <TouchableOpacity style={{ backgroundColor: '#ff5d5a', borderRadius: 50, height: 60, width: 60, position: 'absolute', top: -15, right: 0 }}>
-                                    <Image source={require('../../assets/icons/share.png')} style={{ width: 30, height: 30, position: 'relative', left: 13, top: 15 }} />
+                                <TouchableOpacity style={{ backgroundColor: '#ff5d5a', borderRadius: 50, height: 60, width: 60, position: 'absolute', top: -15, right: 0 }}
+                                    onPress={() => { this.setState({ isOpenMatch1: true }) }}>
+                                    <Image source={require('../../assets/icons/user.png')} style={{ width: 30, height: 30, position: 'relative', left: 13, top: 15 }} />
                                 </TouchableOpacity>
                             </View>
                         </View>
-                        <Text style={{ fontSize: 12, fontFamily: 'font1' }}>
-                            {this.state.product.ubicacion}
+
+                        <View>
+                            <View>
+
+                                <Image source={require('../../assets/icons/favorites.png')} style={{ width: 20, height: 20, position: 'absolute', }} />
+                                <Text style={{ marginLeft: 30 }}>4.7 Puntuación ( 9 Reseñas )</Text>
+                            </View>
+                        </View>
+
+                        <View style={{ flex: 1, flexDirection: 'row', marginTop: 10 }}>
+                            <Text style={{ fontSize: 12, fontFamily: 'font1', flex: 1 }}>
+                                {this.state.product.ubicacion}
+                            </Text>
+                        </View>
+
+                        <View style={{ borderBottomWidth: 1, borderBottomColor: '#eee', marginTop: 10, marginBottom: 10 }} />
+
+                        <View>
+                            <MapView style={{ width: width - 40, height: 145 }}
+                                initialRegion={{
+                                    latitude: this.state.product.ubicacionGPS.latitude,
+                                    longitude: this.state.product.ubicacionGPS.longitude,
+                                    latitudeDelta: 0.01,
+                                    longitudeDelta: 0.01,
+                                }}
+                                pitchEnabled={false}
+                                rotateEnabled={false}
+                                scrollEnabled={false}
+                                zoomEnabled={false}
+                                customMapStyle={generateStyle}
+                            >
+                                <Marker coordinate={{
+                                    latitude: this.state.product.ubicacionGPS.latitude,
+                                    longitude: this.state.product.ubicacionGPS.longitude,
+                                }}>
+                                    <View style={{ backgroundColor: '#4b96f3', borderRadius: 50, width: 20, height: 20, elevation: 10 }}>
+                                    </View>
+                                </Marker>
+                            </MapView>
+                            <View style={{ width: width - 40, minHeight: 20, borderWidth: 1, borderColor: '#eee', paddingBottom: 5, paddingTop: 5, borderBottomLeftRadius: 8, borderBottomRightRadius: 8, paddingLeft: 15 }}>
+                                <Text style={{ color: '#333' }}>
+                                    Esta es la ubicación aproximada del alquiler
+                                </Text>
+                            </View>
+                        </View>
+                        <View>
+                            <TouchableOpacity style={{
+                                height: 50,
+                                width: width - 40,
+                                marginBottom: 10,
+                                marginTop: 10,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                backgroundColor: '#ff5d5a',
+                                borderRadius: 4,
+                            }}>
+                                <Text style={{ color: 'white', fontFamily: 'font1', fontSize: 14, position: 'relative', top: 2 }}>
+                                    Compartir Propiedad
+                    </Text>
+                            </TouchableOpacity>
+                        </View>
+
+                        <View style={{ borderBottomWidth: 1, borderBottomColor: '#eee', marginTop: 10, marginBottom: 10 }} />
+
+                        <View>
+                            <Text style={{ color: 'black', fontSize: 22, fontFamily: 'font1' }}>
+                                Prestaciones & Comodiades
                         </Text>
+                        </View>
+                        <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap' }}>
+                            {
+                                this.state.product.prestaciones.map(element => {
+                                    return (<CheckBox
+                                        containerStyle={{ width: (width + 90) / 3 }}
+                                        title={element.name}
+                                        checked={element.check}
+                                    />)
+                                }
+                                )}
+                        </View>
+                        <View style={{ borderBottomWidth: 1, borderBottomColor: '#eee', marginTop: 15, marginBottom: 15 }} />
+
+                        <View>
+                            <Text style={{ color: 'black', fontSize: 22, fontFamily: 'font1' }}>
+                                Descripción
+                            </Text>
+                            <Text style={{ marginTop: 10 }}>
+                                {this.state.product.description}
+                            </Text>
+                        </View>
+
+                        <View style={{ borderBottomWidth: 1, borderBottomColor: '#eee', marginTop: 15, marginBottom: 15 }} />
+
+
+                        <View>
+                            <Text style={{ color: 'black', fontSize: 22, fontFamily: 'font1' }}>
+                                Normas del alquiler
+                        </Text>
+                        </View>
+                        <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap', paddingBottom: 5 }}>
+                            {
+                                this.state.product.normas.map(element => {
+                                    return (<CheckBox
+                                        containerStyle={{ width: (width + 90) / 3 }}
+                                        title={element.name}
+                                        checked={element.check}
+                                    />)
+                                }
+                                )}
+                        </View>
+
+                        <View style={{ borderBottomWidth: 1, borderBottomColor: '#eee', marginTop: 15, marginBottom: 15 }} />
+
+                        <View style={{ marginTop: 5, marginBottom: 5 }}>
+                            <Text style={{ color: 'black', fontSize: 22, fontFamily: 'font1' }}>
+                                Politicas de cancelación
+                            </Text>
+                            <Text>
+                                La cancelación es gratuita dentro de las 48hs
+                            </Text>
+                        </View>
+
+                        <View style={{ borderBottomWidth: 1, borderBottomColor: '#eee', marginTop: 15, marginBottom: 15 }} />
+
+                        <View style={{ marginTop: 5, marginBottom: 5 }}>
+                            <Text style={{ color: 'black', fontSize: 22, fontFamily: 'font1' }}>
+                                Politicas de reservación
+                            </Text>
+                            <Text>
+                                Mirá cuales son las politicas de reservación
+                            </Text>
+                        </View>
+
+                        <View style={{ borderBottomWidth: 1, borderBottomColor: '#eee', marginTop: 15, marginBottom: 15 }} />
 
                     </View>
                 </ScrollView>
-                <TouchableOpacity style={{
+
+
+                <View style={{
                     width: width,
-                    height: 50,
-                    backgroundColor: '#ff5d5a',
+                    backgroundColor: 'white',
                     position: 'absolute',
+                    height: 70,
                     bottom: 0,
                     left: 0,
-                    justifyContent: 'center',
-                    alignContent: 'center',
-                    alignItems: 'center',
+                    flex: 1,
+                    paddingLeft: 20,
+                    paddingRight: 20,
+                    flexDirection: 'row',
+                    shadowColor: "#000",
+                    shadowOffset: {
+                        width: 0,
+                        height: -6,
+                    },
+                    shadowOpacity: 0.43,
+                    shadowRadius: 4.62,
 
+                    elevation: 8,
                 }}>
-                    <Text style={{ color: 'white', fontFamily: 'font1' }}>
-                        Reservar propiedad
+                    <TouchableOpacity style={{
+                        flex: 0.4,
+                        height: 50,
+                        top: 10,
+                        position: 'relative',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        backgroundColor: '#3483fa',
+                        borderRadius: 4,
+                    }}>
+                        <Text style={{ color: 'white', fontFamily: 'font1', fontSize: 14, position: 'relative', top: 2 }}>
+                            Contactar Rentador
                     </Text>
-                </TouchableOpacity>
+                    </TouchableOpacity>
+
+
+                    <View style={{ flex: 0.2 }} ></View>
+
+                    <TouchableOpacity style={{
+                        flex: 0.4,
+                        height: 50,
+                        top: 10,
+                        position: 'relative',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        backgroundColor: '#ff5d5a',
+                        borderRadius: 4,
+                    }}>
+                        <Text style={{ color: 'white', fontFamily: 'font1', fontSize: 14, position: 'relative', top: 2 }}>
+                            Reservar propiedad
+                    </Text>
+                    </TouchableOpacity>
+                </View>
+                {this.state.isOpenMatch1 ?
+                    <DialogMatchAdd handler={this.addDaysMatch()}/>
+                    : null
+                }
+                {this.state.isOpenMatch2 ?
+                    <DialogMatch />
+                    : null
+                }
             </View>
         );
     }
@@ -248,3 +439,41 @@ const styles = StyleSheet.create({
         marginLeft: 15,
     }
 });
+
+
+const generateStyle = [
+    {
+        "featureType": "administrative",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "poi",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "road",
+        "elementType": "labels.icon",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "transit",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    }
+];

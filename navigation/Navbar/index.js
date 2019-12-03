@@ -25,10 +25,6 @@ export default class NavbarComponent extends Component {
                     </View>
                 </View>
                 <View style={styles.itemNav}>
-                    <Image source={require('../../assets/icons/favorites.png')} style={{ width: 30, height: 30 }} />
-
-                </View>
-                <View style={styles.itemNav}>
                     <Image source={require('../../assets/icons/chat.png')} style={{ width: 30, height: 30 }} />
 
                 </View>
@@ -62,7 +58,7 @@ const styles = StyleSheet.create({
         width: width,
     },
     itemNav: {
-        flex: 0.25,
+        flex: 0.33,
         height: 60,
         justifyContent: 'center',
         alignItems: 'center',
