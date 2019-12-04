@@ -1,7 +1,7 @@
 {
     "expo": {
-        "name": "MySpace",
-        "slug": "MySpace",
+        "name": "Rentify",
+        "slug": "rentify",
         "privacy": "public",
         "sdkVersion": "35.0.0",
         "platforms": [
@@ -26,7 +26,8 @@
             "**/*"
         ],
         "android": {
-            "package": "com.totoapp.belgicaapp",
+            "package": "com.myt.rentify",
+            "googleServicesFile": "./assets/google-services.json",
             "versionCode": 1,
             "icon": "./assets/icon.png",
             "config": {
@@ -36,7 +37,12 @@
             }
         },
         "ios": {
-            "bundleIdentifier": "com.apk.belgicaxa"
+            "bundleIdentifier": "com.myt.rentify",
+            "config": {
+                "googleSignIn": {
+                    "reservedClientId": "com.googleusercontent.apps.998862870360-ccoep15kijfd5bqckdamul9i8vjvlkji"
+                }
+            }
         }
     }
 }

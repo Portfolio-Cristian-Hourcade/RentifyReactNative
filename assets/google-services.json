@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "998862870360",
+    "firebase_url": "https://myspace-632e9.firebaseio.com",
+    "project_id": "myspace-632e9",
+    "storage_bucket": "myspace-632e9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:998862870360:android:a2052c817ad71a9ba3772d",
+        "android_client_info": {
+          "package_name": "com.myt.rentify"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "998862870360-43b3k5mrv82vvv3ijsd37gg07ngb6i3q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8uxVw0FLJ5KTm9_-GNvn1_Ip9Z2E0aso"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "998862870360-43b3k5mrv82vvv3ijsd37gg07ngb6i3q.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "998862870360-ccoep15kijfd5bqckdamul9i8vjvlkji.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.myt.rentify"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

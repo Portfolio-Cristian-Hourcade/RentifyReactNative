@@ -26,6 +26,17 @@ export default class HomeScreen extends Component<any> {
     }
 
 
+
+    lookProduct = async (x) => {
+        try {
+            await AsyncStorage.setItem('Selected', JSON.stringify(x)).then(e => {
+                this.props.navigation.navigate('InfoProduct');
+            });
+        } catch{
+            console.warn;
+        }
+    }
+
     async componentDidMount() {
         await this.getListProduct();
     }
@@ -91,33 +102,45 @@ export default class HomeScreen extends Component<any> {
 
                         <View style={{ flex: 1, flexDirection: 'row', marginLeft: 15, marginRight: 15, marginTop: 20 }}>
                             <View style={{ flex: 0.5, marginRight: 15, }}>
-                                <CardPropiedadHome
-                                    images={this.state.listProducts[0].images}
-                                    title={this.state.listProducts[0].name} 
-                                    price={this.state.listProducts[0].price}/>
+                                <TouchableOpacity onPress={() => this.lookProduct(this.state.listProducts[0])}>
 
+                                    <CardPropiedadHome
+                                        images={this.state.listProducts[0].images}
+                                        title={this.state.listProducts[0].name}
+                                        price={this.state.listProducts[0].price} />
+                                </TouchableOpacity>
                             </View>
                             <View style={{ flex: 0.5 }}>
-                            <CardPropiedadHome
-                                    images={this.state.listProducts[1].images}
-                                    title={this.state.listProducts[1].name}
-                                    price={this.state.listProducts[1].price} />
+                                <TouchableOpacity onPress={() => this.lookProduct(this.state.listProducts[1])}>
+
+                                    <CardPropiedadHome
+                                        images={this.state.listProducts[1].images}
+                                        title={this.state.listProducts[1].name}
+                                        price={this.state.listProducts[1].price} />
+                                </TouchableOpacity>
+
                             </View>
                         </View>
 
                         <View style={{ flex: 1, flexDirection: 'row', marginLeft: 15, marginRight: 15, marginTop: 20 }}>
                             <View style={{ flex: 0.5, marginRight: 15, }}>
-                            <CardPropiedadHome
-                                    images={this.state.listProducts[2].images}
-                                    title={this.state.listProducts[2].name} 
-                                    price={this.state.listProducts[2].price}/>
+                                <TouchableOpacity onPress={() => this.lookProduct(this.state.listProducts[2])}>
 
+                                    <CardPropiedadHome
+                                        images={this.state.listProducts[2].images}
+                                        title={this.state.listProducts[2].name}
+                                        price={this.state.listProducts[2].price} />
+                                </TouchableOpacity>
                             </View>
                             <View style={{ flex: 0.5 }}>
-                            <CardPropiedadHome
-                                    images={this.state.listProducts[3].images}
-                                    title={this.state.listProducts[3].name}
-                                    price={this.state.listProducts[3].price} />
+                                <TouchableOpacity onPress={() => this.lookProduct(this.state.listProducts[3])}>
+
+                                    <CardPropiedadHome
+                                        images={this.state.listProducts[3].images}
+                                        title={this.state.listProducts[3].name}
+                                        price={this.state.listProducts[3].price} />
+                                        
+                                </TouchableOpacity>
                             </View>
                         </View>
 

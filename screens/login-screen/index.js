@@ -7,8 +7,12 @@ import ButtonPrimary from '../../components/Buttons/buttonPrimary';
 import ButtonSecondary from '../../components/Buttons/buttonSecondary';
 import { SingIn, SingUp } from '../../utilities/FirebaseModule';
 import { Dimensions } from "react-native";
-var width = Dimensions.get('window').width; //full width
+import GoogleLogin from 'react-google-login';
+import * as GoogleSignIn from 'expo-google-sign-in';
 
+import Expo from "expo"
+
+var width = Dimensions.get('window').width; //full width
 
 export default class LoginScreen extends Component<any> {
     state = {
@@ -20,6 +24,14 @@ export default class LoginScreen extends Component<any> {
             password: ''
         }
     };
+    async componentDidUpdate() {
+        try {
+            await GoogleSignIn.initAsync({ clientId: 'com.googleusercontent.apps.998862870360-ccoep15kijfd5bqckdamul9i8vjvlkji' });
+        } catch ({ message }) {
+            alert('GoogleSignIn.initAsync(): ' + message);
+        }
+
+    }
 
     singUp = () => {
         if (this.state.user.password.length < 6) {
@@ -44,21 +56,20 @@ export default class LoginScreen extends Component<any> {
         }
     };
 
-    singIn = () => {
-        if (this.state.user.email.length < 4) {
-            alert("¡Upps! Ingresaste un email invalido, por favor verificá que lo hayas escrito bien");
-        } else {
-            if (re.test(String(this.state.user.email).toLowerCase())) {
-                if (this.state.user.password.length < 6) {
-                    alert("¡Upps! La contraseña ingresada es incorrecta");
-                } else {
-                    SingIn(this.state.user.email, this.state.user.password, this.props.navigation);
-                }
-            } else {
-                alert("¡Upps! Ingresaste un email invalido, por favor verificá que lo hayas escrito bien");
+    singIn = async () => {
 
+        try {
+            await GoogleSignIn.askForPlayServicesAsync();
+            const { type, user } = await GoogleSignIn.signInAsync();
+            if (type === 'success') {
+                // ...
             }
+        } catch ({ message }) {
+            alert('login: Error:' + message);
         }
+    }
+    responseGoogle = (response) => {
+        console.log(response);
     }
 
 
@@ -94,9 +105,10 @@ export default class LoginScreen extends Component<any> {
                     <View style={styles.btnPosition}>
                         <View style={styles.rowAll}>
 
-                            <TouchableOpacity style={styles.btnGoogle} onPress={() => this.props.navigation.navigate('Home')}>
+                            <TouchableOpacity style={styles.btnGoogle} onPress={() => this.singIn()}>
                                 <Image source={require('../../assets/gg.png')} style={styles.logoPos} />
                                 <Text style={styles.btnGoogleTxt}>Iniciar Sesión</Text>
+
                             </TouchableOpacity>
                         </View>
                         <View style={styles.rowAll}>

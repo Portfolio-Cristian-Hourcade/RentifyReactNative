@@ -8,7 +8,7 @@ var he = Dimensions.get('window').height; //full width
 const DialogMatchAdd = (props) => {
     console.log(props)
     return (
-        <View style={{ position: 'absolute', left: 0, top: 0, width: width, height: he, backgroundColor: '#0000005c', elevation: 9 }}>
+        <View style={{ position: 'absolute', left: 0, top: 0, width: width, height: he, backgroundColor: '#0000005c', elevation: 90 }}>
             <View style={{ width: width - 80, position: 'relative', left: 40, top: he / 4, backgroundColor: 'white', minHeight: 200, padding: 15, borderRadius: 8 }}>
 
                 <View style={{ justifyContent: 'center', alignItems: 'center', paddingBottom: 30, paddingTop: 10 }}>

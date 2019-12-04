@@ -23,6 +23,7 @@ export default class CardPropiedadHome extends Component<any> {
         this.setState({ images: this.props.images })
     }
 
+
     _renderItem = ({ item, index }, parallaxProps) => {
         if (this.state.images == null) {
             return <Text>Loading</Text>
