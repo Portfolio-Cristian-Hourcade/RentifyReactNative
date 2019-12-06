@@ -1,17 +1,22 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TextInput, Image, ImageBackground, TouchableOpacity, StatusBar } from 'react-native';
+import { StyleSheet, Platform, Text, View, TextInput, Image, ImageBackground, TouchableOpacity, StatusBar, Alert, AsyncStorage } from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
 import StylesGlobal from '../../styles/styles';
 import * as Font from "expo-font";
-import ButtonPrimary from '../../components/Buttons/buttonPrimary';
-import ButtonSecondary from '../../components/Buttons/buttonSecondary';
-import { SingIn, SingUp } from '../../utilities/FirebaseModule';
 import { Dimensions } from "react-native";
-import GoogleLogin from 'react-google-login';
+
+// import { GoogleSignIn } from 'expo-google-sign-in';
 import * as GoogleSignIn from 'expo-google-sign-in';
+// import * as Expo from 'expo';
+// import { Google } from 'expo';
+import * as Google from 'expo-google-app-auth';
+import { Constants } from 'expo-constants';
+import { addClient, getClientsByKey } from '../../utilities/ClientsModule';
+import * as Facebook from 'expo-facebook';
 
-import Expo from "expo"
+// import Expo from "expo"
 
+// import { GoogleSignIn } from 'expo';
 var width = Dimensions.get('window').width; //full width
 
 export default class LoginScreen extends Component<any> {
@@ -24,50 +29,95 @@ export default class LoginScreen extends Component<any> {
             password: ''
         }
     };
-    async componentDidUpdate() {
-        try {
-            await GoogleSignIn.initAsync({ clientId: 'com.googleusercontent.apps.998862870360-ccoep15kijfd5bqckdamul9i8vjvlkji' });
-        } catch ({ message }) {
-            alert('GoogleSignIn.initAsync(): ' + message);
-        }
 
-    }
 
     singUp = () => {
-        if (this.state.user.password.length < 6) {
-            alert("Por favor, escribí una contraseña de más de 6 caracteres.");
-        } else if (this.state.user.name.length < 2) {
-            alert("¡Upps! No te olvides de escribir tu nombre.");
-        } else if (this.state.user.email.length < 4) {
-            alert("¡Uppps! Necesitas escribir tu email para poder iniciar sesión en un futuro.");
+        // if (this.state.user.password.length < 6) {
+        //     alert("Por favor, escribí una contraseña de más de 6 caracteres.");
+        // } else if (this.state.user.name.length < 2) {
+        //     alert("¡Upps! No te olvides de escribir tu nombre.");
+        // } else if (this.state.user.email.length < 4) {
+        //     alert("¡Uppps! Necesitas escribir tu email para poder iniciar sesión en un futuro.");
 
-        } else {
-            var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            if (re.test(String(this.state.user.email).toLowerCase())) {
-                try {
-                    SingUp(this.state.user.email, this.state.user.password, this.state.user.name, this.props.navigation);
+        // } else {
+        //     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        //     if (re.test(String(this.state.user.email).toLowerCase())) {
+        //         try {
+        //             SingUp(this.state.user.email, this.state.user.password, this.state.user.name, this.props.navigation);
 
-                } catch (err) {
-                    alert(err);
-                }
-            } else {
-                alert('Ingresaste un email invalido, por favor ingresá uno válido');
-            }
-        }
+        //         } catch (err) {
+        //             alert(err);
+        //         }
+        //     } else {
+        //         alert('Ingresaste un email invalido, por favor ingresá uno válido');
+        //     }
+        // }
     };
 
-    singIn = async () => {
-
+    fb = async () => {
         try {
-            await GoogleSignIn.askForPlayServicesAsync();
-            const { type, user } = await GoogleSignIn.signInAsync();
-            if (type === 'success') {
-                // ...
+
+            //@ts-ignore
+            const {
+                type,
+                token,
+                expires,
+            } = await Facebook.logInWithReadPermissionsAsync("547933809388148", {
+            });
+
+            if (type === "success") {
+                // Get the user's name using Facebook's Graph API
+                const response = await fetch(
+                    `https://graph.facebook.com/me?access_token=${token}`
+                );
+                    // console.log(await response.json());
+                    
+                    await response.json().then(async (e) => {
+                        e.id = 'f'+e.id;
+                        e.$key = e.id;
+                        // user.id = 'f'+user.id;  
+                        await getClientsByKey(e,this.props);
+                    })
+
+                //  Alert.alert("Logged in!", `Hi ${(await response.json()).name}!`);
+                //  await getClientsByKey(user, this.props).then(e => { });
+
+
+            } else {
+                alert(`Facebook Login Error: Cancelled`);
             }
         } catch ({ message }) {
-            alert('login: Error:' + message);
+            alert(`Facebook Login Error: ${message}`);
         }
     }
+    singIn = async () => {
+        /**
+         * 
+         * Desarrollo
+         * 
+         * android: 998862870360-l50asqfdscqsd9n9ngvq7n86is0or28p.apps.googleusercontent.com
+         * ios: 998862870360-aea2odi5navb7ku1ihjv26epip4ep6d1.apps.googleusercontent.com
+         *
+         * Produccion
+         * 
+         * android:
+         * ios:
+         * 
+         */
+
+        // Desarrollo config
+        // @ts-ignore
+        const { type, accessToken, user } = await Google.logInAsync({
+            clientId: (Platform.OS === 'ios') ? '998862870360-aea2odi5navb7ku1ihjv26epip4ep6d1.apps.googleusercontent.com' : '998862870360-l50asqfdscqsd9n9ngvq7n86is0or28p.apps.googleusercontent.com',
+            scopes: ["profile", "email"]
+        });
+        if (type === 'success') {
+            user['$key'] = 'g'+user.id;
+            await getClientsByKey(user, this.props).then(e => { });
+
+        }
+    }
+
     responseGoogle = (response) => {
         console.log(response);
     }
@@ -80,6 +130,12 @@ export default class LoginScreen extends Component<any> {
             font3: require("../../assets/fonts/Poppins-Medium.ttf"),
 
         });
+        const result = await AsyncStorage.getItem("Usuario");
+        
+        if(result !== null){
+            this.props.navigation.navigate("Home");
+        }
+
         this.setState({ fontsLoaded: true });
     }
 
@@ -93,7 +149,8 @@ export default class LoginScreen extends Component<any> {
                     <View style={styles.containerData}>
                         <View style={StylesGlobal.container}>
                             <View style={styles.contTitle}>
-                                <Image source={require('../../assets/logo.png')} style={{ width: 130, height: 130, paddingTop: 20, alignSelf: 'center' }} />
+                                <Image source={require('../../assets/logo.png')}
+                                    style={{ width: 130, height: 130, paddingTop: 20, alignSelf: 'center' }} />
                                 <Text style={styles.title}>¡Bienvenido a Rentify! </Text>
                                 <Text style={styles.hash}>#SomosRentify</Text>
                             </View>
@@ -112,7 +169,7 @@ export default class LoginScreen extends Component<any> {
                             </TouchableOpacity>
                         </View>
                         <View style={styles.rowAll}>
-                            <TouchableOpacity style={styles.btnFB} onPress={() => this.props.navigation.navigate('Home')}>
+                            <TouchableOpacity style={styles.btnFB} onPress={() => this.fb()}>
                                 <Image source={require('../../assets/ff.png')} style={styles.logoPosff} />
                                 <Text style={styles.btnFBTxt}>Iniciar Sesion</Text>
                             </TouchableOpacity>

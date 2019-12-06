@@ -9,6 +9,7 @@ import OfertScreen from '../screens/oferts-screen';
 import MapsScreen from '../screens/maps-screen';
 import AddRentScreen from '../screens/add-rent-screen';
 import InfoProductScreen from '../screens/info-product-screen';
+import MyAccountScreen from '../screens/my-accoutn-screen';
 
 const AppNavigator = createStackNavigator({
 
@@ -19,8 +20,8 @@ const AppNavigator = createStackNavigator({
     Ofert: OfertScreen,
     Maps: MapsScreen,
     AddProducto:AddRentScreen,
-    InfoProduct:InfoProductScreen
-
+    InfoProduct:InfoProductScreen,
+    Account: MyAccountScreen
 
 }, {
     initialRouteName: 'Splash',

@@ -15,23 +15,30 @@ import Sidebar from '../../components/Sidebar';
 var width = Dimensions.get('window').width; //full width
 
 
-export default class NavbarComponent extends Component {
+export default class NavbarComponent extends Component<any> {
+
+    constructor(props){
+        super(props)
+    }
+    state={
+        navActive: 0
+    }
+
     render() {
         return (
             <View style={styles.navbar}>
                 <View style={styles.itemNav}>
-                    <View>
+                    <TouchableOpacity onPress={() => {this.props.props.navigation.navigate("Home")}}>
                         <Image source={require('../../assets/icons/home.png')} style={{ width: 30, height: 30 }} />
-                    </View>
+                    </TouchableOpacity>
                 </View>
                 <View style={styles.itemNav}>
                     <Image source={require('../../assets/icons/chat.png')} style={{ width: 30, height: 30 }} />
 
                 </View>
-                <View style={styles.itemNav}>
+                <TouchableOpacity style={styles.itemNav} onPress={() => {this.props.props.navigation.navigate("Account")}}>
                     <Image source={require('../../assets/icons/user-1.png')} style={{ width: 30, height: 30 }} />
-
-                </View>
+                </TouchableOpacity>
             </View>
         );
     }

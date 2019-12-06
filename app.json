@@ -1,5 +1,24 @@
 {
     "expo": {
+        "android": {
+            "package": "com.myt.rentify",
+            "googleServicesFile": "./google-services.json",
+            "versionCode": 1,
+            "icon": "./assets/icon.png",
+            "config": {
+                "googleMaps": {
+                    "apiKey": "AIzaSyDA0NuvPpBCOw5WIOiZ4VS64Od1LocV0XA"
+                }
+            }
+        },
+        "ios": {
+            "bundleIdentifier": "com.myt.rentify",
+            "config": {
+                "googleSignIn": {
+                    "reservedClientId": "com.googleusercontent.apps.998862870360-ccoep15kijfd5bqckdamul9i8vjvlkji"
+                }
+            },
+        },
         "name": "Rentify",
         "slug": "rentify",
         "privacy": "public",
@@ -24,25 +43,6 @@
         },
         "assetBundlePatterns": [
             "**/*"
-        ],
-        "android": {
-            "package": "com.myt.rentify",
-            "googleServicesFile": "./assets/google-services.json",
-            "versionCode": 1,
-            "icon": "./assets/icon.png",
-            "config": {
-                "googleMaps": {
-                    "apiKey": "AIzaSyDA0NuvPpBCOw5WIOiZ4VS64Od1LocV0XA"
-                }
-            }
-        },
-        "ios": {
-            "bundleIdentifier": "com.myt.rentify",
-            "config": {
-                "googleSignIn": {
-                    "reservedClientId": "com.googleusercontent.apps.998862870360-ccoep15kijfd5bqckdamul9i8vjvlkji"
-                }
-            }
-        }
+        ]
     }
 }

@@ -6,11 +6,9 @@ import { createAppContainer } from 'react-navigation';
 import { initializeApp } from './utilities/FirebaseModule';
 const AppContainer = createAppContainer(AppNavigator);
 
-
 export default class App extends Component {
   render() {
     initializeApp();
-
     console.ignoredYellowBox = ['Warning: Each', 'Warning: Failed']
     return (
 

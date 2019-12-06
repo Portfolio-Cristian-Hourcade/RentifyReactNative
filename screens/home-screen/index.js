@@ -162,7 +162,7 @@ export default class HomeScreen extends Component<any> {
                         </View>
                     </View>
                 </ScrollView>
-                <NavbarComponent />
+                <NavbarComponent props={this.props}/>
 
             </View>
         );
