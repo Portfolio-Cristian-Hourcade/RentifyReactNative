@@ -19,49 +19,81 @@ class Imgupload {
     }
 }
 
-export async function getProducts() {
-    const arrayProducts = [];
-
-    const dbFirestore = firebase.firestore();
-    var docRef = dbFirestore.collection('productos');
-
-    return new Promise(resolve => {
-        docRef.get().then((doc) => {
-
-            if (doc.empty) {
-                alert("Sin datos");
-            } else {
-                doc.docs.forEach((element) => {
-                    let aux = element;
-                    aux['$key'] = element.id;
-                    arrayProducts.push(aux.data());
-                });
-            }
-            resolve(arrayProducts);
-        });
-    });
-    // console.log(arrayProducts);
-    // return await Promise.all(async);
-
-}
 
 /** Clave autogenerada con firebase **/
-export async function addClient(client: Clients) {
+export async function addClient(client: any) {
     const dbFirestore = firebase.firestore();
     dbFirestore.collection('clientes').doc(client.$key).set(client);
 }
 
+/** Clave autogenerada con firebase **/
+export async function updateClient(client: any, image?: any) {
+    const dbFirestore = firebase.firestore();
+
+    await uploadImages(image).then(data => {
+        client.foto = data;
+        dbFirestore.collection('clientes').doc(client.$key).update(client).then(e => {
+            AsyncStorage.setItem("Usuario", JSON.stringify(client));
+        })
+    });
+
+}
+
+
+async function uploadImages(element) {
+    return new Promise(resolve => {
+        alert(element);
+        var x = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        var file;
+        ImageManipulator.manipulateAsync(
+            element.uri,
+            [{ resize: { width: 800 } }],
+            { compress: 0.5, format: ImageManipulator.SaveFormat.JPEG },
+        ).catch(e => alert(e + ''))
+            .then(data => {
+                //@ts-ignore
+                fetch(data.uri)
+                    .then(res => res.blob())
+                    .then(blob => {
+                        file = blob
+                        const storageRef = firebase.storage().ref();
+                        const uploadTask = storageRef.child(`uploads/${x}`).put(file);
+                        uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
+                            (snapshot) => {
+                                // in progress
+                                // const snap = snapshot as firebase.storage.UploadTaskSnapshot;
+                            },
+                            (error) => {
+                                // fail
+                                alert(JSON.stringify(error));
+                            },
+                            () => {
+                                // success
+                                uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {
+                                    console.log("termino");
+                                    resolve(downloadURL);
+                                });
+                            }
+                        );
+                    });
+            });
+    });
+
+}
 /** Tomar producto segun una key **/
 export async function getClientsByKey(user, prop) {
-        const dbFirestore = firebase.firestore();
-        var docRef = dbFirestore.collection('clientes').doc(user.$key);
-        docRef.get().then((doc) => {
-            if (!doc.exists) {
-                addClient(user);
-            }
+    const dbFirestore = firebase.firestore();
+    var docRef = dbFirestore.collection('clientes').doc(user.$key);
+    docRef.get().then((doc) => {
+        if (!doc.exists) {
+            addClient(user);
             AsyncStorage.setItem("Usuario", JSON.stringify(user));
-            prop.navigation.navigate('Home');
-        });
+        } else {
+            AsyncStorage.setItem("Usuario", JSON.stringify(doc.data()));
+        }
+
+        prop.navigation.navigate('Home');
+    });
 }
 
 

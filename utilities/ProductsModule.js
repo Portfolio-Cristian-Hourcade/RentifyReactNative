@@ -25,24 +25,45 @@ export async function getProducts() {
     var docRef = dbFirestore.collection('productos');
 
     return new Promise(resolve => {
-    docRef.get().then((doc) => {
+        docRef.get().then((doc) => {
 
             if (doc.empty) {
                 alert("Sin datos");
             } else {
                 doc.docs.forEach((element) => {
-                    let aux = element;
-                    aux['$key'] = element.id;
-                    arrayProducts.push(aux.data());
+                    let aux = element.data();
+                    aux.$key = element.id;
+                    arrayProducts.push(aux);
                 });
             }
             resolve(arrayProducts);
+            AsyncStorage.setItem("Product", JSON.stringify(arrayProducts));
         });
     });
-    // console.log(arrayProducts);
-    // return await Promise.all(async);
-
 }
+
+
+export async function getProductsWithKey(key) {
+
+    const dbFirestore = firebase.firestore();
+    var docRef = dbFirestore.collection('productos').doc(key);
+
+    return new Promise(resolve => {
+        docRef.get().then((doc) => {
+
+            if (doc.empty) {
+                alert("Sin datos");
+            } else {
+
+                let aux = doc.data();
+                aux['$key'] = doc.id;
+                resolve(aux);
+
+            }
+        });
+    });
+}
+
 
 /** Clave autogenerada con firebase **/
 export async function addProduct(product: Product) {
@@ -70,7 +91,7 @@ export async function addProduct(product: Product) {
         const dbFirestore = firebase.firestore();
         dbFirestore.collection('productos').add(product);
     });
-
+    getProducts();
 }
 
 

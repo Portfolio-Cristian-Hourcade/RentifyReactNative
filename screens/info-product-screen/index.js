@@ -16,7 +16,7 @@ import CardPropiedadHome from '../../components/Cards/cardPropiedadHome';
 import Sidebar from '../../components/Sidebar';
 import NavbarComponent from '../../navigation/Navbar';
 import { Review } from '../../models/Review';
-import { getProducts } from '../../utilities/ProductsModule';
+import { getProducts, getProductsWithKey } from '../../utilities/ProductsModule';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { CheckBox } from 'react-native-elements';
 
@@ -45,14 +45,18 @@ export default class InfoProductScreen extends Component<any> {
 
     async componentWillMount() {
         var data = await AsyncStorage.getItem('Selected');
-        this.setState({ product: JSON.parse(data) });
-        console.log(this.state.product);
+        data = JSON.parse(data);
+        
+        //@ts-ignore
+        getProductsWithKey(data.$key).then( e => {
+            this.setState({ product: e });
+        })
 
     }
 
     render() {
         if (this.state.product === null) {
-            return <Text>Cargando...</Text>
+            return null
         }
 
         return (

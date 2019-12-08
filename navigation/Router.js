@@ -10,6 +10,8 @@ import MapsScreen from '../screens/maps-screen';
 import AddRentScreen from '../screens/add-rent-screen';
 import InfoProductScreen from '../screens/info-product-screen';
 import MyAccountScreen from '../screens/my-accoutn-screen';
+import UpdateMyProfileScreen from '../screens/update-my-profile-screen';
+import ListProductScreen from '../screens/list-products-screen';
 
 const AppNavigator = createStackNavigator({
 
@@ -21,7 +23,9 @@ const AppNavigator = createStackNavigator({
     Maps: MapsScreen,
     AddProducto:AddRentScreen,
     InfoProduct:InfoProductScreen,
-    Account: MyAccountScreen
+    Account: MyAccountScreen,
+    Profile: UpdateMyProfileScreen,
+    List: ListProductScreen
 
 }, {
     initialRouteName: 'Splash',

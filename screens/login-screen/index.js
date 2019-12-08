@@ -70,14 +70,23 @@ export default class LoginScreen extends Component<any> {
                 const response = await fetch(
                     `https://graph.facebook.com/me?access_token=${token}`
                 );
-                    // console.log(await response.json());
-                    
-                    await response.json().then(async (e) => {
-                        e.id = 'f'+e.id;
-                        e.$key = e.id;
-                        // user.id = 'f'+user.id;  
-                        await getClientsByKey(e,this.props);
-                    })
+                // console.log(await response.json());
+
+                await response.json().then(async (e) => {
+                    e.id = 'f' + e.id;
+                    e.$key = e.id;
+                    e.billetera = 0;
+                    e.sexo = null;
+                    e.nacionalidad = null;
+                    e.biografia = null;
+                    e.edad = null;
+                    e.estudio = null;
+                    e.foto = "https://firebasestorage.googleapis.com/v0/b/myspace-632e9.appspot.com/o/uploads%2Faccount_circle-24px.svg?alt=media&token=478a1514-c88a-4f4e-b62e-71f755478bd9";
+
+
+                    // user.id = 'f'+user.id;  
+                    await getClientsByKey(e, this.props);
+                })
 
                 //  Alert.alert("Logged in!", `Hi ${(await response.json()).name}!`);
                 //  await getClientsByKey(user, this.props).then(e => { });
@@ -112,7 +121,14 @@ export default class LoginScreen extends Component<any> {
             scopes: ["profile", "email"]
         });
         if (type === 'success') {
-            user['$key'] = 'g'+user.id;
+            user['$key'] = 'g' + user.id;
+            user['billetera'] = 0;
+            user['sexo'] = null;
+            user['nacionalidad'] = null;
+            user['biografia'] = null;
+            user['edad'] = null;
+            user['estudio'] = null;
+            user['foto'] = 'https://firebasestorage.googleapis.com/v0/b/myspace-632e9.appspot.com/o/uploads%2Faccount_circle-24px.svg?alt=media&token=478a1514-c88a-4f4e-b62e-71f755478bd9';
             await getClientsByKey(user, this.props).then(e => { });
 
         }
@@ -131,8 +147,8 @@ export default class LoginScreen extends Component<any> {
 
         });
         const result = await AsyncStorage.getItem("Usuario");
-        
-        if(result !== null){
+
+        if (result !== null) {
             this.props.navigation.navigate("Home");
         }
 

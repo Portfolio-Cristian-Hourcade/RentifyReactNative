@@ -146,7 +146,7 @@ export default class HomeScreen extends Component<any> {
 
 
                         <View>
-                            <TouchableOpacity style={styles.btnVerMas}>
+                            <TouchableOpacity style={styles.btnVerMas} onPress={() => this.props.navigation.navigate('List')}>
                                 <Text style={{ color: 'white', fontFamily: 'font2', position: 'relative', top: 1 }}>VER MÁS ALQUILERES EN MI ZONA</Text>
                             </TouchableOpacity>
                         </View>

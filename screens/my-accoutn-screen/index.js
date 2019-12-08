@@ -18,12 +18,15 @@ export default class MyAccountScreen extends Component<any> {
 
 
     render() {
+        if(this.state.user === null){
+            return  null;
+        }
         return (
             <View>
                 <ScrollView style={{ height: height }}>
                     <View style={styles.containerData}>
                         <View style={{ marginTop: 45, marginLeft: 30, marginRight: 30, justifyContent: 'center', alignItems: 'center' }}>
-                            <Image source={{ uri: 'http://okcundinamarca.com/wp-content/uploads/2017/10/perro-feliz.jpg' }} style={{ height: 135, width: 135, borderRadius: 8 }} />
+                            <Image source={{ uri: this.state.user.foto }} style={{ height: 135, width: 135, borderRadius: 8 }} />
                         </View>
                         <View>
                             {(this.state.user !== null) ?
@@ -37,7 +40,7 @@ export default class MyAccountScreen extends Component<any> {
                                 <Text style={{ textAlign: 'left' }}>Mi billetera:</Text>
                             </View>
                             <View style={{ flex: 0.6 }}>
-                                <Text style={{ textAlign: 'right' }}>$0.0</Text>
+                                <Text style={{ textAlign: 'right' }}>${this.state.user.billetera}</Text>
                             </View>
                         </View>
                         {/* <View style={styles.buscadorGroup}>
@@ -73,7 +76,7 @@ export default class MyAccountScreen extends Component<any> {
 
 
                         <View style={{ marginTop: 30 }}>
-                            <TouchableOpacity style={styles.btnVerMas}>
+                            <TouchableOpacity style={styles.btnVerMas} onPress={() => {this.props.navigation.navigate("Profile")}}>
                                 <Text style={{ color: '#131313', fontFamily: 'font3', position: 'relative', top: 1 }}>COMPLETAR MI PERFIL</Text>
                             </TouchableOpacity>
                         </View>
@@ -176,7 +179,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         paddingLeft:10,
         alignItems: 'flex-start',
-        elevation: 3,
     },
     btnOutline: {
         borderColor: '#ff5d5a',

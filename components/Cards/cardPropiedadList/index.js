@@ -134,9 +134,11 @@ const styles = StyleSheet.create({
 
     col12: {
         position: 'relative',
-        top: -35,
         flex: 1,
-        padding: 10
+        padding: 10,
+        height:100, 
+        justifyContent:'center'
+     
     },
     centerTop: {
         alignItems: "center",
