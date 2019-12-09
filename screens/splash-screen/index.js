@@ -1,17 +1,30 @@
 import React, { Component } from 'react';
-import { StyleSheet, Image, StatusBar,View } from 'react-native';
+import { StyleSheet, Image, StatusBar, View, AsyncStorage } from 'react-native';
 import { Dimensions } from 'react-native';
 import { VerifiyAuth } from '../../utilities/FirebaseModule';
+import * as Font from "expo-font";
 
-export default class SplashScreen extends Component {
+export default class SplashScreen extends Component<any> {
 
-    componentDidMount() {
-        VerifiyAuth(this.props.navigation);
+    async componentDidMount() {
+        const result = await AsyncStorage.getItem("Usuario");
+        await Font.loadAsync({
+            font1: require("../../assets/fonts/Poppins-Regular.ttf"),
+            font2: require("../../assets/fonts/Poppins-Bold.ttf"),
+            font3: require("../../assets/fonts/Poppins-Medium.ttf"),
+        });
+        
+        if (result !== null) {
+            this.props.navigation.navigate("Home");
+        } else {
+            this.props.navigation.navigate("Login");
+        }
     }
+
     render() {
         return (
             <View>
-                <StatusBar backgroundColor="#000000" barStyle="light-content" />
+
 
             </View>
         );

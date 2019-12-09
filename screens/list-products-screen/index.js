@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Platform, Text, TextInput, View, TouchableOpacity, Image, ImageBackground, Button, ScrollView, StatusBar, AsyncStorage } from 'react-native';
+import { StyleSheet, Platform, Text, TextInput, View, TouchableOpacity, Image, ImageBackground, Button, ScrollView, StatusBar, AsyncStorage, TouchableHighlight, TouchableHighlightBase, TouchableNativeFeedback } from 'react-native';
 
 import { LogOut } from '../../utilities/FirebaseModule';
 
@@ -126,6 +126,37 @@ export default class ListProductScreen extends Component<any> {
         }
     }
 
+    _filter = (e) => {
+        barriosPosibles.map(element => {
+            if (element.length > e.nativeEvent.text.length) {
+                if (element.toUpperCase().match(e.nativeEvent.text.toUpperCase())) {
+                    let aux = []
+                    this.state.listProducts.map(product => {
+                        if (product.barrio !== undefined) {
+                            if (product.barrio.toUpperCase() === element.toUpperCase()) {
+                                aux.push(product);
+                            }
+                        }
+                    });
+                    this.setState({ ubication: element, listFilters: aux });
+                }
+            } else {
+                if (e.nativeEvent.text.toUpperCase().match(element.toUpperCase())) {
+                    let aux = []
+                    this.state.listProducts.map(product => {
+                        if (product.barrio !== undefined) {
+                            if (product.barrio.toUpperCase() === element.toUpperCase()) {
+                                aux.push(product);
+                            }
+                        }
+                    });
+                    this.setState({ ubication: element, listFilters: aux });
+
+                }
+            }
+        })
+    }
+
     async componentDidMount() {
         // @ts-ignore
         Geocoder.init("AIzaSyDA0NuvPpBCOw5WIOiZ4VS64Od1LocV0XA", { language: 'es' });// use a valid API key
@@ -134,15 +165,33 @@ export default class ListProductScreen extends Component<any> {
             // this.getLocationAsync();
             const data = await AsyncStorage.getItem('Ubication');
             if (data !== null) {
-                let aux = [];
-                this.state.listProducts.map(element => {
-                    if (element.barrio !== undefined) {
-                        if (element.barrio.toUpperCase() === data.toUpperCase()) {
-                            aux.push(element);
+                barriosPosibles.map(element => {
+                    if (element.length > data.length) {
+                        if (element.toUpperCase().match(data.toUpperCase())) {
+                            let aux = []
+                            this.state.listProducts.map(product => {
+                                if (product.barrio !== undefined) {
+                                    if (product.barrio.toUpperCase() === element.toUpperCase()) {
+                                        aux.push(product);
+                                    }
+                                }
+                            });
+                            this.setState({ ubication: element, listFilters: aux });
+                        }
+                    } else {
+                        if (data.toUpperCase().match(element.toUpperCase())) {
+                            let aux = []
+                            this.state.listProducts.map(product => {
+                                if (product.barrio !== undefined) {
+                                    if (product.barrio.toUpperCase() === element.toUpperCase()) {
+                                        aux.push(product);
+                                    }
+                                }
+                            });
+                            this.setState({ ubication: element, listFilters: aux });
                         }
                     }
-                });
-                this.setState({ listFilters: aux, ubication: data });
+                })
             }
         })
     }
@@ -164,7 +213,7 @@ export default class ListProductScreen extends Component<any> {
             <View style={{ backgroundColor: 'white', position: 'relative' }}>
 
                 <View style={styles.containerData}>
-                    <TextInput style={styles.inputBuscador} defaultValue={this.state.ubication} onSubmitEditing={() => { alert("HOLA") }} placeholderTextColor="#000000" keyboardType='web-search' placeholder="¿Dondé estás buscando alojarte?" />
+                    <TextInput style={styles.inputBuscador} defaultValue={this.state.ubication} onSubmitEditing={(e) => { this._filter(e) }} placeholderTextColor="#000000" keyboardType='web-search' placeholder="¿Dondé estás buscando alojarte?" />
                     <TouchableOpacity style={{
                         height: 50, width: 80, backgroundColor: '#ff5d5a',
                         position: 'absolute', top: 0, right: 0,
@@ -176,7 +225,9 @@ export default class ListProductScreen extends Component<any> {
                         height: 50, width: 50,
                         position: 'absolute', top: 0, left: 0,
                         justifyContent: 'center', alignItems: 'center', elevation: 9
-                    }}>
+
+                    }}
+                    onPress={() => {this.props.navigation.navigate('Home'); AsyncStorage.removeItem('Ubication')}}>
                         <Image source={require('../../assets/arrow_b.png')} style={{ width: 25, height: 25, position: 'relative', top: 1, }} />
                     </TouchableOpacity>
                 </View>
@@ -198,7 +249,6 @@ export default class ListProductScreen extends Component<any> {
 
                     </View>
                 </ScrollView>
-                <NavbarComponent props={this.props} />
 
             </View>
         );

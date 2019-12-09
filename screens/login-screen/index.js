@@ -30,30 +30,6 @@ export default class LoginScreen extends Component<any> {
         }
     };
 
-
-    singUp = () => {
-        // if (this.state.user.password.length < 6) {
-        //     alert("Por favor, escribí una contraseña de más de 6 caracteres.");
-        // } else if (this.state.user.name.length < 2) {
-        //     alert("¡Upps! No te olvides de escribir tu nombre.");
-        // } else if (this.state.user.email.length < 4) {
-        //     alert("¡Uppps! Necesitas escribir tu email para poder iniciar sesión en un futuro.");
-
-        // } else {
-        //     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        //     if (re.test(String(this.state.user.email).toLowerCase())) {
-        //         try {
-        //             SingUp(this.state.user.email, this.state.user.password, this.state.user.name, this.props.navigation);
-
-        //         } catch (err) {
-        //             alert(err);
-        //         }
-        //     } else {
-        //         alert('Ingresaste un email invalido, por favor ingresá uno válido');
-        //     }
-        // }
-    };
-
     fb = async () => {
         try {
 

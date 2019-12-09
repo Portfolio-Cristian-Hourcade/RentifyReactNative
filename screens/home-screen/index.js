@@ -67,6 +67,11 @@ export default class HomeScreen extends Component<any> {
             this.props.navigation.navigate('List');
     }
 
+    goToListFromHomeInput = async (e) => {
+        await AsyncStorage.setItem('Ubication', e.nativeEvent.text);
+        this.props.navigation.navigate('List');
+    };
+
     async getListProduct() {
         await getProducts().then(data => {
             this.setState({ listProducts: data });
@@ -93,7 +98,8 @@ export default class HomeScreen extends Component<any> {
                         </View>
                         <View style={styles.buscadorGroup}>
                             <Image source={require('../../assets/lupa.png')} style={styles.searchIcon} />
-                            <TextInput style={styles.inputBuscador} placeholderTextColor="#000000" placeholder="¿Dondé estás buscando alojarte?" />
+                            <TextInput style={styles.inputBuscador} keyboardType='web-search' onSubmitEditing={(e) => { this.goToListFromHomeInput(e) }}
+                             placeholderTextColor="#000000" placeholder="¿En qué barrio estas buscando alojarte?" />
                         </View>
                     </View>
                     <View style={{ flex: 1, flexDirection: 'row' }}>
