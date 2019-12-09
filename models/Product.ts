@@ -9,6 +9,7 @@ export interface Product {
     price: number;
     ubicacion: any;
     ubicacionGPS:any;
+    barrio:any;
     type: string;
     pisoDp:any;
     plan: number; // 1 normal - 2 premium - 3 ultra premium

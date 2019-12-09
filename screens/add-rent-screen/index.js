@@ -72,6 +72,7 @@ export default class AddRentScreen extends Component<any> {
         image: null,
         step: 1,
         isOpenMap: false,
+        barrio:null,
         isOpenPrestaciones: false,
         isOpenNormas: false,
         location: null,
@@ -147,7 +148,11 @@ export default class AddRentScreen extends Component<any> {
             .then(json => {
                 var addressComponent = json.results[0].address_components[0];
                 alert("Tu dirección aproximada es: " + json.results[0].formatted_address);
-                this.setState({ ubicationGPS: { latitude: this.state.region.latitude, longitude: this.state.region.longitude } });
+                console.log();
+
+                this.setState({
+                    barrio: json.results[3].address_components[0].long_name, ubicationGPS: { latitude: this.state.region.latitude, longitude: this.state.region.longitude }
+                });
                 this.setState({ ubication: json.results[0].formatted_address, isOpenMap: false });
             })
             .catch(error => console.warn(error));
@@ -674,7 +679,7 @@ export default class AddRentScreen extends Component<any> {
                         <View >
 
                             <TouchableOpacity style={styles.btnGoogle} onPress={() => this.props.navigation.navigate('Home')}>
-                                <Text style={{fontFamily:'font3', fontSize:16,color:'white'}}>VOLVER AL INICIO</Text>
+                                <Text style={{ fontFamily: 'font3', fontSize: 16, color: 'white' }}>VOLVER AL INICIO</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -726,6 +731,7 @@ export default class AddRentScreen extends Component<any> {
                 price: Number(this.state.precio),
                 ubicacionGPS: this.state.ubicationGPS,
                 ubicacion: this.state.ubication,
+                barrio: this.state.barrio,
                 type: this.state.tipoPropiedad,
                 pisoDp: this.state.piso,
                 plan: this.state.plan,
@@ -947,8 +953,8 @@ const styles = StyleSheet.create({
         marginLeft: 70,
         marginRight: 70,
         height: 45,
-        elevation:2,
-        marginTop:10
+        elevation: 2,
+        marginTop: 10
     },
     inputBuscador: {
         height: 50,

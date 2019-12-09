@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
         elevation: 4,
     },
     item: {
-        width: screenWidth - 60,
+        width: screenWidth,
         height: 170,
     },
     image: {

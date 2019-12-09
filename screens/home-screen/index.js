@@ -17,6 +17,10 @@ import NavbarComponent from '../../navigation/Navbar';
 import { Review } from '../../models/Review';
 import { getProducts } from '../../utilities/ProductsModule';
 import Spinner from 'react-native-loading-spinner-overlay';
+import * as Location from 'expo-location';
+import * as Permissions from 'expo-permissions';
+import Geocoder from 'react-native-geocoding';
+
 var width = Dimensions.get('window').width - 30; //full width
 
 export default class HomeScreen extends Component<any> {
@@ -39,6 +43,28 @@ export default class HomeScreen extends Component<any> {
 
     async componentDidMount() {
         await this.getListProduct();
+        // @ts-ignore
+        Geocoder.init("AIzaSyDA0NuvPpBCOw5WIOiZ4VS64Od1LocV0XA", { language: 'es' });// use a valid API key
+    }
+
+    goToList = async () => {
+        let { status } = await Permissions.askAsync(Permissions.LOCATION);
+        if (status !== 'granted') {
+            this.setState({
+                errorMessage: 'Permission to access location was denied',
+            });
+        }
+
+        let location = await Location.getCurrentPositionAsync({});
+
+        // @ts-ignore
+        Geocoder.from(location.coords.latitude, location.coords.longitude)
+            .then(async (json) => {
+                await AsyncStorage.setItem('Ubication', json.results[3].address_components[0].long_name);
+            })
+            .catch(error => console.warn(error));
+
+            this.props.navigation.navigate('List');
     }
 
     async getListProduct() {
@@ -139,14 +165,14 @@ export default class HomeScreen extends Component<any> {
                                         images={this.state.listProducts[3].images}
                                         title={this.state.listProducts[3].name}
                                         price={this.state.listProducts[3].price} />
-                                        
+
                                 </TouchableOpacity>
                             </View>
                         </View>
 
 
                         <View>
-                            <TouchableOpacity style={styles.btnVerMas} onPress={() => this.props.navigation.navigate('List')}>
+                            <TouchableOpacity style={styles.btnVerMas} onPress={() => this.goToList()}>
                                 <Text style={{ color: 'white', fontFamily: 'font2', position: 'relative', top: 1 }}>VER MÁS ALQUILERES EN MI ZONA</Text>
                             </TouchableOpacity>
                         </View>
@@ -162,7 +188,7 @@ export default class HomeScreen extends Component<any> {
                         </View>
                     </View>
                 </ScrollView>
-                <NavbarComponent props={this.props}/>
+                <NavbarComponent props={this.props} />
 
             </View>
         );

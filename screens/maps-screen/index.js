@@ -56,6 +56,7 @@ export default class MapsScreen extends Component<any> {
         }
 
         let location = await Location.getCurrentPositionAsync({});
+        console.log(location)
         this.setState({ location });
         this.setState({ marker: { latitude: this.state.location.coords.latitude, longitude: this.state.location.coords.longitude } })
     };
