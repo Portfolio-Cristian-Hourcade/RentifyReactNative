@@ -29,13 +29,19 @@ export async function addClient(client: any) {
 /** Clave autogenerada con firebase **/
 export async function updateClient(client: any, image?: any) {
     const dbFirestore = firebase.firestore();
+    if (image !== undefined) {
 
-    await uploadImages(image).then(data => {
-        client.foto = data;
+        await uploadImages(image).then(data => {
+            client.foto = data;
+            dbFirestore.collection('clientes').doc(client.$key).update(client).then(e => {
+                AsyncStorage.setItem("Usuario", JSON.stringify(client));
+            })
+        });
+    } else {
         dbFirestore.collection('clientes').doc(client.$key).update(client).then(e => {
             AsyncStorage.setItem("Usuario", JSON.stringify(client));
         })
-    });
+    }
 
 }
 

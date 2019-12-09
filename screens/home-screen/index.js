@@ -27,6 +27,7 @@ export default class HomeScreen extends Component<any> {
 
     state = {
         listProducts: null,
+        input: null,
     }
 
 
@@ -43,11 +44,6 @@ export default class HomeScreen extends Component<any> {
 
     async componentDidMount() {
         await this.getListProduct();
-        // @ts-ignore
-        Geocoder.init("AIzaSyDA0NuvPpBCOw5WIOiZ4VS64Od1LocV0XA", { language: 'es' });// use a valid API key
-    }
-
-    goToList = async () => {
         let { status } = await Permissions.askAsync(Permissions.LOCATION);
         if (status !== 'granted') {
             this.setState({
@@ -55,22 +51,31 @@ export default class HomeScreen extends Component<any> {
             });
         }
 
+        // @ts-ignore
+        Geocoder.init("AIzaSyDA0NuvPpBCOw5WIOiZ4VS64Od1LocV0XA", { language: 'es' });// use a valid API key
+    }
+
+    goToList = async () => {
+        
+
         let location = await Location.getCurrentPositionAsync({});
 
         // @ts-ignore
         Geocoder.from(location.coords.latitude, location.coords.longitude)
             .then(async (json) => {
                 await AsyncStorage.setItem('Ubication', json.results[3].address_components[0].long_name);
+                this.props.navigation.navigate('List');
             })
             .catch(error => console.warn(error));
-
-            this.props.navigation.navigate('List');
     }
 
     goToListFromHomeInput = async (e) => {
-        await AsyncStorage.setItem('Ubication', e.nativeEvent.text);
-        this.props.navigation.navigate('List');
+        this.setState({input: ''});
+        await AsyncStorage.setItem('Ubication', e.nativeEvent.text).then(ex => {
+            this.props.navigation.navigate('List');
+        });
     };
+
 
     async getListProduct() {
         await getProducts().then(data => {
@@ -98,7 +103,8 @@ export default class HomeScreen extends Component<any> {
                         </View>
                         <View style={styles.buscadorGroup}>
                             <Image source={require('../../assets/lupa.png')} style={styles.searchIcon} />
-                            <TextInput style={styles.inputBuscador} keyboardType='web-search' onSubmitEditing={(e) => { this.goToListFromHomeInput(e) }}
+                            <TextInput style={styles.inputBuscador}  value={this.state.input} onChangeText={(e) => this.setState({input: e})}
+                            keyboardType='web-search' onSubmitEditing={(e) => { this.goToListFromHomeInput(e) }}
                              placeholderTextColor="#000000" placeholder="¿En qué barrio estas buscando alojarte?" />
                         </View>
                     </View>

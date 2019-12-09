@@ -165,39 +165,44 @@ export default class ListProductScreen extends Component<any> {
             // this.getLocationAsync();
             const data = await AsyncStorage.getItem('Ubication');
             if (data !== null) {
+                let aux = []
+                var ubication;
                 barriosPosibles.map(element => {
                     if (element.length > data.length) {
                         if (element.toUpperCase().match(data.toUpperCase())) {
-                            let aux = []
                             this.state.listProducts.map(product => {
                                 if (product.barrio !== undefined) {
                                     if (product.barrio.toUpperCase() === element.toUpperCase()) {
                                         aux.push(product);
+                                        ubication = element;
                                     }
                                 }
                             });
-                            this.setState({ ubication: element, listFilters: aux });
+
                         }
                     } else {
                         if (data.toUpperCase().match(element.toUpperCase())) {
-                            let aux = []
                             this.state.listProducts.map(product => {
                                 if (product.barrio !== undefined) {
                                     if (product.barrio.toUpperCase() === element.toUpperCase()) {
                                         aux.push(product);
+                                        ubication = element;
+
                                     }
                                 }
                             });
-                            this.setState({ ubication: element, listFilters: aux });
                         }
                     }
-                })
+                });
+                this.setState({ ubication: ubication, listFilters: aux });
+
             }
         })
     }
 
     async getListProduct() {
-        this.setState({ listProducts: JSON.parse(await AsyncStorage.getItem("Product")) });
+        const aux = await AsyncStorage.getItem("Product")
+        this.setState({ listProducts: JSON.parse(aux) });
 
     }
 
@@ -209,6 +214,9 @@ export default class ListProductScreen extends Component<any> {
                 textContent={''} />)
         }
 
+        if(this.state.listFilters.length === 0){
+            return (<Text>Sin resultados</Text>)
+        }
         return (
             <View style={{ backgroundColor: 'white', position: 'relative' }}>
 
@@ -227,7 +235,7 @@ export default class ListProductScreen extends Component<any> {
                         justifyContent: 'center', alignItems: 'center', elevation: 9
 
                     }}
-                    onPress={() => {this.props.navigation.navigate('Home'); AsyncStorage.removeItem('Ubication')}}>
+                        onPress={() => { this.props.navigation.navigate('Home'); AsyncStorage.removeItem('Ubication') }}>
                         <Image source={require('../../assets/arrow_b.png')} style={{ width: 25, height: 25, position: 'relative', top: 1, }} />
                     </TouchableOpacity>
                 </View>

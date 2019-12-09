@@ -57,6 +57,7 @@ export default class LoginScreen extends Component<any> {
                     e.biografia = null;
                     e.edad = null;
                     e.estudio = null;
+                    e.favs = null;
                     e.foto = "https://firebasestorage.googleapis.com/v0/b/myspace-632e9.appspot.com/o/uploads%2Faccount_circle-24px.svg?alt=media&token=478a1514-c88a-4f4e-b62e-71f755478bd9";
 
 
@@ -75,6 +76,7 @@ export default class LoginScreen extends Component<any> {
             alert(`Facebook Login Error: ${message}`);
         }
     }
+    
     singIn = async () => {
         /**
          * 
@@ -104,11 +106,13 @@ export default class LoginScreen extends Component<any> {
             user['biografia'] = null;
             user['edad'] = null;
             user['estudio'] = null;
+            user['favs'] = null;
             user['foto'] = 'https://firebasestorage.googleapis.com/v0/b/myspace-632e9.appspot.com/o/uploads%2Faccount_circle-24px.svg?alt=media&token=478a1514-c88a-4f4e-b62e-71f755478bd9';
             await getClientsByKey(user, this.props).then(e => { });
 
         }
     }
+
 
     responseGoogle = (response) => {
         console.log(response);

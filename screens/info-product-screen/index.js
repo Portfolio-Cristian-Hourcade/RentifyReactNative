@@ -23,6 +23,7 @@ import { CheckBox } from 'react-native-elements';
 import { Asset } from 'expo-asset';
 import DialogMatch from '../../components/Cards/dialogMatch';
 import DialogMatchAdd from '../../components/Cards/dialogMatchAdd';
+import { updateClient } from '../../utilities/ClientsModule';
 var width = Dimensions.get('window').width; //full width
 var he = Dimensions.get('window').height; //full width
 
@@ -33,6 +34,7 @@ export default class InfoProductScreen extends Component<any> {
         isOpenMatch1: false,
         isOpenMatch2: false,
         modalVisible: false,
+        user: null
     }
 
     setModalVisible(visible) {
@@ -46,12 +48,21 @@ export default class InfoProductScreen extends Component<any> {
     async componentWillMount() {
         var data = await AsyncStorage.getItem('Selected');
         data = JSON.parse(data);
+
+        const data2 = await AsyncStorage.getItem('Usuario');
         
+        this.setState({user: JSON.parse(data2)});
+
         //@ts-ignore
-        getProductsWithKey(data.$key).then( e => {
+        getProductsWithKey(data.$key).then(e => {
             this.setState({ product: e });
         })
 
+    }
+
+    saveFav = () => {
+        this.state.user.favs.push(this.state.product.$key);
+        updateClient(this.state.user);
     }
 
     render() {
@@ -96,7 +107,7 @@ export default class InfoProductScreen extends Component<any> {
 
                                 <TouchableOpacity
                                     onPress={() => { this.setState({ isOpenMatch1: false, isOpenMatch2: false, modalVisible: false }) }}
-                                    style={{ width: (width - 80) - 30, height: 50, marginTop:5, borderRadius: 8, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white' }}>
+                                    style={{ width: (width - 80) - 30, height: 50, marginTop: 5, borderRadius: 8, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white' }}>
                                     <Text style={{ color: '#ff5d5a', fontFamily: 'font1' }}>Cancelar</Text>
                                 </TouchableOpacity>
                             </View>
@@ -124,7 +135,7 @@ export default class InfoProductScreen extends Component<any> {
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         onPress={() => { this.setState({ isOpenMatch1: false, isOpenMatch2: false, modalVisible: false }) }}
-                                        style={{ width: (width - 80) - 30, height: 50,marginTop:5, borderRadius: 8, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white' }}>
+                                        style={{ width: (width - 80) - 30, height: 50, marginTop: 5, borderRadius: 8, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white' }}>
                                         <Text style={{ color: '#ff5d5a', fontFamily: 'font1' }}>Cancelar</Text>
                                     </TouchableOpacity>
                                 </View>
@@ -132,9 +143,9 @@ export default class InfoProductScreen extends Component<any> {
                             : null
                     }
                 </Modal>
-
-                <ScrollView style={{ height: he }}>
+                <ScrollView style={{ height: he, position: 'relative' }}>
                     <Image style={{ width: width, height: width, borderBottomLeftRadius: 25, borderBottomRightRadius: 25 }} source={{ uri: this.state.product.images[0], cache: 'force-cache' }} />
+
                     <View style={{ elevation: 0, width: width, padding: 20, paddingBottom: 100 }}>
                         <Text style={{ color: 'black', fontSize: 22, fontFamily: 'font1' }}>
                             {this.state.product.name}
@@ -144,9 +155,10 @@ export default class InfoProductScreen extends Component<any> {
                                 ${this.state.product.price} <Text style={{ fontSize: 17, fontFamily: 'font1', color: '#333', paddingLeft: 10 }}> / Día</Text>
                             </Text>
                             <View style={{ flex: 0.4, justifyContent: 'flex-start', alignContent: 'flex-start', position: 'relative' }}>
-                                <TouchableOpacity style={{ backgroundColor: '#ff5d5a', borderRadius: 50, height: 60, width: 60, position: 'absolute', top: -15, right: 0 }}
-                                    onPress={() => { this.setModalVisible(true) }}>
-                                    <Image source={require('../../assets/icons/user.png')} style={{ width: 30, height: 30, position: 'relative', left: 13, top: 15 }} />
+                                <TouchableOpacity 
+                                onPress={() => {this.saveFav()}}
+                                style={{ backgroundColor: '#ff5d5a', borderRadius: 50, height: 60, width: 60,justifyContent: 'center',alignItems:'center', position: 'absolute', top: -15, right: 0 }}>
+                                    <Image source={require('../../assets/heart.png')} style={{ width: 30, height: 30, }} />
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -208,6 +220,23 @@ export default class InfoProductScreen extends Component<any> {
                             }}>
                                 <Text style={{ color: 'white', fontFamily: 'font1', fontSize: 14, position: 'relative', top: 2 }}>
                                     Compartir Propiedad
+                    </Text>
+                            </TouchableOpacity>
+                        </View>
+                        <View>
+                            <TouchableOpacity style={{
+                                height: 50,
+                                width: width - 40,
+                                marginBottom: 5,
+                                marginTop: 5,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                backgroundColor:  '#3483fa',
+                                borderRadius: 4,
+                            }}
+                                onPress={() => { this.setModalVisible(true) }}>
+                                <Text style={{ color: 'white', fontFamily: 'font1', fontSize: 14, position: 'relative', top: 2 }}>
+                                    Buscar Compañeros
                     </Text>
                             </TouchableOpacity>
                         </View>
