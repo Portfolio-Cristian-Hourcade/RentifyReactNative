@@ -132,7 +132,7 @@ export default class ListHistorialScreen extends Component<any> {
             <View style={{ backgroundColor: 'white', position: 'relative' }}>
 
                 <View style={styles.containerData}>
-                    <TextInput style={styles.inputBuscador} defaultValue={this.state.ubication}  placeholderTextColor="#000000" keyboardType='web-search' placeholder="Tus historial de propiedades" />
+                    <TextInput style={styles.inputBuscador} defaultValue={this.state.ubication} placeholderTextColor="#000000" keyboardType='web-search' placeholder="Tus historial de propiedades" />
                     <TouchableOpacity style={{
                         height: 50, width: 80, backgroundColor: '#ff5d5a',
                         position: 'absolute', top: 0, right: 0,
@@ -154,12 +154,14 @@ export default class ListHistorialScreen extends Component<any> {
                     <View style={{ paddingBottom: 95 }}>
                         <View style={{ flex: 1, flexWrap: 'wrap', flexDirection: 'row', marginLeft: 0, marginRight: 0, marginTop: 5, justifyContent: 'center' }}>
                             {this.state.listProducts.map(element => {
-                                return (<TouchableOpacity style={{ marginTop: 30 }} onPress={() => this.lookProduct(element)}>
+                                return (<View style={{ marginTop: 30 }} >
                                     <CardPropiedadList
+                                        navigation={this.props.navigation}
+                                        product={element}
                                         images={element.images}
                                         title={element.name}
                                         price={element.price} />
-                                </TouchableOpacity>)
+                                </View>)
                             })}
                         </View>
 

@@ -6,7 +6,7 @@ import { LogOut } from '../../utilities/FirebaseModule';
 
 import StylesGlobal from '../../styles/styles';
 import MapView, { Marker } from 'react-native-maps';
-import Carousel from 'react-native-snap-carousel';
+import Carousel, { Pagination, ParallaxImage } from 'react-native-snap-carousel';
 
 import Constants from 'expo-constants';
 import { Dimensions } from "react-native";
@@ -104,6 +104,34 @@ export default class InfoProductScreen extends Component<any> {
         this.forceUpdate();
     }
 
+
+    _renderItem = ({ item, index }, parallaxProps) => {
+        if (this.state.product.images == null) {
+            return <Text>Loading</Text>
+        }
+        return (
+            <View style={{ width: width,
+                minHeight: 500,}}>
+                <ParallaxImage
+                    source={{ uri: item }}
+                    containerStyle={{
+                        flex: 1,
+                        marginBottom: Platform.select({ ios: 0, android: 1 }), // Prevent a random Android rendering issue
+                        backgroundColor: 'white',
+                        borderRadius: 3,
+                        borderBottomRightRadius: 0,
+                        borderBottomLeftRadius: 0
+                    }}
+                    style={{
+                        ...StyleSheet.absoluteFillObject,
+                        resizeMode: 'cover',
+                    }}
+                    parallaxFactor={0.4}
+                    {...parallaxProps}
+                />
+            </View>
+        );
+    }
     render() {
         if (this.state.product === null) {
             return null
@@ -183,8 +211,15 @@ export default class InfoProductScreen extends Component<any> {
                     }
                 </Modal>
                 <ScrollView style={{ height: he, position: 'relative' }}>
-                    <Image style={{ width: width, height: width, borderBottomLeftRadius: 25, borderBottomRightRadius: 25 }} source={{ uri: this.state.product.images[0], cache: 'force-cache' }} />
-
+                    {/* <Image style={{ width: width, height: width, borderBottomLeftRadius: 25, borderBottomRightRadius: 25 }} source={{ uri: this.state.product.images[0], cache: 'force-cache' }} /> */}
+                    <Carousel
+                        sliderWidth={width}
+                        sliderHeight={500}
+                        itemWidth={(width)}
+                        data={this.state.product.images}
+                        renderItem={({ item, index }, parallaxProps) => this._renderItem({ item, index }, parallaxProps)}
+                        hasParallaxImages={true}
+                    />
                     <View style={{ elevation: 0, width: width, padding: 20, paddingBottom: 100 }}>
                         <Text style={{ color: 'black', fontSize: 22, fontFamily: 'font1' }}>
                             {this.state.product.name}

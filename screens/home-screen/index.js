@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Platform, Text, TextInput, View, TouchableOpacity, Image, ImageBackground, Button, ScrollView, StatusBar, AsyncStorage } from 'react-native';
+import { StyleSheet, Platform, Text, TextInput, View, TouchableOpacity, Image, ImageBackground, Button, ScrollView, StatusBar, AsyncStorage, TouchableHighlight } from 'react-native';
 
 import { LogOut } from '../../utilities/FirebaseModule';
 
@@ -22,6 +22,55 @@ import * as Permissions from 'expo-permissions';
 import Geocoder from 'react-native-geocoding';
 
 var width = Dimensions.get('window').width - 30; //full width
+
+const barriosPosibles = [
+    'Agronomia',
+    'Almagro',
+    'Balvanera',
+    'Barracas',
+    'Belgrano',
+    'Boedo',
+    'Caballito',
+    'Chacarita',
+    'Coghlan',
+    'Colegiales',
+    'Constitucion',
+    'Flores',
+    'Floresta',
+    'La Boca',
+    'Liniers',
+    'Mataderos',
+    'Monserrat',
+    'Monte Castro',
+    'Nuñez',
+    'Palermo',
+    'Parque Avellaneda',
+    'Parque Chacabuco',
+    'Parque Chas',
+    'Parque Patricios',
+    'Paternal',
+    'Pompeya',
+    'Puerto Madero',
+    'Recoleta',
+    'Retiro',
+    'Saavedra',
+    'San Nicolás',
+    'San Telmo',
+    'Vélez Sárfield',
+    'Versalles',
+    'Villa Crespo',
+    'Villa del parque',
+    'Villa Devoto',
+    'Villa gral mitre',
+    'Villa Lugano',
+    'Villa luro',
+    'Villa ortuzar',
+    'Villa Real',
+    'Villa riachuelo',
+    'Villa santa rita',
+    'Villa soldati',
+    'Villa Urquiza'
+]
 
 export default class HomeScreen extends Component<any> {
 
@@ -63,8 +112,21 @@ export default class HomeScreen extends Component<any> {
         // @ts-ignore
         Geocoder.from(location.coords.latitude, location.coords.longitude)
             .then(async (json) => {
-                await AsyncStorage.setItem('Ubication', json.results[3].address_components[0].long_name);
-                this.props.navigation.navigate('List');
+                let barrio = null;
+                json.results.map(item => {
+                    item.address_components.map(data => {
+                        barriosPosibles.map(mes => {
+
+                            if (mes.toUpperCase().match(data.long_name.toUpperCase())) {
+                                console.log("se encontro");
+                                barrio = mes;
+                            }
+                        });
+                    });
+                });
+                await AsyncStorage.setItem('Ubication', barrio).then(e => {
+                    this.props.navigation.navigate('List');
+                });
             })
             .catch(error => console.warn(error));
     }
@@ -140,45 +202,48 @@ export default class HomeScreen extends Component<any> {
 
                         <View style={{ flex: 1, flexDirection: 'row', marginLeft: 15, marginRight: 15, marginTop: 20 }}>
                             <View style={{ flex: 0.5, marginRight: 15, }}>
-                                <TouchableOpacity onPress={() => this.lookProduct(this.state.listProducts[0])}>
+
 
                                     <CardPropiedadHome
                                         images={this.state.listProducts[0].images}
                                         title={this.state.listProducts[0].name}
-                                        price={this.state.listProducts[0].price} />
-                                </TouchableOpacity>
+                                        price={this.state.listProducts[0].price}
+                                        navigation={this.props.navigation}
+                                        product={this.state.listProducts[0]} />
+
+
                             </View>
                             <View style={{ flex: 0.5 }}>
-                                <TouchableOpacity onPress={() => this.lookProduct(this.state.listProducts[1])}>
 
                                     <CardPropiedadHome
                                         images={this.state.listProducts[1].images}
                                         title={this.state.listProducts[1].name}
-                                        price={this.state.listProducts[1].price} />
-                                </TouchableOpacity>
+                                        price={this.state.listProducts[1].price}
+                                        navigation={this.props.navigation}
+                                        product={this.state.listProducts[1]} />
 
                             </View>
                         </View>
 
                         <View style={{ flex: 1, flexDirection: 'row', marginLeft: 15, marginRight: 15, marginTop: 20 }}>
                             <View style={{ flex: 0.5, marginRight: 15, }}>
-                                <TouchableOpacity onPress={() => this.lookProduct(this.state.listProducts[2])}>
 
                                     <CardPropiedadHome
                                         images={this.state.listProducts[2].images}
                                         title={this.state.listProducts[2].name}
-                                        price={this.state.listProducts[2].price} />
-                                </TouchableOpacity>
+                                        price={this.state.listProducts[2].price} 
+                                        navigation={this.props.navigation}
+                                        product={this.state.listProducts[2]} />
                             </View>
                             <View style={{ flex: 0.5 }}>
-                                <TouchableOpacity onPress={() => this.lookProduct(this.state.listProducts[3])}>
 
                                     <CardPropiedadHome
                                         images={this.state.listProducts[3].images}
                                         title={this.state.listProducts[3].name}
-                                        price={this.state.listProducts[3].price} />
+                                        price={this.state.listProducts[3].price} 
+                                        navigation={this.props.navigation}
+                                        product={this.state.listProducts[3]} />
 
-                                </TouchableOpacity>
                             </View>
                         </View>
 
@@ -189,23 +254,23 @@ export default class HomeScreen extends Component<any> {
                             </TouchableOpacity>
                         </View>
 
-                            <ImageBackground source={require('../../assets/bg-example.png')} style={{ width: width+30, minHeight: 250, justifyContent: 'center' }}>
-                                <View style={{ marginTop: 5, paddingLeft: 15, paddingRight: 30 }}>
-                                    <Text style={{
-                                        fontFamily: 'font2',
-                                        fontSize: 28, textAlign: 'center'
-                                    }}>¿Tenés una propiedad?</Text>
-                                    <Text style={{
-                                        fontFamily: 'font1',
-                                        fontSize: 14, textAlign: 'center'
-                                    }}>Alquilá tu propiedad con Rentify y generá una ganancia mensual de hasta $36.000 / Mes</Text>
-                                </View>
-                                <View>
-                                    <TouchableOpacity style={styles.btnOutline} onPress={() => this.props.navigation.navigate('AddProducto')}>
-                                        <Text style={{ color: '#ff5d5a', fontFamily: 'font2', position: 'relative', top: 1 }}>PUBLICAR MI PROPIEDAD</Text>
-                                    </TouchableOpacity>
-                                </View>
-                            </ImageBackground>
+                        <ImageBackground source={require('../../assets/bg-example.png')} style={{ width: width + 30, minHeight: 250, justifyContent: 'center' }}>
+                            <View style={{ marginTop: 5, paddingLeft: 15, paddingRight: 30 }}>
+                                <Text style={{
+                                    fontFamily: 'font2',
+                                    fontSize: 28, textAlign: 'center'
+                                }}>¿Tenés una propiedad?</Text>
+                                <Text style={{
+                                    fontFamily: 'font1',
+                                    fontSize: 14, textAlign: 'center'
+                                }}>Alquilá tu propiedad con Rentify y generá una ganancia mensual de hasta $36.000 / Mes</Text>
+                            </View>
+                            <View>
+                                <TouchableOpacity style={styles.btnOutline} onPress={() => this.props.navigation.navigate('AddProducto')}>
+                                    <Text style={{ color: '#ff5d5a', fontFamily: 'font2', position: 'relative', top: 1 }}>PUBLICAR MI PROPIEDAD</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </ImageBackground>
 
                     </View>
                 </ScrollView>

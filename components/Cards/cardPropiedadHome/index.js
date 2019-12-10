@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Platform, Text, View, Image, Button, TouchableOpacity } from 'react-native';
+import { StyleSheet, Platform, Text, View, Image, Button, TouchableOpacity, AsyncStorage } from 'react-native';
 import Carousel, { Pagination, ParallaxImage } from 'react-native-snap-carousel';
 import { Dimensions } from 'react-native';
 
@@ -30,7 +30,8 @@ export default class CardPropiedadHome extends Component<any> {
         }
 
         return (
-            <View style={styles.item}>
+            <TouchableOpacity style={styles.item} onPress={() => { this.lookProduct() }}>
+
                 <ParallaxImage
                     source={{ uri: item }}
                     containerStyle={styles.imageContainer}
@@ -38,8 +39,14 @@ export default class CardPropiedadHome extends Component<any> {
                     parallaxFactor={0.4}
                     {...parallaxProps}
                 />
-            </View>
+            </TouchableOpacity>
         );
+    }
+
+    lookProduct = async () => {
+        await AsyncStorage.setItem('Selected', JSON.stringify(this.props.product)).then(e => {
+            this.props.navigation.navigate('InfoProduct');
+        })
     }
 
     getArrayData = () => {
@@ -67,13 +74,13 @@ export default class CardPropiedadHome extends Component<any> {
                         renderItem={({ item, index }, parallaxProps) => this._renderItem({ item, index }, parallaxProps)}
                         hasParallaxImages={true}
                     />
-                    <View style={styles.col12}>
+                    <TouchableOpacity style={styles.col12} onPress={() => { this.lookProduct() }}>
                         <Text style={styles.textWeight}> 20 Reseñas - Belgrano</Text>
                         <Text style={styles.titleCard}>
                             {this.props.title}
                         </Text>
                         <Text style={styles.textWeight}> ${this.props.price} por noche</Text>
-                    </View>
+                    </TouchableOpacity>
 
 
                 </View>

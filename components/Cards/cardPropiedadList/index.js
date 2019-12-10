@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Platform, Text, View, Image, Button, TouchableOpacity } from 'react-native';
+import { StyleSheet, Platform, Text, View, Image, Button, TouchableOpacity, AsyncStorage } from 'react-native';
 import Carousel, { Pagination, ParallaxImage } from 'react-native-snap-carousel';
 import { Dimensions } from 'react-native';
 
@@ -27,13 +27,20 @@ export default class CardPropiedadList extends Component<any> {
         this.setState({ images: this.props.images })
     }
 
+    lookProduct = async () => {
+        await AsyncStorage.setItem('Selected', JSON.stringify(this.props.product)).then(e => {
+            this.props.navigation.navigate('InfoProduct');
+        })
+    }
+
     _renderItem = ({ item, index }, parallaxProps) => {
         if (this.state.images == null) {
             return <Text>Loading</Text>
         }
 
         return (
-            <View style={styles.item}>
+            <TouchableOpacity style={styles.item} onPress={() => { this.lookProduct() }}>
+
                 <ParallaxImage
                     source={{ uri: item, cache: 'force-cache' }}
                     containerStyle={styles.imageContainer}
@@ -41,7 +48,7 @@ export default class CardPropiedadList extends Component<any> {
                     parallaxFactor={0.4}
                     {...parallaxProps}
                 />
-            </View>
+            </TouchableOpacity>
         );
     }
 
@@ -61,25 +68,33 @@ export default class CardPropiedadList extends Component<any> {
         }
         return (
             <View style={styles.card}>
+
                 <View style={styles.column}>
+
                     <Carousel
                         sliderWidth={(screenWidth) - 60}
-                        sliderHeight={170}
+                        sliderHeight={screenWidth * 2}
                         itemWidth={(screenWidth)}
                         data={this.props.images}
                         renderItem={({ item, index }, parallaxProps) => this._renderItem({ item, index }, parallaxProps)}
                         hasParallaxImages={true}
+                        onPress={() => { alert('hola') }}
+                        ref={(c) => { this._carousel = c; }}
                     />
-                    <View style={styles.col12}>
-                        <Text style={styles.textWeight}> 20 Reseñas - Belgrano</Text>
-                        <Text style={styles.titleCard}>
-                            {this.props.title}
-                        </Text>
-                        <Text style={styles.textWeight}> ${this.props.price} por noche</Text>
-                    </View>
+                    <TouchableOpacity onPress={() => { this.lookProduct() }}>
+
+                        <View style={styles.col12}>
+                            <Text style={styles.textWeight}> 20 Reseñas - Belgrano</Text>
+                            <Text style={styles.titleCard}>
+                                {this.props.title}
+                            </Text>
+                            <Text style={styles.textWeight}> ${this.props.price} por noche</Text>
+                        </View>
 
 
+                    </TouchableOpacity>
                 </View>
+
             </View>
 
         )
@@ -104,8 +119,8 @@ const styles = StyleSheet.create({
         elevation: 4,
     },
     item: {
-        width: screenWidth,
-        height: 170,
+        width: screenWidth - 60,
+        height: 350
     },
     image: {
         ...StyleSheet.absoluteFillObject,
@@ -114,10 +129,11 @@ const styles = StyleSheet.create({
     titleCard: {
         fontFamily: 'font2',
         fontSize: 16,
+        width: screenWidth - 90,
     },
     imageContainer: {
         flex: 1,
-        // marginBottom: Platform.select({ ios: 0, android: 1 }), // Prevent a random Android rendering issue
+        // marginBottom: Platform.select({ios: 0, android: 1 }), // Prevent a random Android rendering issue
         backgroundColor: 'white',
         borderRadius: 3,
         borderBottomRightRadius: 0,
@@ -136,9 +152,9 @@ const styles = StyleSheet.create({
         position: 'relative',
         flex: 1,
         padding: 10,
-        height:100, 
-        justifyContent:'center'
-     
+        height: 100,
+        justifyContent: 'center'
+
     },
     centerTop: {
         alignItems: "center",

@@ -109,6 +109,7 @@ export default class ListProductScreen extends Component<any> {
                         }
                     }
                 });
+                console.log(this.state.listProducts);
                 this.setState({ listFilters: aux });
             })
             .catch(error => console.warn(error));
@@ -166,7 +167,7 @@ export default class ListProductScreen extends Component<any> {
             const data = await AsyncStorage.getItem('Ubication');
             if (data !== null) {
                 let aux = []
-                var ubication;
+                var ubication = null;
                 barriosPosibles.map(element => {
                     if (element.length > data.length) {
                         if (element.toUpperCase().match(data.toUpperCase())) {
@@ -194,8 +195,15 @@ export default class ListProductScreen extends Component<any> {
                         }
                     }
                 });
+                if(ubication == null){
+                    ubication = data;
+                    aux = this.state.listProducts;
+                }
                 this.setState({ ubication: ubication, listFilters: aux });
 
+            }else{
+                ubication = 'Rentify'
+                this.setState({ ubication: ubication, listFilters: this.state.listProducts });
             }
         })
     }
@@ -244,12 +252,14 @@ export default class ListProductScreen extends Component<any> {
                         <Text style={{ fontFamily: 'font2', fontSize: 24, marginLeft: 15, marginRight: 15, marginTop: 30, marginBottom: 15 }}>Más de {this.state.listFilters.length} alojamientos en {this.state.ubication} </Text>
                         <View style={{ flex: 1, flexWrap: 'wrap', flexDirection: 'row', marginLeft: 0, marginRight: 0, marginTop: 5, justifyContent: 'center' }}>
                             {this.state.listFilters.map(element => {
-                                return (<TouchableOpacity style={{ marginBottom: 30 }} onPress={() => this.lookProduct(element)}>
+                                return (<View style={{ marginBottom: 30 }}>
                                     <CardPropiedadList
+                                        navigation={this.props.navigation}
+                                        product={element}
                                         images={element.images}
                                         title={element.name}
                                         price={element.price} />
-                                </TouchableOpacity>)
+                                </View>)
                             })}
                         </View>
 
