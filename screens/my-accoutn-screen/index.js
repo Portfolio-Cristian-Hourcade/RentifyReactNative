@@ -81,7 +81,7 @@ export default class MyAccountScreen extends Component<any> {
                             </TouchableOpacity>
                         </View>
                         <View style={{ marginTop: 0 }}>
-                            <TouchableOpacity style={styles.btnVerMas}>
+                            <TouchableOpacity style={styles.btnVerMas} onPress={() => {this.props.navigation.navigate('History')}}>
                                 <Text style={{ color: '#131313', fontFamily: 'font3', position: 'relative', top: 1 }}>MI HISTORIAL</Text>
                             </TouchableOpacity>
                         </View>
