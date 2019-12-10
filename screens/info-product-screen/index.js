@@ -57,9 +57,28 @@ export default class InfoProductScreen extends Component<any> {
         //@ts-ignore
         getProductsWithKey(data.$key).then(e => {
             this.setState({ product: e });
+            this.saveHistorial();
+
         })
 
+
     }
+    saveHistorial = () => {
+        if (this.state.user.historial[0] === null) {
+            this.state.user.historial.push(this.state.product.$key);
+        } else {
+            if (this.state.user.historial.indexOf(this.state.product.$key) !== -1) {
+                this.state.user.historial.splice(this.state.user.historial.findIndex(e => e === this.state.product.$key), 1);
+                this.state.user.historial.push(this.state.product.$key);
+            } else {
+                this.state.user.historial.push(this.state.product.$key);
+            }
+        }
+        AsyncStorage.setItem('Usuario', JSON.stringify(this.state.user));
+        updateClient(this.state.user);
+        this.forceUpdate();
+    }
+
 
     saveFav = () => {
         if (this.state.user.favs[0] === null) {
@@ -73,13 +92,13 @@ export default class InfoProductScreen extends Component<any> {
                 }
                 aux++;
             });
-            if(index !== null){
+            if (index !== null) {
                 this.state.user.favs.splice(this.state.user.favs.findIndex(e => e === this.state.product.$key), 1);
-            }else{
+            } else {
                 this.state.user.favs.push(this.state.product.$key);
             }
         }
-        
+
         AsyncStorage.setItem('Usuario', JSON.stringify(this.state.user));
         updateClient(this.state.user);
         this.forceUpdate();
@@ -179,10 +198,10 @@ export default class InfoProductScreen extends Component<any> {
                                     onPress={() => { this.saveFav() }}
                                     style={{ backgroundColor: '#ff5d5a', borderRadius: 50, height: 60, width: 60, justifyContent: 'center', alignItems: 'center', position: 'absolute', top: -15, right: 0 }}>
                                     <Image source={
-                                        (this.state.user.favs.indexOf(this.state.product.$key) !== -1) ?
-                                         require('../../assets/heart.png') 
-                                         : require('../../assets/favorite-heart-button.png')} 
-                                         style={{ width: 30, height: 30, }} />
+                                        (this.state.user.favs.indexOf(this.state.product.$key) === -1) ?
+                                            require('../../assets/heart.png')
+                                            : require('../../assets/favorite-heart-button.png')}
+                                        style={{ width: 30, height: 30, }} />
                                 </TouchableOpacity>
                             </View>
                         </View>

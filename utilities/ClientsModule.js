@@ -48,7 +48,6 @@ export async function updateClient(client: any, image?: any) {
 
 async function uploadImages(element) {
     return new Promise(resolve => {
-        alert(element);
         var x = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
         var file;
         ImageManipulator.manipulateAsync(

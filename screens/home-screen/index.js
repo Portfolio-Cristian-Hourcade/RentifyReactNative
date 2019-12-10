@@ -110,7 +110,7 @@ export default class HomeScreen extends Component<any> {
                     </View>
                     <View style={{ flex: 1, flexDirection: 'row' }}>
                         <View style={{ flex: 0.5 }}>
-                            <TouchableOpacity style={styles.btnGuardados}>
+                            <TouchableOpacity style={styles.btnGuardados} onPress={() => { this.props.navigation.navigate('Favs')}}>
                                 <View style={styles.btnIcons}>
                                     <Image source={require('../../assets/icons/heart.png')}
                                         style={{ width: 15, height: 15, marginRight: 8, position: 'relative', top: 0.5 }} />

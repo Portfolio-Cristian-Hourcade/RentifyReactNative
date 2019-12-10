@@ -12,6 +12,7 @@ import InfoProductScreen from '../screens/info-product-screen';
 import MyAccountScreen from '../screens/my-accoutn-screen';
 import UpdateMyProfileScreen from '../screens/update-my-profile-screen';
 import ListProductScreen from '../screens/list-products-screen';
+import ListFavsScreen from '../screens/list-favs-screen';
 
 const AppNavigator = createStackNavigator({
 
@@ -25,7 +26,8 @@ const AppNavigator = createStackNavigator({
     InfoProduct:InfoProductScreen,
     Account: MyAccountScreen,
     Profile: UpdateMyProfileScreen,
-    List: ListProductScreen
+    List: ListProductScreen,
+    Favs: ListFavsScreen
 
 }, {
     initialRouteName: 'Splash',
