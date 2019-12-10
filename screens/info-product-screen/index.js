@@ -40,6 +40,7 @@ export default class InfoProductScreen extends Component<any> {
     setModalVisible(visible) {
         this.setState({ modalVisible: visible, isOpenMatch1: true });
     }
+
     addDaysMatch() {
         // TODO - Agregar dias a la busqueda
         this.setState({ isOpenMatch1: false, isOpenMatch2: true });
@@ -50,8 +51,8 @@ export default class InfoProductScreen extends Component<any> {
         data = JSON.parse(data);
 
         const data2 = await AsyncStorage.getItem('Usuario');
-        
-        this.setState({user: JSON.parse(data2)});
+
+        this.setState({ user: JSON.parse(data2) });
 
         //@ts-ignore
         getProductsWithKey(data.$key).then(e => {
@@ -61,8 +62,27 @@ export default class InfoProductScreen extends Component<any> {
     }
 
     saveFav = () => {
-        this.state.user.favs.push(this.state.product.$key);
+        if (this.state.user.favs[0] === null) {
+            this.state.user.favs.push(this.state.product.$key);
+        } else {
+            let aux = 0;
+            let index = null;
+            this.state.user.favs.map(element => {
+                if (this.state.product.$key === element) {
+                    index = aux;
+                }
+                aux++;
+            });
+            if(index !== null){
+                this.state.user.favs.splice(this.state.user.favs.findIndex(e => e === this.state.product.$key), 1);
+            }else{
+                this.state.user.favs.push(this.state.product.$key);
+            }
+        }
+        
+        AsyncStorage.setItem('Usuario', JSON.stringify(this.state.user));
         updateClient(this.state.user);
+        this.forceUpdate();
     }
 
     render() {
@@ -155,10 +175,14 @@ export default class InfoProductScreen extends Component<any> {
                                 ${this.state.product.price} <Text style={{ fontSize: 17, fontFamily: 'font1', color: '#333', paddingLeft: 10 }}> / Día</Text>
                             </Text>
                             <View style={{ flex: 0.4, justifyContent: 'flex-start', alignContent: 'flex-start', position: 'relative' }}>
-                                <TouchableOpacity 
-                                onPress={() => {this.saveFav()}}
-                                style={{ backgroundColor: '#ff5d5a', borderRadius: 50, height: 60, width: 60,justifyContent: 'center',alignItems:'center', position: 'absolute', top: -15, right: 0 }}>
-                                    <Image source={require('../../assets/heart.png')} style={{ width: 30, height: 30, }} />
+                                <TouchableOpacity
+                                    onPress={() => { this.saveFav() }}
+                                    style={{ backgroundColor: '#ff5d5a', borderRadius: 50, height: 60, width: 60, justifyContent: 'center', alignItems: 'center', position: 'absolute', top: -15, right: 0 }}>
+                                    <Image source={
+                                        (this.state.user.favs.indexOf(this.state.product.$key) !== -1) ?
+                                         require('../../assets/heart.png') 
+                                         : require('../../assets/favorite-heart-button.png')} 
+                                         style={{ width: 30, height: 30, }} />
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -231,7 +255,7 @@ export default class InfoProductScreen extends Component<any> {
                                 marginTop: 5,
                                 justifyContent: 'center',
                                 alignItems: 'center',
-                                backgroundColor:  '#3483fa',
+                                backgroundColor: '#3483fa',
                                 borderRadius: 4,
                             }}
                                 onPress={() => { this.setModalVisible(true) }}>
