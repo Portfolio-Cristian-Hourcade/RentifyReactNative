@@ -56,7 +56,7 @@ export default class HomeScreen extends Component<any> {
     }
 
     goToList = async () => {
-        
+
 
         let location = await Location.getCurrentPositionAsync({});
 
@@ -70,7 +70,7 @@ export default class HomeScreen extends Component<any> {
     }
 
     goToListFromHomeInput = async (e) => {
-        this.setState({input: ''});
+        this.setState({ input: '' });
         await AsyncStorage.setItem('Ubication', e.nativeEvent.text).then(ex => {
             this.props.navigation.navigate('List');
         });
@@ -103,14 +103,14 @@ export default class HomeScreen extends Component<any> {
                         </View>
                         <View style={styles.buscadorGroup}>
                             <Image source={require('../../assets/lupa.png')} style={styles.searchIcon} />
-                            <TextInput style={styles.inputBuscador}  value={this.state.input} onChangeText={(e) => this.setState({input: e})}
-                            keyboardType='web-search' onSubmitEditing={(e) => { this.goToListFromHomeInput(e) }}
-                             placeholderTextColor="#000000" placeholder="¿En qué barrio estas buscando alojarte?" />
+                            <TextInput style={styles.inputBuscador} value={this.state.input} onChangeText={(e) => this.setState({ input: e })}
+                                keyboardType='web-search' onSubmitEditing={(e) => { this.goToListFromHomeInput(e) }}
+                                placeholderTextColor="#000000" placeholder="¿En qué barrio estas buscando alojarte?" />
                         </View>
                     </View>
                     <View style={{ flex: 1, flexDirection: 'row' }}>
                         <View style={{ flex: 0.5 }}>
-                            <TouchableOpacity style={styles.btnGuardados} onPress={() => { this.props.navigation.navigate('Favs')}}>
+                            <TouchableOpacity style={styles.btnGuardados} onPress={() => { this.props.navigation.navigate('Favs') }}>
                                 <View style={styles.btnIcons}>
                                     <Image source={require('../../assets/icons/heart.png')}
                                         style={{ width: 15, height: 15, marginRight: 8, position: 'relative', top: 0.5 }} />
@@ -183,21 +183,30 @@ export default class HomeScreen extends Component<any> {
                         </View>
 
 
-                        <View>
+                        <View style={{ paddingBottom: 45 }}>
                             <TouchableOpacity style={styles.btnVerMas} onPress={() => this.goToList()}>
                                 <Text style={{ color: 'white', fontFamily: 'font2', position: 'relative', top: 1 }}>VER MÁS ALQUILERES EN MI ZONA</Text>
                             </TouchableOpacity>
                         </View>
 
-                        <View style={styles.titleSectionContent}>
-                            <Text style={styles.titleSection}>¿Tenés una propiedad?</Text>
-                            <Text style={styles.descriptionSection}>Alquilá tu propiedad con Rentify y generá una ganancia mensual de hasta $36.000 / Mes</Text>
-                        </View>
-                        <View>
-                            <TouchableOpacity style={styles.btnOutline} onPress={() => this.props.navigation.navigate('AddProducto')}>
-                                <Text style={{ color: '#ff5d5a', fontFamily: 'font2', position: 'relative', top: 1 }}>PUBLICAR MI PROPIEDAD</Text>
-                            </TouchableOpacity>
-                        </View>
+                            <ImageBackground source={require('../../assets/bg-example.png')} style={{ width: width+30, minHeight: 250, justifyContent: 'center' }}>
+                                <View style={{ marginTop: 5, paddingLeft: 15, paddingRight: 30 }}>
+                                    <Text style={{
+                                        fontFamily: 'font2',
+                                        fontSize: 28, textAlign: 'center'
+                                    }}>¿Tenés una propiedad?</Text>
+                                    <Text style={{
+                                        fontFamily: 'font1',
+                                        fontSize: 14, textAlign: 'center'
+                                    }}>Alquilá tu propiedad con Rentify y generá una ganancia mensual de hasta $36.000 / Mes</Text>
+                                </View>
+                                <View>
+                                    <TouchableOpacity style={styles.btnOutline} onPress={() => this.props.navigation.navigate('AddProducto')}>
+                                        <Text style={{ color: '#ff5d5a', fontFamily: 'font2', position: 'relative', top: 1 }}>PUBLICAR MI PROPIEDAD</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </ImageBackground>
+
                     </View>
                 </ScrollView>
                 <NavbarComponent props={this.props} />
@@ -277,8 +286,8 @@ const styles = StyleSheet.create({
     btnOutline: {
         borderColor: '#ff5d5a',
         borderWidth: 2,
-        marginLeft: 15,
-        marginRight: 15,
+        marginLeft: 30,
+        marginRight: 30,
         height: 50,
         flex: 1,
         borderRadius: 5,

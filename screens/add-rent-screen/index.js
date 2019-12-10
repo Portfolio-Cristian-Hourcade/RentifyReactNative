@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Image, StatusBar, View, Platform, Text, Button, TouchableOpacity, CameraRoll, ScrollView, TextInput, Picker, FlatList, BackHandler } from 'react-native';
+import { StyleSheet, Image, StatusBar, View, Platform, Text, Button, TouchableOpacity, CameraRoll, ScrollView, TextInput, Picker, FlatList, BackHandler, AsyncStorage } from 'react-native';
 import { Dimensions } from 'react-native';
 import Constants from 'expo-constants';
 import * as ImagePicker from 'expo-image-picker';
@@ -25,6 +25,7 @@ export default class AddRentScreen extends Component<any> {
 
     state = {
         photos: null,
+        user:null,
         images: [],
         saveTemp: [],   //add to product
         ubication: null,   //add to product
@@ -292,7 +293,7 @@ export default class AddRentScreen extends Component<any> {
         this.setState({ saveTemp: this.state.saveTemp, images: this.state.images });
     }
 
-    componentWillMount() {
+    async componentWillMount() {
         if (Platform.OS === 'android' && !Constants.isDevice) {
             this.setState({
                 errorMessage: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
@@ -301,8 +302,9 @@ export default class AddRentScreen extends Component<any> {
             this._getLocationAsync();
             // @ts-ignore
             Geocoder.init("AIzaSyDA0NuvPpBCOw5WIOiZ4VS64Od1LocV0XA", { language: 'es' }); // use a valid API key
-
         }
+        const userData = await AsyncStorage.getItem('Usuario');
+        this.setState({user: JSON.parse(userData)});
     }
 
     _getLocationAsync = async () => {
@@ -739,7 +741,7 @@ export default class AddRentScreen extends Component<any> {
                 prestaciones: this.state.prestaciones,
                 normas: this.state.normas,
                 sales: 0,
-                keyOwner: "HAY QUEN CAMBIAR ESTO"
+                keyOwner: this.state.user.$key
             }
             this.setState({ loading: true });
             addProduct(productToPush).then(data => {
