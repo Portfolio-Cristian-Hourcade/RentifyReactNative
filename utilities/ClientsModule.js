@@ -97,7 +97,7 @@ export async function getClientsByKey(user, prop) {
             AsyncStorage.setItem("Usuario", JSON.stringify(doc.data()));
         }
 
-        prop.navigation.navigate('Home');
+        prop.navigation.replace('Home');
     });
 }
 

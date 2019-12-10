@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Platform, Text, View, TextInput, Image, ImageBackground, TouchableOpacity, StatusBar, AsyncStorage } from 'react-native';
+import { StyleSheet, Platform, Text, View, TextInput, Image, ImageBackground, TouchableOpacity, StatusBar, AsyncStorage, BackHandler } from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
 import StylesGlobal from '../../styles/styles';
 import * as Font from "expo-font";
@@ -43,6 +43,11 @@ export default class MapsScreen extends Component<any> {
 
         this.setState({
             listProducts: JSON.parse(x)
+        });
+
+        BackHandler.addEventListener('hardwareBackPress', () => {
+            this.props.navigation.goBack();
+            return true;
         });
 
     }
@@ -122,9 +127,9 @@ export default class MapsScreen extends Component<any> {
                     </View>
 
                     {(this.state.selectItem !== null) ?
-                        <TouchableOpacity onPress={() => this.lookProduct()}
+                        <View
                             style={{
-                                width: width - 60, height: height / 3,
+                                width: width - 60,
                                 borderTopRightRadius: 5, borderTopLeftRadius: 5,
                                 backgroundColor: 'white', elevation: 9,
                                 position: 'absolute', bottom: 15,
@@ -133,10 +138,12 @@ export default class MapsScreen extends Component<any> {
 
                             <CardPropiedadList
                                 images={this.state.selectItem.images}
+                                product={this.state.selectItem}
+                                navigation={this.props.navigation}
                                 title={this.state.selectItem.name}
-                                price={this.state.selectItem.price} />
-
-                        </TouchableOpacity>
+                                price={this.state.selectItem.price}
+                                maps={true} />
+                        </View>
                         : null}
                 </View>
             );

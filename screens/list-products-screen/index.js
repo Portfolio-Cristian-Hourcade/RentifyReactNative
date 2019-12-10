@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Platform, Text, TextInput, View, TouchableOpacity, Image, ImageBackground, Button, ScrollView, StatusBar, AsyncStorage, TouchableHighlight, TouchableHighlightBase, TouchableNativeFeedback } from 'react-native';
+import { StyleSheet, Platform, Text, TextInput, View, TouchableOpacity, Image, ImageBackground, Button, ScrollView, StatusBar, AsyncStorage, TouchableHighlight, TouchableHighlightBase, TouchableNativeFeedback, BackHandler } from 'react-native';
 
 import { LogOut } from '../../utilities/FirebaseModule';
 
@@ -206,6 +206,10 @@ export default class ListProductScreen extends Component<any> {
                 this.setState({ ubication: ubication, listFilters: this.state.listProducts });
             }
         })
+        BackHandler.addEventListener('hardwareBackPress', () => {
+            this.props.navigation.goBack();
+            return true;
+        });
     }
 
     async getListProduct() {

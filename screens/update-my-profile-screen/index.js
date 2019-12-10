@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Platform, Text, View, TextInput, Image, ImageBackground, TouchableOpacity, StatusBar, Alert, AsyncStorage, ScrollView } from 'react-native';
+import { StyleSheet, Platform, Text, View, TextInput, Image, ImageBackground, TouchableOpacity, StatusBar, Alert, AsyncStorage, ScrollView, BackHandler } from 'react-native';
 import NavbarComponent from '../../navigation/Navbar';
 import Constants from 'expo-constants';
 import { CheckBox } from 'react-native-elements';
@@ -42,7 +42,7 @@ export default class UpdateMyProfileScreen extends Component<any> {
         }).then(result => {
             if (!result.cancelled) {
                 this.state.user.foto = result.uri;
-                this.setState({image:result}); 
+                this.setState({ image: result });
                 this.forceUpdate();
             }
         });
@@ -74,7 +74,10 @@ export default class UpdateMyProfileScreen extends Component<any> {
             "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Togo", "Tonga", "Trinidad and Tobago",
             "Tunisia", "Turkey", "Turkmenistan", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States",
             "Uruguay", "Uzbekistan", "Vanuatu", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"]
-
+        BackHandler.addEventListener('hardwareBackPress', () => {
+            this.props.navigation.goBack();
+            return true;
+        });
         var site_value = Object.keys(paises).map(function (key) {
             var output = {};
             output['label'] = paises[key];

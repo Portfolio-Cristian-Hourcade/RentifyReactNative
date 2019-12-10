@@ -15,9 +15,9 @@ export default class SplashScreen extends Component<any> {
         });
         
         if (result !== null) {
-            this.props.navigation.navigate("Home");
+            this.props.navigation.replace("Home");
         } else {
-            this.props.navigation.navigate("Login");
+            this.props.navigation.replace("Login");
         }
     }
 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Platform, Text, TextInput, View, TouchableOpacity, Image, ImageBackground, Button, ScrollView, StatusBar, AsyncStorage, TouchableHighlight } from 'react-native';
+import { StyleSheet, Platform, Text, TextInput, View, TouchableOpacity, Image, ImageBackground, Button, ScrollView, StatusBar, AsyncStorage, TouchableHighlight, BackHandler } from 'react-native';
 
 import { LogOut } from '../../utilities/FirebaseModule';
 
@@ -99,7 +99,12 @@ export default class HomeScreen extends Component<any> {
                 errorMessage: 'Permission to access location was denied',
             });
         }
+        BackHandler.addEventListener('hardwareBackPress', function () {
+            // this.onMainScreen and this.goBack are just examples, you need to use your own implementation here
+            // Typically you would use the navigator here to go to the last state.
+            return true;
 
+        });
         // @ts-ignore
         Geocoder.init("AIzaSyDA0NuvPpBCOw5WIOiZ4VS64Od1LocV0XA", { language: 'es' });// use a valid API key
     }
@@ -204,23 +209,23 @@ export default class HomeScreen extends Component<any> {
                             <View style={{ flex: 0.5, marginRight: 15, }}>
 
 
-                                    <CardPropiedadHome
-                                        images={this.state.listProducts[0].images}
-                                        title={this.state.listProducts[0].name}
-                                        price={this.state.listProducts[0].price}
-                                        navigation={this.props.navigation}
-                                        product={this.state.listProducts[0]} />
+                                <CardPropiedadHome
+                                    images={this.state.listProducts[0].images}
+                                    title={this.state.listProducts[0].name}
+                                    price={this.state.listProducts[0].price}
+                                    navigation={this.props.navigation}
+                                    product={this.state.listProducts[0]} />
 
 
                             </View>
                             <View style={{ flex: 0.5 }}>
 
-                                    <CardPropiedadHome
-                                        images={this.state.listProducts[1].images}
-                                        title={this.state.listProducts[1].name}
-                                        price={this.state.listProducts[1].price}
-                                        navigation={this.props.navigation}
-                                        product={this.state.listProducts[1]} />
+                                <CardPropiedadHome
+                                    images={this.state.listProducts[1].images}
+                                    title={this.state.listProducts[1].name}
+                                    price={this.state.listProducts[1].price}
+                                    navigation={this.props.navigation}
+                                    product={this.state.listProducts[1]} />
 
                             </View>
                         </View>
@@ -228,21 +233,21 @@ export default class HomeScreen extends Component<any> {
                         <View style={{ flex: 1, flexDirection: 'row', marginLeft: 15, marginRight: 15, marginTop: 20 }}>
                             <View style={{ flex: 0.5, marginRight: 15, }}>
 
-                                    <CardPropiedadHome
-                                        images={this.state.listProducts[2].images}
-                                        title={this.state.listProducts[2].name}
-                                        price={this.state.listProducts[2].price} 
-                                        navigation={this.props.navigation}
-                                        product={this.state.listProducts[2]} />
+                                <CardPropiedadHome
+                                    images={this.state.listProducts[2].images}
+                                    title={this.state.listProducts[2].name}
+                                    price={this.state.listProducts[2].price}
+                                    navigation={this.props.navigation}
+                                    product={this.state.listProducts[2]} />
                             </View>
                             <View style={{ flex: 0.5 }}>
 
-                                    <CardPropiedadHome
-                                        images={this.state.listProducts[3].images}
-                                        title={this.state.listProducts[3].name}
-                                        price={this.state.listProducts[3].price} 
-                                        navigation={this.props.navigation}
-                                        product={this.state.listProducts[3]} />
+                                <CardPropiedadHome
+                                    images={this.state.listProducts[3].images}
+                                    title={this.state.listProducts[3].name}
+                                    price={this.state.listProducts[3].price}
+                                    navigation={this.props.navigation}
+                                    product={this.state.listProducts[3]} />
 
                             </View>
                         </View>

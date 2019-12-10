@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { StyleSheet, Platform, Text, View, TextInput, Image, ImageBackground, TouchableOpacity, StatusBar, Alert, AsyncStorage, ScrollView } from 'react-native';
+import { StyleSheet, Platform, Text, View, TextInput, Image, ImageBackground, TouchableOpacity, StatusBar, Alert, AsyncStorage, ScrollView, BackHandler } from 'react-native';
 import NavbarComponent from '../../navigation/Navbar';
 import Constants from 'expo-constants';
 import { Dimensions } from "react-native";
+import { NavigationActions } from 'react-navigation';
 var width = Dimensions.get('window').width - 30; //full width
 var height = Dimensions.get('window').height  //full width
 
@@ -14,12 +15,16 @@ export default class MyAccountScreen extends Component<any> {
     async componentDidMount() {
         const result = await AsyncStorage.getItem('Usuario');
         this.setState({ user: JSON.parse(result) })
+        BackHandler.addEventListener('hardwareBackPress', () => {
+            this.props.navigation.goBack();
+            return true;
+        });
     }
 
 
     render() {
-        if(this.state.user === null){
-            return  null;
+        if (this.state.user === null) {
+            return null;
         }
         return (
             <View>
@@ -76,12 +81,12 @@ export default class MyAccountScreen extends Component<any> {
 
 
                         <View style={{ marginTop: 30 }}>
-                            <TouchableOpacity style={styles.btnVerMas} onPress={() => {this.props.navigation.navigate("Profile")}}>
+                            <TouchableOpacity style={styles.btnVerMas} onPress={() => { this.props.navigation.navigate("Profile") }}>
                                 <Text style={{ color: '#131313', fontFamily: 'font3', position: 'relative', top: 1 }}>COMPLETAR MI PERFIL</Text>
                             </TouchableOpacity>
                         </View>
                         <View style={{ marginTop: 0 }}>
-                            <TouchableOpacity style={styles.btnVerMas} onPress={() => {this.props.navigation.navigate('History')}}>
+                            <TouchableOpacity style={styles.btnVerMas} onPress={() => { this.props.navigation.navigate('History') }}>
                                 <Text style={{ color: '#131313', fontFamily: 'font3', position: 'relative', top: 1 }}>MI HISTORIAL</Text>
                             </TouchableOpacity>
                         </View>
@@ -97,8 +102,8 @@ export default class MyAccountScreen extends Component<any> {
                             </TouchableOpacity>
                         </View>
 
-                        <View style={{marginTop:60}}>
-                            <TouchableOpacity style={styles.btnGuardados} onPress={() => { AsyncStorage.clear(); this.props.navigation.navigate('Login') }}>
+                        <View style={{ marginTop: 60 }}>
+                            <TouchableOpacity style={styles.btnGuardados} onPress={() => { AsyncStorage.clear().then(e => { this.props.navigation.replace('Login') }) }}>
                                 <Text style={{ color: 'white', fontFamily: 'font3', position: 'relative', top: 1 }}>CERRAR SESIÓN</Text>
                             </TouchableOpacity>
                         </View>
@@ -109,6 +114,7 @@ export default class MyAccountScreen extends Component<any> {
             </View>
         )
     }
+   
 }
 
 
@@ -164,7 +170,7 @@ const styles = StyleSheet.create({
     },
     titleSection: {
         fontFamily: 'font2',
-        textAlign:'center',
+        textAlign: 'center',
         fontSize: 24
     },
     btnVerMas: {
@@ -177,7 +183,7 @@ const styles = StyleSheet.create({
         flex: 1,
         borderRadius: 5,
         justifyContent: 'center',
-        paddingLeft:10,
+        paddingLeft: 10,
         alignItems: 'flex-start',
     },
     btnOutline: {
@@ -210,7 +216,7 @@ const styles = StyleSheet.create({
     descriptionSection: {
         fontFamily: 'font1',
         fontSize: 14,
-        textAlign:'center'
+        textAlign: 'center'
     },
 
     icon: {

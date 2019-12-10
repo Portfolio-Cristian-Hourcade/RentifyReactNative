@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Platform, Text, View, TextInput, Image, ImageBackground, TouchableOpacity, StatusBar, Alert, AsyncStorage } from 'react-native';
+import { StyleSheet, Platform, Text, View, TextInput, Image, ImageBackground, TouchableOpacity, StatusBar, Alert, AsyncStorage, BackHandler } from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
 import StylesGlobal from '../../styles/styles';
 import * as Font from "expo-font";
@@ -128,13 +128,14 @@ export default class LoginScreen extends Component<any> {
             font3: require("../../assets/fonts/Poppins-Medium.ttf"),
 
         });
-        const result = await AsyncStorage.getItem("Usuario");
-
-        if (result !== null) {
-            this.props.navigation.navigate("Home");
-        }
-
         this.setState({ fontsLoaded: true });
+
+        BackHandler.addEventListener('hardwareBackPress', function () {
+            // this.onMainScreen and this.goBack are just examples, you need to use your own implementation here
+            // Typically you would use the navigator here to go to the last state.
+                return true;
+            
+        });
     }
 
     render() {

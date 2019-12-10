@@ -29,7 +29,12 @@ export default class CardPropiedadList extends Component<any> {
 
     lookProduct = async () => {
         await AsyncStorage.setItem('Selected', JSON.stringify(this.props.product)).then(e => {
-            this.props.navigation.navigate('InfoProduct');
+            if(this.props.replaceIt !== undefined ){
+                this.props.navigation.replace('InfoProduct');
+            }else{
+                this.props.navigation.navigate('InfoProduct');
+
+            }
         })
     }
 
@@ -39,7 +44,11 @@ export default class CardPropiedadList extends Component<any> {
         }
 
         return (
-            <TouchableOpacity style={styles.item} onPress={() => { this.lookProduct() }}>
+            <TouchableOpacity style={{
+                width: screenWidth - 60,
+                height: (this.props.maps !== undefined)? 200 : 300
+            }}
+                 onPress={() => { this.lookProduct() }}>
 
                 <ParallaxImage
                     source={{ uri: item, cache: 'force-cache' }}
@@ -73,7 +82,7 @@ export default class CardPropiedadList extends Component<any> {
 
                     <Carousel
                         sliderWidth={(screenWidth) - 60}
-                        sliderHeight={screenWidth * 2}
+                        sliderHeight={(this.props.maps !== undefined)? 200 : 300}
                         itemWidth={(screenWidth)}
                         data={this.props.images}
                         renderItem={({ item, index }, parallaxProps) => this._renderItem({ item, index }, parallaxProps)}
@@ -81,15 +90,13 @@ export default class CardPropiedadList extends Component<any> {
                         onPress={() => { alert('hola') }}
                         ref={(c) => { this._carousel = c; }}
                     />
-                    <TouchableOpacity onPress={() => { this.lookProduct() }}>
+                    <TouchableOpacity style={styles.col12} onPress={() => { this.lookProduct() }}>
 
-                        <View style={styles.col12}>
                             <Text style={styles.textWeight}> 20 Reseñas - Belgrano</Text>
                             <Text style={styles.titleCard}>
                                 {this.props.title}
                             </Text>
                             <Text style={styles.textWeight}> ${this.props.price} por noche</Text>
-                        </View>
 
 
                     </TouchableOpacity>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Platform, Text, TextInput, View, TouchableOpacity, Image, ImageBackground, Button, ScrollView, StatusBar, AsyncStorage, TouchableHighlight, TouchableHighlightBase, TouchableNativeFeedback } from 'react-native';
+import { StyleSheet, Platform, Text, TextInput, View, TouchableOpacity, Image, ImageBackground, Button, ScrollView, StatusBar, AsyncStorage, TouchableHighlight, TouchableHighlightBase, TouchableNativeFeedback, BackHandler } from 'react-native';
 
 import { LogOut } from '../../utilities/FirebaseModule';
 
@@ -97,6 +97,10 @@ export default class ListHistorialScreen extends Component<any> {
 
     async componentDidMount() {
         await this.getListProduct();
+        BackHandler.addEventListener('hardwareBackPress', () => {
+            this.props.navigation.goBack();
+            return true;
+        });
     }
 
     async getListProduct() {

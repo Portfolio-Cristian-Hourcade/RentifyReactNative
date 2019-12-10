@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Platform, Text, TextInput, View, TouchableOpacity, Image, ImageBackground, Button, ScrollView, StatusBar, AsyncStorage, Modal, TouchableHighlight, Alert } from 'react-native';
+import { StyleSheet, Platform, Text, TextInput, View, TouchableOpacity, Image, ImageBackground, Button, ScrollView, StatusBar, AsyncStorage, Modal, TouchableHighlight, Alert, BackHandler } from 'react-native';
 
 import { LogOut } from '../../utilities/FirebaseModule';
 
@@ -47,6 +47,11 @@ export default class InfoProductScreen extends Component<any> {
     }
 
     async componentWillMount() {
+        BackHandler.addEventListener('hardwareBackPress', () => {
+            this.props.navigation.goBack();
+            return true;
+        });
+
         var data = await AsyncStorage.getItem('Selected');
         data = JSON.parse(data);
 
@@ -110,8 +115,10 @@ export default class InfoProductScreen extends Component<any> {
             return <Text>Loading</Text>
         }
         return (
-            <View style={{ width: width,
-                minHeight: 500,}}>
+            <View style={{
+                width: width,
+                minHeight: 500,
+            }}>
                 <ParallaxImage
                     source={{ uri: item }}
                     containerStyle={{
