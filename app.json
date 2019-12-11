@@ -1,5 +1,10 @@
 {
     "expo": {
+        "extra": {
+            "facebook": {
+                "appId": "547933809388148"
+            }
+        },
         "android": {
             "package": "com.myt.rentify",
             "googleServicesFile": "./google-services.json",
@@ -17,7 +22,7 @@
                 "googleSignIn": {
                     "reservedClientId": "com.googleusercontent.apps.998862870360-ccoep15kijfd5bqckdamul9i8vjvlkji"
                 }
-            },
+            }
         },
         "name": "Rentify",
         "slug": "rentify",

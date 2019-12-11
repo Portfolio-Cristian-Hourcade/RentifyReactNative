@@ -113,12 +113,12 @@ export default class ListMyPropiedadesScreen extends Component<any> {
         const dataToShow = [];
 
         list.map(element => {
-            if (userData === element.keyOwener) {
+            if (userData.$key === element.keyOwner) {
                 dataToShow.push(element);
             }
         });
 
-        this.setState({ listProducts: dataToShow.reverse() });
+        this.setState({ listProducts: dataToShow });
 
 
     }
@@ -130,7 +130,9 @@ export default class ListMyPropiedadesScreen extends Component<any> {
                 visible={(this.state.listProducts === null) ? true : false}
                 textContent={''} />)
         }
-
+        if(this.state.listProducts.length === 0){
+            return ( <Text>Sin resultados</Text>)
+        }
         return (
             <View style={{ backgroundColor: 'white', position: 'relative' }}>
 
@@ -161,6 +163,7 @@ export default class ListMyPropiedadesScreen extends Component<any> {
                                     <CardPropiedadList
                                         navigation={this.props.navigation}
                                         product={element}
+                                        editable={true}
                                         images={element.images}
                                         title={element.name}
                                         price={element.price} />

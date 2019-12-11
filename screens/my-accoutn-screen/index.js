@@ -91,13 +91,13 @@ export default class MyAccountScreen extends Component<any> {
                             </TouchableOpacity>
                         </View>
                         <View style={{ marginTop: 0 }}>
-                            <TouchableOpacity style={styles.btnVerMas}>
+                            <TouchableOpacity style={styles.btnVerMas} onPress={ () => { alert("Estamos trabajando en tu reputación.")}}>
                                 <Text style={{ color: '#131313', fontFamily: 'font3', position: 'relative', top: 1 }}>MI REPUTACIÓN</Text>
                             </TouchableOpacity>
                         </View>
 
                         <View style={{ marginTop: 0 }}>
-                            <TouchableOpacity style={styles.btnVerMas}>
+                            <TouchableOpacity style={styles.btnVerMas} onPress={() => { this.props.navigation.navigate('MyProps') }}>
                                 <Text style={{ color: '#131313', fontFamily: 'font3', position: 'relative', top: 1 }}>MIS PROPIEDADES</Text>
                             </TouchableOpacity>
                         </View>
@@ -114,7 +114,7 @@ export default class MyAccountScreen extends Component<any> {
             </View>
         )
     }
-   
+
 }
 
 

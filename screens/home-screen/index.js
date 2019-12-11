@@ -94,6 +94,12 @@ export default class HomeScreen extends Component<any> {
     async componentDidMount() {
         await this.getListProduct();
         let { status } = await Permissions.askAsync(Permissions.LOCATION);
+        if (Constants.platform.ios) {
+            const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+            if (status !== 'granted') {
+                alert('Sorry, we need camera roll permissions to make this work!');
+            }
+        }
         if (status !== 'granted') {
             this.setState({
                 errorMessage: 'Permission to access location was denied',

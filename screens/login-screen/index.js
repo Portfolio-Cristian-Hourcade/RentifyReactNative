@@ -32,48 +32,50 @@ export default class LoginScreen extends Component<any> {
 
     fb = async () => {
         try {
-
+            // @ts-ignore
             //@ts-ignore
             const {
                 type,
                 token,
                 expires,
             } = await Facebook.logInWithReadPermissionsAsync("547933809388148", {
+                permissions: ['public_profile'],
             });
 
-            if (type === "success") {
-                // Get the user's name using Facebook's Graph API
-                const response = await fetch(
-                    `https://graph.facebook.com/me?access_token=${token}`
-                );
-                // console.log(await response.json());
+            // if (type === "success") {
+            //     // Get the user's name using Facebook's Graph API
+            //     const response = await fetch(
+            //         `https://graph.facebook.com/me?access_token=${token}`
+            //     );
+            //     // console.log(await response.json());
 
-                await response.json().then(async (e) => {
-                    e.id = 'f' + e.id;
-                    e.$key = e.id;
-                    e.billetera = 0;
-                    e.sexo = null;
-                    e.nacionalidad = null;
-                    e.biografia = null;
-                    e.edad = null;
-                    e.estudio = null;
-                    e.favs = [];
-                    e.historial = [];
-                    e.foto = "https://firebasestorage.googleapis.com/v0/b/myspace-632e9.appspot.com/o/uploads%2Faccount_circle-24px.svg?alt=media&token=478a1514-c88a-4f4e-b62e-71f755478bd9";
-
-
-                    // user.id = 'f'+user.id;  
-                    await getClientsByKey(e, this.props);
-                })
-
-                //  Alert.alert("Logged in!", `Hi ${(await response.json()).name}!`);
-                //  await getClientsByKey(user, this.props).then(e => { });
+            //     await response.json().then(async (e) => {
+            //         e.id = 'f' + e.id;
+            //         e.$key = e.id;
+            //         e.billetera = 0;
+            //         e.sexo = null;
+            //         e.nacionalidad = null;
+            //         e.biografia = null;
+            //         e.edad = null;
+            //         e.estudio = null;
+            //         e.favs = [];
+            //         e.historial = [];
+            //         e.foto = "https://firebasestorage.googleapis.com/v0/b/myspace-632e9.appspot.com/o/uploads%2Faccount_circle-24px.svg?alt=media&token=478a1514-c88a-4f4e-b62e-71f755478bd9";
 
 
-            } else {
-                alert(`Facebook Login Error: Cancelled`);
-            }
+            //         // user.id = 'f'+user.id;  
+            //         await getClientsByKey(e, this.props);
+            //     })
+
+            //     //  Alert.alert("Logged in!", `Hi ${(await response.json()).name}!`);
+            //     //  await getClientsByKey(user, this.props).then(e => { });
+
+
+            // } else {
+            //     alert(`Facebook Login Error: Cancelled`);
+            // }
         } catch ({ message }) {
+            console.log(message);
             alert(`Facebook Login Error: ${message}`);
         }
     }

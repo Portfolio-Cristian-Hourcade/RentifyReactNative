@@ -14,6 +14,8 @@ import UpdateMyProfileScreen from '../screens/update-my-profile-screen';
 import ListProductScreen from '../screens/list-products-screen';
 import ListFavsScreen from '../screens/list-favs-screen';
 import ListHistorialScreen from '../screens/list-historial-screen';
+import ListMyPropiedadesScreen from '../screens/list-my-propieades-screen';
+import UpdatePropiedadScreen from '../screens/update-propiedad-screen';
 
 const AppNavigator = createStackNavigator({
 
@@ -29,7 +31,9 @@ const AppNavigator = createStackNavigator({
     Profile: UpdateMyProfileScreen,
     List: ListProductScreen,
     Favs: ListFavsScreen,
-    History: ListHistorialScreen
+    History: ListHistorialScreen,
+    MyProps: ListMyPropiedadesScreen,
+    UpdateProp: UpdatePropiedadScreen
 }, {
     initialRouteName: 'Splash',
     defaultNavigationOptions: {

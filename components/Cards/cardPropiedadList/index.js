@@ -18,20 +18,21 @@ export default class CardPropiedadList extends Component<any> {
     constructor(props) {
         super(props);
     }
+    editProduct = async () => {
+        await AsyncStorage.setItem('Selected', JSON.stringify(this.props.product)).then(e => {
+                this.props.navigation.navigate('UpdateProp');
+        })
+    }
 
     componentDidMount() {
-        // this.props.images.map(element => {
-        //     Image.prefetch({ uri: element });
-        // });
-
         this.setState({ images: this.props.images })
     }
 
     lookProduct = async () => {
         await AsyncStorage.setItem('Selected', JSON.stringify(this.props.product)).then(e => {
-            if(this.props.replaceIt !== undefined ){
+            if (this.props.replaceIt !== undefined) {
                 this.props.navigation.replace('InfoProduct');
-            }else{
+            } else {
                 this.props.navigation.navigate('InfoProduct');
 
             }
@@ -46,9 +47,9 @@ export default class CardPropiedadList extends Component<any> {
         return (
             <TouchableOpacity style={{
                 width: screenWidth - 60,
-                height: (this.props.maps !== undefined)? 200 : 300
+                height: (this.props.maps !== undefined) ? 200 : 300
             }}
-                 onPress={() => { this.lookProduct() }}>
+                onPress={() => { this.lookProduct() }}>
 
                 <ParallaxImage
                     source={{ uri: item, cache: 'force-cache' }}
@@ -82,7 +83,7 @@ export default class CardPropiedadList extends Component<any> {
 
                     <Carousel
                         sliderWidth={(screenWidth) - 60}
-                        sliderHeight={(this.props.maps !== undefined)? 200 : 300}
+                        sliderHeight={(this.props.maps !== undefined) ? 200 : 300}
                         itemWidth={(screenWidth)}
                         data={this.props.images}
                         renderItem={({ item, index }, parallaxProps) => this._renderItem({ item, index }, parallaxProps)}
@@ -92,12 +93,33 @@ export default class CardPropiedadList extends Component<any> {
                     />
                     <TouchableOpacity style={styles.col12} onPress={() => { this.lookProduct() }}>
 
-                            <Text style={styles.textWeight}> 20 Reseñas - Belgrano</Text>
-                            <Text style={styles.titleCard}>
-                                {this.props.title}
-                            </Text>
-                            <Text style={styles.textWeight}> ${this.props.price} por noche</Text>
+                        <Text style={styles.textWeight}> 20 Reseñas - Belgrano</Text>
+                        <Text style={styles.titleCard}>
+                            {this.props.title}
+                        </Text>
+                        <Text style={styles.textWeight}> ${this.props.price} por noche</Text>
 
+                        {
+                            (this.props.editable !== undefined) ?
+                                <TouchableOpacity style={{
+                                    backgroundColor: '#ff5d5a',
+                                    marginLeft: 15,
+                                    marginRight: 15,
+                                    height: 50,
+                                    flex: 1,
+                                    borderRadius: 5,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    elevation: 3,
+                                    marginTop: 15
+                                }}
+                                    onPress={() => this.editProduct()}>
+                                    <Text style={{
+                                        fontFamily: 'font2',
+                                        color: 'white'
+                                    }}>Editar Propiedad</Text>
+                                </TouchableOpacity>
+                                : null}
 
                     </TouchableOpacity>
                 </View>
@@ -159,7 +181,7 @@ const styles = StyleSheet.create({
         position: 'relative',
         flex: 1,
         padding: 10,
-        height: 100,
+        minHeight: 100,
         justifyContent: 'center'
 
     },
