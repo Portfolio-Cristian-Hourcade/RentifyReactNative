@@ -112,11 +112,8 @@ const styles = StyleSheet.create({
         height: 170,
     },
     image: {
-        flex:1,
-        alignSelf: 'center',
-        resizeMode:'cover',
-        backgroundColor:'red'
-     
+        ...StyleSheet.absoluteFillObject,
+        resizeMode: 'cover',
     },
     titleCard: {
         fontFamily: 'font2',
