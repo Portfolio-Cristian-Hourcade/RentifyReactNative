@@ -69,7 +69,7 @@ export default class CardPropiedadHome extends Component<any> {
                     <Carousel
                         sliderWidth={(screenWidth / 2) - 20}
                         sliderHeight={170}
-                        itemWidth={(screenWidth)}
+                        itemWidth={(screenWidth / 2 ) - 20}
                         data={this.state.images}
                         renderItem={({ item, index }, parallaxProps) => this._renderItem({ item, index }, parallaxProps)}
                         hasParallaxImages={true}
