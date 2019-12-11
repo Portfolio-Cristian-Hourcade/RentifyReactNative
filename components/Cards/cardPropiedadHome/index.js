@@ -112,9 +112,11 @@ const styles = StyleSheet.create({
         height: 170,
     },
     image: {
-        resizeMode:'contain',
-        backgroundColor:'red',
-        resizeMethod:"resize"
+        flex:1,
+        alignSelf: 'center',
+        resizeMode:'cover',
+        backgroundColor:'red'
+     
     },
     titleCard: {
         fontFamily: 'font2',
@@ -122,14 +124,9 @@ const styles = StyleSheet.create({
     },
     imageContainer: {
         flex: 1,
-        flexDirection:'row',
-        alignContent:'center',
-        // alignSelf:'center',
         marginBottom: Platform.select({ ios: 0, android: 1 }), // Prevent a random Android rendering issue
         backgroundColor: 'white',
         borderRadius: 3,
-        justifyContent:'center',
-        alignItems:'center',
         borderBottomRightRadius: 0,
         borderBottomLeftRadius: 0
     },
