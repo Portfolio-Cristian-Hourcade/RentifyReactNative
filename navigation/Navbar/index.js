@@ -37,7 +37,7 @@ export default class NavbarComponent extends Component<any> {
 
                 </View>
                 <TouchableOpacity style={styles.itemNav} onPress={() => {this.props.props.navigation.navigate("Account")}}>
-                    <Image source={require('../../assets/icons/user-1.png')} style={{ width: 30, height: 30 }} />
+                    <Image source={require('../../assets/icons/user-1.png')} style={{ width: 30, height: 30,}} />
                 </TouchableOpacity>
             </View>
         );

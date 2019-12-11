@@ -34,7 +34,6 @@ const AppNavigator = createStackNavigator({
     initialRouteName: 'Splash',
     defaultNavigationOptions: {
         header: null
-
     },
 
 });

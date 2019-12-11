@@ -11,13 +11,10 @@ export default class MyCarousel extends Component {
     let someLocalImage;
     switch (item) {
       case '1':
-        someLocalImage = require('../../assets/dog.jpg');
+        someLocalImage = require('../../assets/bg_2.png');
         break;
       case '2':
-        someLocalImage = require('../../assets/bg_app.jpg');
-        break;
-      default:
-        someLocalImage = require('../../assets/bg-login.jpg');
+        someLocalImage = require('../../assets/bg_1.png');
         break;
     }
 
@@ -38,13 +35,14 @@ export default class MyCarousel extends Component {
   render() {
     return (
       <Carousel
-        sliderWidth={screenWidth}
+        sliderWidth={screenWidth }
         sliderHeight={screenWidth}
         itemWidth={screenWidth - 60}
-        data={['1', '2', '3', '3']}
-        firstItem={1}
+        data={['1', '2']}
+        firstItem={0}
         renderItem={this._renderItem}
         hasParallaxImages={true}
+        layout={'default'}
       />
     );
   }
@@ -53,16 +51,19 @@ export default class MyCarousel extends Component {
 const styles = StyleSheet.create({
   item: {
     width: screenWidth - 60,
-    height: screenWidth - 60,
+    height: screenWidth/2+120,
   },
   imageContainer: {
     flex: 1,
-    marginBottom: Platform.select({ ios: 0, android: 1 }), // Prevent a random Android rendering issue
     backgroundColor: 'white',
     borderRadius: 8,
+    marginBottom: Platform.select({ ios: 0, android: 1 }), // Prevent a random Android rendering issue
+
   },
   image: {
     ...StyleSheet.absoluteFillObject,
-    resizeMode: 'cover',
+    resizeMode:'contain',
+    width:50,
+    height:200
   },
 })

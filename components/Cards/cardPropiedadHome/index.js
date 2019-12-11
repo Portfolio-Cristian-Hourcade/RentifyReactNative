@@ -112,8 +112,9 @@ const styles = StyleSheet.create({
         height: 170,
     },
     image: {
-        ...StyleSheet.absoluteFillObject,
-        resizeMode: 'cover',
+        resizeMode:'contain',
+        backgroundColor:'red',
+        resizeMethod:"resize"
     },
     titleCard: {
         fontFamily: 'font2',
@@ -121,9 +122,14 @@ const styles = StyleSheet.create({
     },
     imageContainer: {
         flex: 1,
+        flexDirection:'row',
+        alignContent:'center',
+        // alignSelf:'center',
         marginBottom: Platform.select({ ios: 0, android: 1 }), // Prevent a random Android rendering issue
         backgroundColor: 'white',
         borderRadius: 3,
+        justifyContent:'center',
+        alignItems:'center',
         borderBottomRightRadius: 0,
         borderBottomLeftRadius: 0
     },
