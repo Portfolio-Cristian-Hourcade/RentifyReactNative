@@ -36,8 +36,8 @@ export async function getProducts() {
                     arrayProducts.push(aux);
                 });
             }
-            resolve(arrayProducts);
             AsyncStorage.setItem("Product", JSON.stringify(arrayProducts));
+            resolve(arrayProducts);
         });
     });
 }
@@ -90,6 +90,45 @@ export async function addProduct(product: Product) {
         product.images = img;
         const dbFirestore = firebase.firestore();
         dbFirestore.collection('productos').add(product);
+    });
+    getProducts();
+}
+
+export async function updateProduct(product: Product) {
+
+    var aux = 0;
+    // product.images = product.images.map(function (el) {
+    //     if (el.type !== undefined) {
+    //         var o = Object.assign({}, el);
+    //     } else {
+    //         var o = el;
+    //     }
+
+    //     o.index = aux;
+    //     aux++;
+    //     return o;
+    // })
+
+    // console.log(product.images);
+    var img = [];
+
+    // console.log(product.images);
+    const pArray = product.images.map(async (element) => {
+        console.log(element);
+        if (element.type !== undefined) {
+            await uploadImages(element).then(data => {
+                return img[element.index] = data;
+            });
+        } else if( element.uri !== undefined) {
+             return img[element.index] = element.uri;
+        }
+    });
+
+    
+    await Promise.all(pArray).then(e => {
+        product.images = img;
+        const dbFirestore = firebase.firestore();
+        dbFirestore.collection('productos').doc(product.$key).update(product);
     });
     getProducts();
 }

@@ -95,7 +95,17 @@ export default class ListMyPropiedadesScreen extends Component<any> {
     }
 
 
+    async componentDidUpdate() {
+        const data = await AsyncStorage.getItem('Upload');
+        if(data === 'true'){
+            alert("Se actualizo tu propiedad con exito");
+            AsyncStorage.removeItem('Upload');
+
+        }
+    }
+
     async componentDidMount() {
+
         await this.getListProduct();
         BackHandler.addEventListener('hardwareBackPress', () => {
             this.props.navigation.goBack();
@@ -130,8 +140,8 @@ export default class ListMyPropiedadesScreen extends Component<any> {
                 visible={(this.state.listProducts === null) ? true : false}
                 textContent={''} />)
         }
-        if(this.state.listProducts.length === 0){
-            return ( <Text>Sin resultados</Text>)
+        if (this.state.listProducts.length === 0) {
+            return (<Text>Sin resultados</Text>)
         }
         return (
             <View style={{ backgroundColor: 'white', position: 'relative' }}>

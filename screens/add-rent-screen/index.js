@@ -468,12 +468,7 @@ export default class AddRentScreen extends Component<any> {
                             />
                         </View>
 
-                        <View style={{ marginTop: 40 }}>
-                            <Text style={{ fontFamily: 'font1', fontSize: 18 }}>Si tu propiedad esta en un edificio, ¿Que piso es?</Text>
-                        </View>
-                        <View style={{ marginTop: 15, position: 'relative' }}>
-                            <TextInput style={styles.inputBuscador} placeholderTextColor="#000000" placeholder="0" keyboardType='phone-pad' value={this.state.piso} onChangeText={data => this.setState({ piso: data })} />
-                        </View>
+                        
                         <View style={{ marginTop: 40 }}>
                             <Text style={{ fontFamily: 'font1', fontSize: 18 }}>¿Que prestaciones tiene tu propiedad?</Text>
                             <TouchableOpacity style={{
@@ -561,11 +556,11 @@ export default class AddRentScreen extends Component<any> {
                         <View>
                             <Text style={{ fontFamily: 'font3', fontSize: 21, alignSelf: 'center', marginTop: 40 }}>¿Qué exposicion queres?</Text>
                         </View>
-                        <View style={{ flex: 1, flexDirection: 'row', marginTop: 20 }}>
+                        <View style={{ flex: 1, flexDirection: 'column', marginTop: 20 }}>
                             <TouchableOpacity
                                 onPress={() => this.setState({ plan: 0 })}
                                 style={{
-                                    height: 90, flex: 0.5, backgroundColor: 'white', borderRadius: 4, shadowColor: "#000",
+                                    height: 90, flex: 1, backgroundColor: 'white', borderRadius: 4, shadowColor: "#000",
                                     justifyContent: 'center',
                                     shadowOffset: {
                                         width: 0,
@@ -599,7 +594,7 @@ export default class AddRentScreen extends Component<any> {
                             <TouchableOpacity
                                 onPress={() => this.setState({ plan: 1 })}
                                 style={{
-                                    height: 90, flex: 0.5, backgroundColor: 'white', borderRadius: 4, shadowColor: "#000",
+                                    height: 90, flex: 1, backgroundColor: 'white', borderRadius: 4, shadowColor: "#000",
                                     shadowOffset: {
                                         width: 0,
                                         height: 2,
@@ -608,7 +603,7 @@ export default class AddRentScreen extends Component<any> {
                                     shadowRadius: 3.84,
                                     justifyContent: 'center',
                                     elevation: 5,
-                                    marginBottom: 10,
+                                    marginBottom: 20,
                                     marginRight: 10,
                                     marginLeft: 10
                                 }}>

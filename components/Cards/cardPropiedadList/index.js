@@ -20,7 +20,7 @@ export default class CardPropiedadList extends Component<any> {
     }
     editProduct = async () => {
         await AsyncStorage.setItem('Selected', JSON.stringify(this.props.product)).then(e => {
-                this.props.navigation.navigate('UpdateProp');
+                this.props.navigation.replace('UpdateProp');
         })
     }
 
