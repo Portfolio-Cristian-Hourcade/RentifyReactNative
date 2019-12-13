@@ -7,7 +7,9 @@ import RNPickerSelect from 'react-native-picker-select';
 import * as ImagePicker from 'expo-image-picker';
 
 import { Dimensions } from "react-native";
+import Spinner from 'react-native-loading-spinner-overlay';
 import { updateClient } from '../../utilities/ClientsModule';
+
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height  //full width
 
@@ -22,14 +24,28 @@ export default class UpdateMyProfileScreen extends Component<any> {
         estudio: null,
         image: null,
         paises: null,
+        loading: false
     }
 
     constructor(props) {
         super(props);
     }
 
-    updateClientData = () => {
-        updateClient(this.state.user, this.state.image);
+    updateClientData = async () => {
+        this.setState({ loading: true });
+        if (this.state.image !== undefined && this.state.image !== null) {
+            await updateClient(this.state.user, this.state.image).then(e => {
+                AsyncStorage.setItem('Status', 'true').then(e => {
+                    this.props.navigation.replace('Account');
+                })
+
+            })
+        } else {
+            await updateClient(this.state.user, this.state.image);
+            AsyncStorage.setItem('Status', 'true').then(e => {
+                this.props.navigation.replace('Account')
+            });
+        }
     }
 
 
@@ -93,8 +109,14 @@ export default class UpdateMyProfileScreen extends Component<any> {
         if (this.state.user == null) {
             return null;
         }
+
         return (
             <View>
+                {this.state.loading ?
+                    <Spinner
+                        visible={(this.state.loading) ? true : false}
+                        textContent={''} />
+                    : null}
                 <ScrollView style={{ height: height }}>
                     <View style={styles.containerData}>
                         <View style={{ marginTop: 30, marginLeft: 30, marginRight: 30 }}>
@@ -113,7 +135,7 @@ export default class UpdateMyProfileScreen extends Component<any> {
                         <TextInput style={styles.inputBuscador2} placeholderTextColor="#000000" placeholder="¡Describite en unas pocas palabras!" multiline={true}
                             numberOfLines={4}
                             value={this.state.user.biografia}
-                            keyboardType='default' onChangeText={data => { this.state.user.biografia = data }} />
+                            keyboardType='default' onChangeText={data => { this.state.user.biografia = data; this.forceUpdate() }} />
                         <View style={{ marginTop: 40 }}>
                             <Text style={{ fontSize: 24, fontFamily: 'font2', }}>¿De que sexo sos?</Text>
                         </View>
@@ -150,7 +172,7 @@ export default class UpdateMyProfileScreen extends Component<any> {
                                         value: null,
                                         color: 'black',
                                     }}
-                                    onValueChange={(value) => this.state.user.nacionalidad = value}
+                                    onValueChange={(value) => { this.state.user.nacionalidad = value; this.forceUpdate() }}
                                     items={this.state.paises}
                                     value={this.state.user.nacionalidad}
                                 />
@@ -163,7 +185,7 @@ export default class UpdateMyProfileScreen extends Component<any> {
 
                         <View>
                             <TextInput style={styles.inputBuscador} placeholderTextColor="#000000" placeholder="Escribí acá tu edad"
-                                keyboardType='numeric' value={this.state.user.edad} onChangeText={data => { this.state.user.edad = data }} />
+                                keyboardType='numeric' value={this.state.user.edad} onChangeText={data => { this.state.user.edad = data; this.forceUpdate() }} />
                         </View>
                         <View style={{ marginTop: 40 }}>
                             <Text style={{ fontSize: 24, fontFamily: 'font2', }}>¿A que te dedicas?</Text>

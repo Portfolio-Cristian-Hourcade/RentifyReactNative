@@ -23,7 +23,7 @@ import { CheckBox } from 'react-native-elements';
 import { Asset } from 'expo-asset';
 import DialogMatch from '../../components/Cards/dialogMatch';
 import DialogMatchAdd from '../../components/Cards/dialogMatchAdd';
-import { updateClient } from '../../utilities/ClientsModule';
+import { updateClient, getClientsByKey, getClientsByKeyPantallaProducto } from '../../utilities/ClientsModule';
 var width = Dimensions.get('window').width; //full width
 var he = Dimensions.get('window').height; //full width
 
@@ -31,6 +31,7 @@ export default class InfoProductScreen extends Component<any> {
 
     state = {
         product: null,
+        productUser: null,
         isOpenMatch1: false,
         isOpenMatch2: false,
         modalVisible: false,
@@ -63,8 +64,14 @@ export default class InfoProductScreen extends Component<any> {
         getProductsWithKey(data.$key).then(e => {
             this.setState({ product: e });
             this.saveHistorial();
-
         })
+
+        getClientsByKeyPantallaProducto(this.state.product.keyOwner).then(e => {
+        console.log(e);
+            // this.setState({
+            //     productUser: e
+            // })
+        });
 
 
     }
@@ -140,7 +147,7 @@ export default class InfoProductScreen extends Component<any> {
         );
     }
     render() {
-        if (this.state.product === null) {
+        if (this.state.product === null && this.state.productUser === null) {
             return null
         }
 
@@ -352,6 +359,20 @@ export default class InfoProductScreen extends Component<any> {
                             </Text>
                             <Text style={{ marginTop: 10 }}>
                                 {this.state.product.description}
+                            </Text>
+                        </View>
+
+                        <View style={{ borderBottomWidth: 1, borderBottomColor: '#eee', marginTop: 15, marginBottom: 15 }} />
+
+
+                        <View style={{ borderBottomWidth: 1, borderBottomColor: '#eee', marginTop: 15, marginBottom: 15 }} />
+
+                        <View>
+                            <Text style={{ color: 'black', fontSize: 22, fontFamily: 'font1' }}>
+                                Rentador
+                            </Text>
+                            <Text style={{ marginTop: 10 }}>
+                                {this.state.productUser.name}
                             </Text>
                         </View>
 

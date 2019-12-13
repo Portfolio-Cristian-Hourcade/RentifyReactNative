@@ -21,6 +21,14 @@ export default class MyAccountScreen extends Component<any> {
         });
     }
 
+    async componentDidUpdate() {
+        if (await AsyncStorage.getItem('Status') !== null) {
+            AsyncStorage.removeItem('Status').then(e => {
+                alert('Se edito tu perfil con exito');
+            });
+        }
+    }
+
 
     render() {
         if (this.state.user === null) {
@@ -91,7 +99,7 @@ export default class MyAccountScreen extends Component<any> {
                             </TouchableOpacity>
                         </View>
                         <View style={{ marginTop: 0 }}>
-                            <TouchableOpacity style={styles.btnVerMas} onPress={ () => { alert("Estamos trabajando en tu reputación.")}}>
+                            <TouchableOpacity style={styles.btnVerMas} onPress={() => { alert("Estamos trabajando en tu reputación.") }}>
                                 <Text style={{ color: '#131313', fontFamily: 'font3', position: 'relative', top: 1 }}>MI REPUTACIÓN</Text>
                             </TouchableOpacity>
                         </View>

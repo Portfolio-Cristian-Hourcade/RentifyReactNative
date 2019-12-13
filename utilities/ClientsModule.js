@@ -28,8 +28,9 @@ export async function addClient(client: any) {
 
 /** Clave autogenerada con firebase **/
 export async function updateClient(client: any, image?: any) {
+    console.log(image);
     const dbFirestore = firebase.firestore();
-    if (image !== undefined) {
+    if (image !== undefined && image !== null) {
 
         await uploadImages(image).then(data => {
             client.foto = data;
@@ -85,6 +86,24 @@ async function uploadImages(element) {
     });
 
 }
+
+/** Tomar producto segun una key **/
+export async function getClientsByKeyPantallaProducto(user) {
+    return new Promise(resolve => {
+
+        const dbFirestore = firebase.firestore();
+        var docRef = dbFirestore.collection('clientes').doc(user.$key);
+        docRef.get().then((doc) => {
+            if (!doc.exists) {
+                alert("Surgió un error, volvé a intentarlo en un instante. Si el problema persiste, contacta al equipo de Rentify");
+            } else {
+                resolve(doc.data());
+            }
+        });
+    })
+}
+
+
 /** Tomar producto segun una key **/
 export async function getClientsByKey(user, prop) {
     const dbFirestore = firebase.firestore();
