@@ -2,12 +2,22 @@ import React, { Component } from 'react';
 import { StyleSheet, Platform, Text, TextInput, View, TouchableOpacity, Image, ImageBackground, Button, ScrollView, StatusBar, AsyncStorage, TouchableHighlight, BackHandler } from 'react-native';
 import CalendarPicker from 'react-native-calendar-picker';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Dimensions } from 'react-native';
+import { getClientsByKeyPantallaProducto } from '../../utilities/ClientsModule';
+import { getProductsWithKey } from '../../utilities/ProductsModule';
+
+var width = Dimensions.get('window').width;
+var height = Dimensions.get('window').height;
 
 export default class ReservationScreen extends Component<any> {
     state = {
         selectedStartDate: null,
         selectedEndDate: null,
         step: 1,
+        estadiaInicio: null,
+        estadiaFin: null,
+        product: null,
+        productUser: null,
     }
 
     constructor(props) {
@@ -16,8 +26,27 @@ export default class ReservationScreen extends Component<any> {
             selectedStartDate: null,
             selectedEndDate: null,
             step: 1,
+            estadiaInicio: null,
+            estadiaFin: null,
+            product: null,
+            productUser: null,
         };
         this.onDateChange = this.onDateChange.bind(this);
+    }
+
+    async componentWillMount() {
+        var data = await AsyncStorage.getItem('Selected');
+        data = JSON.parse(data);
+
+        //@ts-ignore
+        getProductsWithKey(data.$key).then(e => {
+            this.setState({ product: e });
+            getClientsByKeyPantallaProducto(e.keyOwner).then(t => {
+                this.setState({
+                    productUser: t
+                })
+            });
+        })
     }
 
     onDateChange(date, type) {
@@ -25,22 +54,45 @@ export default class ReservationScreen extends Component<any> {
             this.setState({
                 selectedEndDate: date,
             });
+            this.nextStep(this.state.selectedStartDate, this.state.selectedEndDate, type);
+
         } else {
             this.setState({
                 selectedStartDate: date,
                 selectedEndDate: null,
+                estadiaInicio: null,
+                estadiaFin: null
             });
+        }
+
+    }
+
+    nextStep = (inicio: Date, fin: Date, type?) => {
+
+        inicio = new Date(inicio);
+        fin = new Date(fin);
+        if (type === undefined) {
+            this.setState(
+                {
+                    estadiaInicio: inicio.getFullYear() + '-' + (Number(inicio.getMonth()) + 1) + '-' + inicio.getDate(),
+                    estadiaFin: fin.getFullYear() + '-' + (Number(fin.getMonth()) + 1) + '-' + fin.getDate(),
+                    step: this.state.step + 1
+                }
+            );
+        } else {
+            this.setState(
+                {
+                    estadiaInicio: inicio.getFullYear() + '-' + (Number(inicio.getMonth()) + 1) + '-' + inicio.getDate(),
+                    estadiaFin: fin.getFullYear() + '-' + (Number(fin.getMonth()) + 1) + '-' + fin.getDate(),
+                }
+            );
         }
     }
 
-    nextStep = (inicio: Date, fin: Date) => {
-        inicio = new Date(inicio);
-        fin = new Date(fin);
-        console.log('Desde el: '+inicio.getFullYear() + '-'+(Number(inicio.getMonth())+1)+'-'+inicio.getDate() );
-        console.log('Hasta el: '+fin.getFullYear() + '-'+fin.getMonth()+'-'+fin.getDate() );
-    }
-
     render() {
+        if (this.state.product === null) {
+            return null;
+        }
         const { selectedStartDate, selectedEndDate } = this.state;
         const minDate = new Date(); // Today
         const maxDate = new Date(2017, 6, 3);
@@ -55,7 +107,7 @@ export default class ReservationScreen extends Component<any> {
         switch (step) {
             case 1:
                 widthProgress = 40;
-                titleText = "1. ¡Seleccioná las fotos de tu propiedad!"
+                titleText = "Seleccioná el rango de tu estadia"
                 break;
             case 2:
                 widthProgress = 140
@@ -102,27 +154,84 @@ export default class ReservationScreen extends Component<any> {
                         }
                     </View>
                 </View>
-                <CalendarPicker
-                    allowRangeSelection={true}
-                    selectedDayColor="#ff5d5a"
-                    months={['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-                        'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']}
-                    previousTitle="Anterior"
-                    nextTitle="Proximo"
-                    disabledDates={date => {
-                        return date.isBetween(disableData, new Date());
-                    }}
-                    disabledDatesTextStyle={{ color: "#eeeeee" }}
-                    selectedDayTextColor="#FFFFFF"
-                    onDateChange={this.onDateChange}
-                />
+                <ScrollView>
 
-                <View>
-                    <Text>SELECTED DATE:{startDate}</Text>
-                </View>
-                <TouchableOpacity onPress={() => {this.nextStep(startDate, endDate)}}>
-                    <Text>Siguiente</Text>
-                </TouchableOpacity>
+                    {this.state.step === 1 ?
+                        <View>
+                            <View style={{
+                                width: width - 30,
+                                marginLeft: 15,
+                                marginTop: 30
+                            }}>
+
+                                <CalendarPicker
+                                    allowRangeSelection={true}
+                                    selectedDayColor="#ff5d5a"
+                                    months={['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                                        'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']}
+                                    previousTitle="Anterior"
+                                    nextTitle="Proximo"
+                                    disabledDates={date => {
+                                        return date.isBetween(disableData, new Date());
+                                    }}
+                                    disabledDatesTextStyle={{ color: "#eeeeee" }}
+                                    selectedDayTextColor="#FFFFFF"
+                                    onDateChange={this.onDateChange}
+                                />
+
+                            </View>
+                            <TouchableOpacity style={{
+                                width: width - 30,
+                                marginLeft: 15,
+                                height: 50,
+                                backgroundColor: (this.state.estadiaInicio !== null && this.state.estadiaFin !== null) ? '#ff5d5a' : 'gray',
+                                borderRadius: 5,
+                                justifyContent: 'center',
+                                alignItems: 'center'
+                            }}
+                                disabled={(this.state.estadiaInicio === null && this.state.estadiaFin === null)}
+                                onPress={() => { this.nextStep(startDate, endDate) }}>
+                                <Text style={{ color: 'white', fontFamily: 'font2' }}>Siguiente</Text>
+                            </TouchableOpacity>
+                        </View>
+                        : null}
+
+                    {this.state.step === 2 ?
+                        <View>
+                            <View style={{
+                                width: width - 30,
+                                marginLeft: 15,
+                                marginTop: 30,
+                                flex: 1,
+                                flexDirection: 'row'
+                            }}>
+                                <Image source={{ uri: this.state.product.images[0] }} style={{ flex: 0.4, height:85, resizeMode: 'cover', marginTop: 10, marginBottom: 10, }} />
+                                <View style={{ flex:0.6,flexDirection: 'column' }}>
+                                    <Text>{this.state.product.type}</Text>
+                                    <Text>$ {this.state.product.price.toString()}</Text>
+                                    <View>
+                                        <Image source={require('../../assets/icons/favorites.png')} style={{ width: 20, height: 20, position: 'absolute', }} />
+                                        <Text style={{ marginLeft: 30 }}>4.7 Puntuación ( 9 Reseñas )</Text>
+                                    </View>
+                                </View>
+                            </View>
+                            <TouchableOpacity style={{
+                                width: width - 30,
+                                marginLeft: 15,
+                                height: 50,
+                                backgroundColor: (this.state.estadiaInicio !== null && this.state.estadiaFin !== null) ? '#ff5d5a' : 'gray',
+                                borderRadius: 5,
+                                justifyContent: 'center',
+                                alignItems: 'center'
+                            }}
+                                disabled={(this.state.estadiaInicio === null && this.state.estadiaFin === null)}
+                                onPress={() => { this.nextStep(startDate, endDate) }}>
+                                <Text style={{ color: 'white', fontFamily: 'font2' }}>Siguiente</Text>
+                            </TouchableOpacity>
+                        </View>
+                        : null}
+
+                </ScrollView>
             </View>
         );
     }

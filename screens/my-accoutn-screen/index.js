@@ -25,6 +25,7 @@ export default class MyAccountScreen extends Component<any> {
         if (await AsyncStorage.getItem('Status') !== null) {
             AsyncStorage.removeItem('Status').then(e => {
                 alert('Se edito tu perfil con exito');
+                this.forceUpdate();
             });
         }
     }

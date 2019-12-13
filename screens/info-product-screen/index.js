@@ -80,10 +80,8 @@ export default class InfoProductScreen extends Component<any> {
                 })
             });
         })
-
-
-
     }
+    
     saveHistorial = () => {
         if (this.state.user.historial[0] === null) {
             this.state.user.historial.push(this.state.product.$key);
@@ -371,30 +369,7 @@ export default class InfoProductScreen extends Component<any> {
                             </Text>
                         </View>
 
-                        <View style={{ borderBottomWidth: 1, borderBottomColor: '#eee', marginTop: 15, marginBottom: 15 }} />
 
-
-
-                        <View>
-                            <Text style={{ color: 'black', fontSize: 22, marginBottom: 30, fontFamily: 'font1' }}>
-                                Rentador
-                            </Text>
-                            <View style={{ flex: 1, flexDirection: 'column', }}>
-
-                                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                    <Image source={{ uri: this.state.productUser.foto }} style={{ width: 100, height: 100, resizeMode: 'contain', borderRadius: 8 }} />
-                                </View>
-                                <Text style={{ marginTop: 10, textAlign: 'center', fontFamily: 'font2', fontSize: 18, justifyContent: 'center', alignItems: 'center' }}>
-                                    {this.state.productUser.name} <Text style={{ fontFamily: 'font1', fontSize: 14 }}>( {this.state.productUser.edad} años )</Text>
-                                </Text>
-                                <Text style={{ marginTop: 10, textAlign: 'center', justifyContent: 'center', alignItems: 'center' }}>
-                                    {this.calculateDays()} Días en Rentify - {this.state.productUser.nacionalidad}
-                                </Text>
-                                <Text style={{marginTop:10, textAlign:'center', fontStyle:'italic' ,justifyContent:'center',alignItems:'center'}}>
-                                    "{this.state.productUser.biografia}"
-                                </Text>
-                            </View>
-                        </View>
 
                         <View style={{ borderBottomWidth: 1, borderBottomColor: '#eee', marginTop: 15, marginBottom: 15 }} />
 
@@ -415,28 +390,51 @@ export default class InfoProductScreen extends Component<any> {
                                 }
                                 )}
                         </View>
-
                         <View style={{ borderBottomWidth: 1, borderBottomColor: '#eee', marginTop: 15, marginBottom: 15 }} />
 
-                        <View style={{ marginTop: 5, marginBottom: 5 }}>
+
+
+                        <View style={{marginTop:15}}>
+                            <Text style={{ color: 'black', fontSize: 22, marginBottom: 30, fontFamily: 'font1', textAlign:'center' }}>
+                                Rentador
+                            </Text>
+                            <View style={{ flex: 1, flexDirection: 'column', }}>
+
+                                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                    <Image source={{ uri: this.state.productUser.foto }} style={{ height: 115, width: 115, borderRadius: 50 }} />
+                                </View>
+                                <Text style={{ marginTop: 10, textAlign: 'center', fontFamily: 'font2', fontSize: 18, justifyContent: 'center', alignItems: 'center' }}>
+                                    {this.state.productUser.name} <Text style={{ fontFamily: 'font1', fontSize: 14 }}>( {this.state.productUser.edad} años )</Text>
+                                </Text>
+                                <Text style={{ marginTop: 10, textAlign: 'center', justifyContent: 'center', alignItems: 'center' }}>
+                                    {this.calculateDays()} Días en Rentify - {this.state.productUser.nacionalidad}
+                                </Text>
+                                <Text style={{ marginTop: 10, textAlign: 'center', fontStyle: 'italic', justifyContent: 'center', alignItems: 'center' }}>
+                                    "{this.state.productUser.biografia}"
+                                </Text>
+                            </View>
+                        </View>
+                        <View style={{ borderBottomWidth: 1, borderBottomColor: '#eee', marginTop: 15, marginBottom: 15 }} />
+
+                        <TouchableOpacity style={{ marginTop: 5, marginBottom: 5 }}>
                             <Text style={{ color: 'black', fontSize: 22, fontFamily: 'font1' }}>
                                 Politicas de cancelación
                             </Text>
                             <Text>
                                 La cancelación es gratuita dentro de las 48hs
                             </Text>
-                        </View>
+                        </TouchableOpacity>
 
                         <View style={{ borderBottomWidth: 1, borderBottomColor: '#eee', marginTop: 15, marginBottom: 15 }} />
 
-                        <View style={{ marginTop: 5, marginBottom: 5 }}>
+                        <TouchableOpacity style={{ marginTop: 5, marginBottom: 5 }}>
                             <Text style={{ color: 'black', fontSize: 22, fontFamily: 'font1' }}>
                                 Politicas de reservación
                             </Text>
                             <Text>
                                 Mirá cuales son las politicas de reservación
                             </Text>
-                        </View>
+                        </TouchableOpacity>
 
                         <View style={{ borderBottomWidth: 1, borderBottomColor: '#eee', marginTop: 15, marginBottom: 15 }} />
 
@@ -491,9 +489,9 @@ export default class InfoProductScreen extends Component<any> {
                         backgroundColor: '#ff5d5a',
                         borderRadius: 4,
                     }}
-                    onPress={() => {
-                        this.props.navigation.navigate('Reservation');
-                    }}>
+                        onPress={() => {
+                            this.props.navigation.navigate('Reservation');
+                        }}>
                         <Text style={{ color: 'white', fontFamily: 'font1', fontSize: 14, position: 'relative', top: 2 }}>
                             Reservar propiedad
                     </Text>
