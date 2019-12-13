@@ -20,6 +20,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
 import Geocoder from 'react-native-geocoding';
+import * as Calendar from 'expo-calendar';
 
 var width = Dimensions.get('window').width - 30; //full width
 
@@ -92,6 +93,7 @@ export default class HomeScreen extends Component<any> {
     }
 
     async componentDidMount() {
+        await Calendar.requestPermissionsAsync();
         await this.getListProduct();
         let { status } = await Permissions.askAsync(Permissions.LOCATION);
         if (Constants.platform.ios) {

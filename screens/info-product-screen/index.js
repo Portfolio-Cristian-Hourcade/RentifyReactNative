@@ -490,6 +490,9 @@ export default class InfoProductScreen extends Component<any> {
                         alignItems: 'center',
                         backgroundColor: '#ff5d5a',
                         borderRadius: 4,
+                    }}
+                    onPress={() => {
+                        this.props.navigation.navigate('Reservation');
                     }}>
                         <Text style={{ color: 'white', fontFamily: 'font1', fontSize: 14, position: 'relative', top: 2 }}>
                             Reservar propiedad
