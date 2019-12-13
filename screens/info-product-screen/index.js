@@ -47,6 +47,15 @@ export default class InfoProductScreen extends Component<any> {
         this.setState({ isOpenMatch1: false, isOpenMatch2: true });
     }
 
+    calculateDays = () => {
+        var f = new Date();
+        var fechaInicio = new Date(this.state.productUser.fechaIngreso).getTime();
+        var fechaFin = new Date(f.getFullYear() + "-" + (f.getMonth() + 1) + "-" + f.getDate()).getTime();
+
+        var diff = fechaFin - fechaInicio;
+        return (diff / (1000 * 60 * 60 * 24)).toString();
+    }
+
     async componentWillMount() {
         BackHandler.addEventListener('hardwareBackPress', () => {
             this.props.navigation.goBack();
@@ -64,14 +73,14 @@ export default class InfoProductScreen extends Component<any> {
         getProductsWithKey(data.$key).then(e => {
             this.setState({ product: e });
             this.saveHistorial();
+            console.log(e.keyOwner);
+            getClientsByKeyPantallaProducto(e.keyOwner).then(t => {
+                this.setState({
+                    productUser: t
+                })
+            });
         })
 
-        getClientsByKeyPantallaProducto(this.state.product.keyOwner).then(e => {
-        console.log(e);
-            // this.setState({
-            //     productUser: e
-            // })
-        });
 
 
     }
@@ -147,7 +156,7 @@ export default class InfoProductScreen extends Component<any> {
         );
     }
     render() {
-        if (this.state.product === null && this.state.productUser === null) {
+        if (this.state.product === null || this.state.productUser === null) {
             return null
         }
 
@@ -240,7 +249,7 @@ export default class InfoProductScreen extends Component<any> {
                         </Text>
                         <View style={{ flex: 1, flexDirection: 'row' }}>
                             <Text style={{ color: 'black', fontSize: 32, fontFamily: 'font2', flex: 0.6 }}>
-                                ${this.state.product.price} <Text style={{ fontSize: 17, fontFamily: 'font1', color: '#333', paddingLeft: 10 }}> / Día</Text>
+                                ${this.state.product.price} <Text style={{ fontSize: 17, fontFamily: 'font1', color: '#333', paddingLeft: 10 }}> / Noche</Text>
                             </Text>
                             <View style={{ flex: 0.4, justifyContent: 'flex-start', alignContent: 'flex-start', position: 'relative' }}>
                                 <TouchableOpacity
@@ -365,15 +374,26 @@ export default class InfoProductScreen extends Component<any> {
                         <View style={{ borderBottomWidth: 1, borderBottomColor: '#eee', marginTop: 15, marginBottom: 15 }} />
 
 
-                        <View style={{ borderBottomWidth: 1, borderBottomColor: '#eee', marginTop: 15, marginBottom: 15 }} />
 
                         <View>
-                            <Text style={{ color: 'black', fontSize: 22, fontFamily: 'font1' }}>
+                            <Text style={{ color: 'black', fontSize: 22, marginBottom: 30, fontFamily: 'font1' }}>
                                 Rentador
                             </Text>
-                            <Text style={{ marginTop: 10 }}>
-                                {this.state.productUser.name}
-                            </Text>
+                            <View style={{ flex: 1, flexDirection: 'column', }}>
+
+                                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                    <Image source={{ uri: this.state.productUser.foto }} style={{ width: 100, height: 100, resizeMode: 'contain', borderRadius: 8 }} />
+                                </View>
+                                <Text style={{ marginTop: 10, textAlign: 'center', fontFamily: 'font2', fontSize: 18, justifyContent: 'center', alignItems: 'center' }}>
+                                    {this.state.productUser.name} <Text style={{ fontFamily: 'font1', fontSize: 14 }}>( {this.state.productUser.edad} años )</Text>
+                                </Text>
+                                <Text style={{ marginTop: 10, textAlign: 'center', justifyContent: 'center', alignItems: 'center' }}>
+                                    {this.calculateDays()} Días en Rentify - {this.state.productUser.nacionalidad}
+                                </Text>
+                                <Text style={{marginTop:10, textAlign:'center', fontStyle:'italic' ,justifyContent:'center',alignItems:'center'}}>
+                                    "{this.state.productUser.biografia}"
+                                </Text>
+                            </View>
                         </View>
 
                         <View style={{ borderBottomWidth: 1, borderBottomColor: '#eee', marginTop: 15, marginBottom: 15 }} />

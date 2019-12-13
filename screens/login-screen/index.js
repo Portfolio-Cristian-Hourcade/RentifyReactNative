@@ -18,7 +18,8 @@ import * as Facebook from 'expo-facebook';
 
 // import { GoogleSignIn } from 'expo';
 var width = Dimensions.get('window').width; //full width
-
+var f = new Date();
+var fechaHoy = f.getFullYear() + "-" + (f.getMonth() + 1) + "-" + f.getDate();
 export default class LoginScreen extends Component<any> {
     state = {
         fontsLoaded: false,
@@ -59,7 +60,9 @@ export default class LoginScreen extends Component<any> {
             //         e.edad = null;
             //         e.estudio = null;
             //         e.favs = [];
+            //         e.review = 5;
             //         e.historial = [];
+            //         e.fechaIngreso = fechaHoy;
             //         e.foto = "https://firebasestorage.googleapis.com/v0/b/myspace-632e9.appspot.com/o/uploads%2Faccount_circle-24px.svg?alt=media&token=478a1514-c88a-4f4e-b62e-71f755478bd9";
 
 
@@ -111,6 +114,8 @@ export default class LoginScreen extends Component<any> {
             user['estudio'] = null;
             user['favs'] = [];
             user['historial'] = [];
+            user['fechaIngreso'] = fechaHoy;
+            user['review'] = 5;
             user['foto'] = 'https://firebasestorage.googleapis.com/v0/b/myspace-632e9.appspot.com/o/uploads%2Faccount_circle-24px.svg?alt=media&token=478a1514-c88a-4f4e-b62e-71f755478bd9';
             await getClientsByKey(user, this.props).then(e => { });
 
@@ -135,8 +140,8 @@ export default class LoginScreen extends Component<any> {
         BackHandler.addEventListener('hardwareBackPress', function () {
             // this.onMainScreen and this.goBack are just examples, you need to use your own implementation here
             // Typically you would use the navigator here to go to the last state.
-                return true;
-            
+            return true;
+
         });
     }
 
