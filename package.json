@@ -31,6 +31,7 @@
         "react-native": "https://github.com/expo/react-native/archive/sdk-35.0.0.tar.gz",
         "react-native-anchor-carousel": "^3.1.1",
         "react-native-calendar-picker": "^6.0.2",
+        "react-native-calendars": "^1.214.0",
         "react-native-elements": "^1.2.7",
         "react-native-firebase": "^5.5.6",
         "react-native-geocoding": "^0.4.0",
