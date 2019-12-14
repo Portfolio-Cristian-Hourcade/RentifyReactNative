@@ -89,6 +89,14 @@ export default class ReservationScreen extends Component<any> {
         }
     }
 
+    calculateDays = () => {
+        var f = new Date();
+        var fechaInicio = new Date(this.state.estadiaInicio).getTime();
+        var fechaFin = new Date(this.state.estadiaFin).getTime();
+
+        var diff = fechaFin - fechaInicio;
+        return (diff / (1000 * 60 * 60 * 24)).toString();
+    }
     render() {
         if (this.state.product === null) {
             return null;
@@ -111,7 +119,7 @@ export default class ReservationScreen extends Component<any> {
                 break;
             case 2:
                 widthProgress = 140
-                titleText = "2. Contanos un poco sobre tu propiedad"
+                titleText = "Confirma tu reserva"
 
                 break;
             case 3:
@@ -205,18 +213,53 @@ export default class ReservationScreen extends Component<any> {
                                 flex: 1,
                                 flexDirection: 'row'
                             }}>
-                                <Image source={{ uri: this.state.product.images[0] }} style={{ flex: 0.4, height:85, resizeMode: 'cover', marginTop: 10, marginBottom: 10, }} />
-                                <View style={{ flex:0.6,flexDirection: 'column' }}>
-                                    <Text>{this.state.product.type}</Text>
-                                    <Text>$ {this.state.product.price.toString()}</Text>
-                                    <View>
-                                        <Image source={require('../../assets/icons/favorites.png')} style={{ width: 20, height: 20, position: 'absolute', }} />
-                                        <Text style={{ marginLeft: 30 }}>4.7 Puntuación ( 9 Reseñas )</Text>
+                                <Image source={{ uri: this.state.product.images[0] }} style={{ flex: 0.4, height: 100, borderRadius: 8, resizeMode: 'cover', marginTop: 10, marginBottom: 10, }} />
+
+                                <View style={{ flex: 0.6, flexDirection: 'column', paddingTop: 30 }}>
+
+                                    <View style={{ justifyContent: 'center', alignItems: 'flex-end', }}>
+                                        <Text style={{ fontFamily: 'font2', fontSize: 22 }}>$ {this.state.product.price.toString()}<Text style={{ fontSize: 16, fontFamily: 'font1' }}>/ Noche</Text></Text>
                                     </View>
+                                    <View style={{ justifyContent: 'center', alignItems: 'flex-end' }}>
+                                        <Text style={{}}>4.7 Puntuación</Text>
+                                    </View>
+                                </View>
+                            </View>
+
+                            <View style={{ borderBottomWidth: 1, borderBottomColor: '#eee', marginTop: 10, marginBottom: 10 }} />
+
+                            <View style={{ marginLeft: 15, marginRight: 15 }}>
+                                <Text style={{ fontFamily: 'font2', fontSize: 20 }}>Fechas de la estadia</Text>
+                                <Text style={{ marginBottom: 15 }}>{this.state.estadiaInicio} hasta el {this.state.estadiaFin}</Text>
+                                <View style={{ flexDirection: 'row', paddingTop: 15, paddingBottom: 15 }}>
+                                    <Text style={{ flex: 0.6 }}>Servicios de limpieza</Text>
+                                    <Text style={{ flex: 0.4, textAlign: 'right' }}>$130</Text>
+                                </View>
+
+                                <View style={{ borderBottomWidth: 1, borderBottomColor: '#eee', marginTop: 3, marginBottom: 3 }} />
+
+                                <View style={{ flexDirection: 'row', paddingTop: 15, paddingBottom: 15 }}>
+                                    <Text style={{ flex: 0.6 }}>${this.state.product.price} x {this.calculateDays()} noches</Text>
+                                    <Text style={{ flex: 0.4, textAlign: 'right' }}>${Number(this.state.product.price)*Number(this.calculateDays())}</Text>
+                                </View>
+
+                                <View style={{ borderBottomWidth: 1, borderBottomColor: '#eee', marginTop: 3, marginBottom: 3 }} />
+
+                                <View style={{ flexDirection: 'row', paddingTop: 15, paddingBottom: 15 }}>
+                                    <Text style={{ flex: 0.6 }}>Seña con devolución</Text>
+                                    <Text style={{ flex: 0.4, textAlign: 'right' }}>$2000</Text>
+                                </View>
+
+                                <View style={{ borderBottomWidth: 1, borderBottomColor: '#eee', marginTop: 3, marginBottom: 3 }} />
+
+                                <View style={{ flexDirection: 'row', paddingTop: 15, paddingBottom: 15 }}>
+                                    <Text style={{ flex: 0.6, fontFamily: 'font2' }}>Total de tu estadia</Text>
+                                    <Text style={{ flex: 0.4, fontFamily: 'font2', textAlign: 'right' }}>${Number(this.state.product.price)*Number(this.calculateDays())+2000+130}</Text>
                                 </View>
                             </View>
                             <TouchableOpacity style={{
                                 width: width - 30,
+                                marginTop: 30,
                                 marginLeft: 15,
                                 height: 50,
                                 backgroundColor: (this.state.estadiaInicio !== null && this.state.estadiaFin !== null) ? '#ff5d5a' : 'gray',
@@ -225,9 +268,11 @@ export default class ReservationScreen extends Component<any> {
                                 alignItems: 'center'
                             }}
                                 disabled={(this.state.estadiaInicio === null && this.state.estadiaFin === null)}
-                                onPress={() => { this.nextStep(startDate, endDate) }}>
+                                onPress={() => { }}>
                                 <Text style={{ color: 'white', fontFamily: 'font2' }}>Siguiente</Text>
                             </TouchableOpacity>
+
+
                         </View>
                         : null}
 
