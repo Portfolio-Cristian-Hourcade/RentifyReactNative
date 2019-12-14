@@ -59,18 +59,19 @@ export default class UpdatePropiedadScreen extends Component<any> {
                     this.state.product.images[this.state.itemSelected.index].uri = resulta.uri;
                     this.state.product.images[this.state.itemSelected.index].index = this.state.itemSelected.index;
                 }
-                this.setState({modalVisible:false});
+                this.setState({ modalVisible: false });
             }
         });
     };
 
     remove = async () => {
         this.state.product.images.splice(this.state.product.images.findIndex(e => e === this.state.itemSelected), 1);
+        this.setState({ modalVisible: false });
         this.forceUpdate();
     }
 
     async componentDidMount() {
-        
+
         const data = await AsyncStorage.getItem('Selected');
         let productSearch = JSON.parse(data);
 
@@ -281,12 +282,12 @@ export default class UpdatePropiedadScreen extends Component<any> {
                         </View>
                         <View style={{ marginTop: 30 }}>
                             <Text style={{ fontFamily: 'font3', fontSize: 16 }}>Titulo de tu publicación</Text>
-                            <TextInput style={styles.inputBuscador} placeholderTextColor="#000000" placeholder="0" value={this.state.product.name} onChangeText={e => this.state.product.name = e} />
+                            <TextInput style={styles.inputBuscador} placeholderTextColor="#000000" placeholder="0" value={this.state.product.name} onChangeText={e => { this.state.product.name = e; this.forceUpdate() }} />
                         </View>
 
                         <View style={{ marginTop: 30 }}>
                             <Text style={{ fontFamily: 'font3', fontSize: 16 }}>Descripción</Text>
-                            <TextInput style={styles.inputBuscador2} placeholderTextColor="#000000" placeholder="0" multiline={true} numberOfLines={3} value={this.state.product.description} onChangeText={e => this.state.product.description = e} />
+                            <TextInput style={styles.inputBuscador2} placeholderTextColor="#000000" placeholder="0" multiline={true} numberOfLines={3} value={this.state.product.description} onChangeText={e => { this.state.product.description = e; this.forceUpdate() }} />
                         </View>
 
                         <View style={{ marginTop: 40 }}>
@@ -297,7 +298,7 @@ export default class UpdatePropiedadScreen extends Component<any> {
                                 style={styles.inputBuscador}
                                 placeholder={{
                                     label: 'Hacemé click para seleccionar el tipo de propiedad',
-                                    value: null,
+                                    value: this.state.product.tipoPropiedad,
                                     color: '#9EA0A4',
                                 }}
                                 onValueChange={(value) => this.setState({ tipoPropiedad: value })}

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Platform, Text, TextInput, View, TouchableOpacity, Image, ImageBackground, Button, ScrollView, StatusBar, AsyncStorage, TouchableHighlight, BackHandler } from 'react-native';
+import { StyleSheet, Platform, Text, TextInput, Switch, View, TouchableOpacity, Image, ImageBackground, Button, ScrollView, StatusBar, AsyncStorage, TouchableHighlight, BackHandler } from 'react-native';
 import CalendarPicker from 'react-native-calendar-picker';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Dimensions } from 'react-native';
@@ -18,11 +18,18 @@ export default class ReservationScreen extends Component<any> {
         estadiaFin: null,
         product: null,
         productUser: null,
+        switchValue: true,
+
     }
 
+    _handleToggleSwitch = () =>
+        this.setState(state => ({
+            switchValue: !state.switchValue,
+        }));
     constructor(props) {
         super(props);
         this.state = {
+            switchValue: true,
             selectedStartDate: null,
             selectedEndDate: null,
             step: 1,
@@ -205,7 +212,7 @@ export default class ReservationScreen extends Component<any> {
                         : null}
 
                     {this.state.step === 2 ?
-                        <View>
+                        <View style={{ paddingBottom: 75 }}>
                             <View style={{
                                 width: width - 30,
                                 marginLeft: 15,
@@ -215,7 +222,11 @@ export default class ReservationScreen extends Component<any> {
                             }}>
                                 <Image source={{ uri: this.state.product.images[0] }} style={{ flex: 0.4, height: 100, borderRadius: 8, resizeMode: 'cover', marginTop: 10, marginBottom: 10, }} />
 
-                                <View style={{ flex: 0.6, flexDirection: 'column', paddingTop: 30 }}>
+                                <View style={{ flex: 0.6, flexDirection: 'column', paddingTop: 15 }}>
+
+                                    <View style={{ justifyContent: 'center', alignItems: 'flex-end', }}>
+                                        <Text style={{ fontFamily: 'font1', fontSize: 16, color:'#4d4d4d' }}>{this.state.product.name}</Text>
+                                    </View>
 
                                     <View style={{ justifyContent: 'center', alignItems: 'flex-end', }}>
                                         <Text style={{ fontFamily: 'font2', fontSize: 22 }}>$ {this.state.product.price.toString()}<Text style={{ fontSize: 16, fontFamily: 'font1' }}>/ Noche</Text></Text>
@@ -240,7 +251,7 @@ export default class ReservationScreen extends Component<any> {
 
                                 <View style={{ flexDirection: 'row', paddingTop: 15, paddingBottom: 15 }}>
                                     <Text style={{ flex: 0.6 }}>${this.state.product.price} x {this.calculateDays()} noches</Text>
-                                    <Text style={{ flex: 0.4, textAlign: 'right' }}>${Number(this.state.product.price)*Number(this.calculateDays())}</Text>
+                                    <Text style={{ flex: 0.4, textAlign: 'right' }}>${Number(this.state.product.price) * Number(this.calculateDays())}</Text>
                                 </View>
 
                                 <View style={{ borderBottomWidth: 1, borderBottomColor: '#eee', marginTop: 3, marginBottom: 3 }} />
@@ -254,29 +265,53 @@ export default class ReservationScreen extends Component<any> {
 
                                 <View style={{ flexDirection: 'row', paddingTop: 15, paddingBottom: 15 }}>
                                     <Text style={{ flex: 0.6, fontFamily: 'font2' }}>Total de tu estadia</Text>
-                                    <Text style={{ flex: 0.4, fontFamily: 'font2', textAlign: 'right' }}>${Number(this.state.product.price)*Number(this.calculateDays())+2000+130}</Text>
+                                    <Text style={{ flex: 0.4, fontFamily: 'font2', textAlign: 'right' }}>${Number(this.state.product.price) * Number(this.calculateDays()) + 2000 + 130}</Text>
                                 </View>
                             </View>
-                            <TouchableOpacity style={{
-                                width: width - 30,
-                                marginTop: 30,
-                                marginLeft: 15,
-                                height: 50,
-                                backgroundColor: (this.state.estadiaInicio !== null && this.state.estadiaFin !== null) ? '#ff5d5a' : 'gray',
-                                borderRadius: 5,
-                                justifyContent: 'center',
-                                alignItems: 'center'
-                            }}
-                                disabled={(this.state.estadiaInicio === null && this.state.estadiaFin === null)}
-                                onPress={() => { }}>
-                                <Text style={{ color: 'white', fontFamily: 'font2' }}>Siguiente</Text>
-                            </TouchableOpacity>
 
+                            <View style={{ borderBottomWidth: 1, borderBottomColor: '#eee', marginTop: 5, marginBottom: 10 }} />
 
+                            <View style={{ marginLeft: 15, marginRight: 15, marginTop: 15 }}>
+                                <Text style={{ fontFamily: 'font2', fontSize: 20 }}>Politica de reservación</Text>
+                                <Text>
+                                    Cuando hagas la reserva, el propietario debe confirmarla dentro de las 48hs.
+                                     Si el propietario cancela la reservación se le penalizará según nuestras politicas
+                                     de cancelación y te devolveremos tu dinero. <Text style={{ fontFamily: 'font2', fontSize: 16 }}> ¡Tu reserva esta protegida!</Text></Text>
+                            </View>
                         </View>
                         : null}
 
                 </ScrollView>
+                {
+                    this.state.step === 2 ?
+                        <View style={{
+                            backgroundColor: 'white', position: 'absolute',
+                            left: 0,
+                            width: width,
+                            height: 75,
+                            bottom: 0,
+                        }}>
+
+                            <TouchableOpacity style={{
+                                width: width - 30,
+                                marginTop: 30,
+                                height: 50,
+                                borderRadius: 5,
+                                position: 'absolute',
+                                left: 15,
+                                bottom: 15,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                backgroundColor: (this.state.estadiaInicio !== null && this.state.estadiaFin !== null) ? '#ff5d5a' : 'gray',
+                            }}
+                                disabled={(this.state.estadiaInicio === null && this.state.estadiaFin === null)}
+                                onPress={() => { }}>
+                                <Text style={{ color: 'white', fontFamily: 'font2' }}>Pagar Reserva</Text>
+                            </TouchableOpacity>
+                        </View>
+                        : null
+                }
+
             </View>
         );
     }
