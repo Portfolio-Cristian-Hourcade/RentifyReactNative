@@ -225,7 +225,7 @@ export default class ReservationScreen extends Component<any> {
                                 <View style={{ flex: 0.6, flexDirection: 'column', paddingTop: 15 }}>
 
                                     <View style={{ justifyContent: 'center', alignItems: 'flex-end', }}>
-                                        <Text style={{ fontFamily: 'font1', fontSize: 16, color:'#4d4d4d' }}>{this.state.product.name}</Text>
+                                        <Text style={{ fontFamily: 'font1', fontSize: 16, color:'#4d4d4d', textAlign:'right', paddingLeft:10 }}>{this.state.product.name}</Text>
                                     </View>
 
                                     <View style={{ justifyContent: 'center', alignItems: 'flex-end', }}>
