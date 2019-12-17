@@ -37,8 +37,7 @@ export default class UpdateMyProfileScreen extends Component<any> {
             await updateClient(this.state.user, this.state.image).then(e => {
                 AsyncStorage.setItem('Status', 'true').then(e => {
                     this.props.navigation.replace('Account');
-                })
-
+                });
             })
         } else {
             await updateClient(this.state.user, this.state.image);
@@ -57,7 +56,7 @@ export default class UpdateMyProfileScreen extends Component<any> {
             quality: 1
         }).then(result => {
             if (!result.cancelled) {
-                this.state.user.foto = result.uri;
+                // this.state.user.foto = result.uri;
                 this.setState({ image: result });
                 this.forceUpdate();
             }
@@ -67,8 +66,8 @@ export default class UpdateMyProfileScreen extends Component<any> {
 
     async componentDidMount() {
         const result = await AsyncStorage.getItem('Usuario');
-        this.setState({ user: JSON.parse(result) })
-        console.log(this.state.user);
+        this.setState({ user: JSON.parse(result), image: JSON.parse(result).foto })
+
         const paises = ["Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antarctica", "Antigua and Barbuda",
             "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados",
             "Belarus", "Belgium", "Belize", "Benin", "Bermuda", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana",
@@ -98,7 +97,6 @@ export default class UpdateMyProfileScreen extends Component<any> {
             var output = {};
             output['label'] = paises[key];
             output['value'] = paises[key];
-
             return output;
         });
         this.setState({ paises: site_value });
@@ -124,7 +122,7 @@ export default class UpdateMyProfileScreen extends Component<any> {
                         </View>
                         <View style={{ marginTop: 45, marginLeft: 30, marginRight: 30, justifyContent: 'center', alignItems: 'center' }}>
                             <TouchableOpacity onPress={() => this._pickImage()}>
-                                <Image source={{ uri: this.state.user.foto }} style={{ height: 135, width: 135, borderRadius: 8 }} />
+                                <Image source={{ uri: (this.state.image.uri !== undefined) ? this.state.image.uri : this.state.image }} style={{ height: 135, width: 135, borderRadius: 8 }} />
                             </TouchableOpacity>
                         </View>
                         <View>

@@ -22,10 +22,11 @@ export default class MyAccountScreen extends Component<any> {
     }
 
     async componentDidUpdate() {
+        const result = await AsyncStorage.getItem('Usuario');
+        this.setState({ user: JSON.parse(result) })
         if (await AsyncStorage.getItem('Status') !== null) {
-            AsyncStorage.removeItem('Status').then(e => {
+            AsyncStorage.removeItem('Status').then(async (e) => {
                 alert('Se edito tu perfil con exito');
-                this.forceUpdate();
             });
         }
     }
