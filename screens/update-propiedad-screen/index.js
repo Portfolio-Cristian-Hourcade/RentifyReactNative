@@ -18,7 +18,8 @@ export default class UpdatePropiedadScreen extends Component<any> {
         itemSelected: null,
         isOpenPrestaciones: false,
         isOpenNormas: false,
-        loading: false
+        loading: false,
+        productTemp: [],
     }
 
     constructor(props) {
@@ -54,7 +55,10 @@ export default class UpdatePropiedadScreen extends Component<any> {
             if (!resulta.cancelled) {
                 if (add) {
                     this.state.product.images.push({ type: resulta.type, uri: resulta.uri, index: this.state.product.images.length });
+                    alert('entro aca 1')
+
                 } else {
+                    this.state.productTemp.push(this.state.itemSelected.uri);
                     this.state.product.images[this.state.itemSelected.index].type = resulta.type;
                     this.state.product.images[this.state.itemSelected.index].uri = resulta.uri;
                     this.state.product.images[this.state.itemSelected.index].index = this.state.itemSelected.index;
@@ -65,6 +69,7 @@ export default class UpdatePropiedadScreen extends Component<any> {
     };
 
     remove = async () => {
+        this.state.productTemp.push(this.state.itemSelected.uri);
         this.state.product.images.splice(this.state.product.images.findIndex(e => e === this.state.itemSelected), 1);
         this.setState({ modalVisible: false });
         this.forceUpdate();
@@ -90,6 +95,7 @@ export default class UpdatePropiedadScreen extends Component<any> {
             });
             e.images = array;
             this.setState({ product: e });
+            // this.state.productTemp = this.state.product;
         });
     }
 
@@ -184,7 +190,7 @@ export default class UpdatePropiedadScreen extends Component<any> {
 
     saveProduct = () => {
         this.setState({ loading: true });
-        updateProduct(this.state.product).then(e => {
+        updateProduct(this.state.product, this.state.productTemp).then(e => {
             AsyncStorage.setItem('Upload', 'true').then(e => {
                 this.props.navigation.replace('MyProps');
             })

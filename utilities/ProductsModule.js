@@ -94,7 +94,7 @@ export async function addProduct(product: Product) {
     getProducts();
 }
 
-export async function updateProduct(product: Product) {
+export async function updateProduct(product: Product, tempProduct: any) {
 
     var aux = 0;
     // product.images = product.images.map(function (el) {
@@ -112,19 +112,33 @@ export async function updateProduct(product: Product) {
     // console.log(product.images);
     var img = [];
 
-    // console.log(product.images);
+    tempProduct.map(e => {
+        console.log(e);
+        firebase.storage().refFromURL(e).delete();
+    })
+
+    // let length = product.images.length;
+    // if (length > tempProduct.images.length) {
+    //     length = length - tempProduct.images.length;
+    // }else{
+
+    // }
+    // for (let i = 0; i < length; i++) {
+    //     if (tempProduct.images[i] !== product.images[i]) {
+    //         firebase.storage().refFromURL(tempProduct.images[i].uri).delete();
+    //     }
+    // }
     const pArray = product.images.map(async (element) => {
-        console.log(element);
         if (element.type !== undefined) {
             await uploadImages(element).then(data => {
                 return img[element.index] = data;
             });
-        } else if( element.uri !== undefined) {
-             return img[element.index] = element.uri;
+        } else if (element.uri !== undefined) {
+            return img[element.index] = element.uri;
         }
     });
 
-    
+
     await Promise.all(pArray).then(e => {
         product.images = img;
         const dbFirestore = firebase.firestore();
