@@ -69,7 +69,7 @@ export default class InfoProductScreen extends Component<any> {
 
         this.setState({ user: JSON.parse(data2) });
 
-        //@ts-ignore
+        
         getProductsWithKey(data.$key).then(e => {
             this.setState({ product: e });
             this.saveHistorial();

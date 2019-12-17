@@ -34,13 +34,13 @@ export default class UpdateMyProfileScreen extends Component<any> {
     updateClientData = async () => {
         this.setState({ loading: true });
         if (this.state.image !== undefined && this.state.image !== null) {
-            await updateClient(this.state.user, this.state.image).then(e => {
+            await updateClient(this.state.user, this.state.image, true).then(e => {
                 AsyncStorage.setItem('Status', 'true').then(e => {
                     this.props.navigation.replace('Account');
                 });
             })
         } else {
-            await updateClient(this.state.user, this.state.image);
+            await updateClient(this.state.user, this.state.image, true);
             AsyncStorage.setItem('Status', 'true').then(e => {
                 this.props.navigation.replace('Account')
             });
@@ -56,7 +56,6 @@ export default class UpdateMyProfileScreen extends Component<any> {
             quality: 1
         }).then(result => {
             if (!result.cancelled) {
-                // this.state.user.foto = result.uri;
                 this.setState({ image: result });
                 this.forceUpdate();
             }

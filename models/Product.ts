@@ -23,4 +23,5 @@ export interface Product {
     offer?: number;
     sales:number;
     keyOwner: string;
+    dataReservation:any;
 }

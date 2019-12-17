@@ -736,7 +736,8 @@ export default class AddRentScreen extends Component<any> {
                 prestaciones: this.state.prestaciones,
                 normas: this.state.normas,
                 sales: 0,
-                keyOwner: this.state.user.$key
+                keyOwner: this.state.user.$key,
+                dataReservation:null
             }
             this.setState({ loading: true });
             addProduct(productToPush).then(data => {

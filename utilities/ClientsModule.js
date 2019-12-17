@@ -27,10 +27,13 @@ export async function addClient(client: any) {
 }
 
 /** Clave autogenerada con firebase **/
-export async function updateClient(client: any, image?: any) {
+export async function updateClient(client: any, image?: any, deleteImg: any, ) {
+
     const dbFirestore = firebase.firestore();
 
-    firebase.storage().refFromURL(client.foto).delete();
+    if (deleteImg !== undefined) {
+        firebase.storage().refFromURL(client.foto).delete();
+    }
 
     if (image !== undefined && image !== null) {
 

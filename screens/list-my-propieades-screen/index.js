@@ -99,7 +99,9 @@ export default class ListMyPropiedadesScreen extends Component<any> {
         const data = await AsyncStorage.getItem('Upload');
         if(data === 'true'){
             alert("Se actualizo tu propiedad con exito");
+            await this.getListProduct();
             AsyncStorage.removeItem('Upload');
+
 
         }
     }

@@ -94,40 +94,19 @@ export async function addProduct(product: Product) {
     getProducts();
 }
 
-export async function updateProduct(product: Product, tempProduct: any) {
+export async function updateProduct(product: Product, tempProduct?: any) {
 
     var aux = 0;
-    // product.images = product.images.map(function (el) {
-    //     if (el.type !== undefined) {
-    //         var o = Object.assign({}, el);
-    //     } else {
-    //         var o = el;
-    //     }
 
-    //     o.index = aux;
-    //     aux++;
-    //     return o;
-    // })
-
-    // console.log(product.images);
     var img = [];
+    if (tempProduct !== undefined) {
 
-    tempProduct.map(e => {
-        console.log(e);
-        firebase.storage().refFromURL(e).delete();
-    })
+        tempProduct.map(e => {
+            console.log(e);
+            firebase.storage().refFromURL(e).delete();
+        })
+    }
 
-    // let length = product.images.length;
-    // if (length > tempProduct.images.length) {
-    //     length = length - tempProduct.images.length;
-    // }else{
-
-    // }
-    // for (let i = 0; i < length; i++) {
-    //     if (tempProduct.images[i] !== product.images[i]) {
-    //         firebase.storage().refFromURL(tempProduct.images[i].uri).delete();
-    //     }
-    // }
     const pArray = product.images.map(async (element) => {
         if (element.type !== undefined) {
             await uploadImages(element).then(data => {

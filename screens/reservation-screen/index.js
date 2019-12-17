@@ -4,7 +4,7 @@ import CalendarPicker from 'react-native-calendar-picker';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Dimensions } from 'react-native';
 import { getClientsByKeyPantallaProducto } from '../../utilities/ClientsModule';
-import { getProductsWithKey } from '../../utilities/ProductsModule';
+import { getProductsWithKey, updateProduct } from '../../utilities/ProductsModule';
 
 var width = Dimensions.get('window').width;
 var height = Dimensions.get('window').height;
@@ -104,10 +104,23 @@ export default class ReservationScreen extends Component<any> {
         var diff = fechaFin - fechaInicio;
         return (diff / (1000 * 60 * 60 * 24)).toString();
     }
+
+    payReservation = () => {
+        //API MP
+        if (this.state.product.dataReservation === null) {
+            this.state.product.dataReservation = [];
+        }
+        this.state.product.dataReservation.push(this.state.estadiaInicio + '|' + this.state.estadiaFin);
+        updateProduct(this.state.product);
+    }
+
     render() {
         if (this.state.product === null) {
             return null;
         }
+        const mesActual = new Date().getMonth();
+        const diaActual = new Date().getDate();
+
         const { selectedStartDate, selectedEndDate } = this.state;
         const minDate = new Date(); // Today
         const maxDate = new Date(2017, 6, 3);
@@ -115,6 +128,8 @@ export default class ReservationScreen extends Component<any> {
         const endDate = selectedEndDate ? selectedEndDate.toString() : '';
 
         const disableData = new Date(1900, 6, 3);
+
+
         let widthProgress;
         let titleText;
         let { step } = this.state;
@@ -138,7 +153,6 @@ export default class ReservationScreen extends Component<any> {
                 titleText = "4. ¡Felicitaciones!"
                 break;
         }
-
         return (
             <View style={styles.container}>
                 <View style={styles.bar}>
@@ -182,12 +196,49 @@ export default class ReservationScreen extends Component<any> {
                                 <CalendarPicker
                                     allowRangeSelection={true}
                                     selectedDayColor="#ff5d5a"
+                                    minDate={1}
                                     months={['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
                                         'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']}
                                     previousTitle="Anterior"
                                     nextTitle="Proximo"
                                     disabledDates={date => {
-                                        return date.isBetween(disableData, new Date());
+
+                                        const dateCalendario = new Date(date);
+                                        if (this.state.product.dataReservation !== null) {
+                                            let x = this.state.product.dataReservation.map(e => {
+                                                let a = e.split('|');
+                                                if (new Date(a[0]) <= dateCalendario && dateCalendario <= new Date(a[1])) {
+                                                    return true;
+                                                } else {
+                                                    return false;
+                                                }
+                                            });
+                                            
+                                            let toReturn = false;
+                                            x.map(c => {
+                                                if(c){
+                                                    toReturn = true;
+                                                }
+                                            })
+                                            if (mesActual === dateCalendario.getMonth()) {
+                                                if (diaActual > dateCalendario.getDate()) {
+                                                    return true;
+                                                } else {
+                                                    return toReturn;
+                                                }
+                                            }
+                                            if (mesActual > dateCalendario.getMonth()) {
+                                                return true;
+                                            } else {
+                                                return toReturn;
+                                            }
+                                            // if (x.length === 1 && x[0] === true) {
+                                            //     return true
+                                            // }
+
+
+                                        }
+                                        
                                     }}
                                     disabledDatesTextStyle={{ color: "#eeeeee" }}
                                     selectedDayTextColor="#FFFFFF"
@@ -225,7 +276,7 @@ export default class ReservationScreen extends Component<any> {
                                 <View style={{ flex: 0.6, flexDirection: 'column', paddingTop: 15 }}>
 
                                     <View style={{ justifyContent: 'center', alignItems: 'flex-end', }}>
-                                        <Text style={{ fontFamily: 'font1', fontSize: 16, color:'#4d4d4d', textAlign:'right', paddingLeft:10 }}>{this.state.product.name}</Text>
+                                        <Text style={{ fontFamily: 'font1', fontSize: 16, color: '#4d4d4d', textAlign: 'right', paddingLeft: 10 }}>{this.state.product.name}</Text>
                                     </View>
 
                                     <View style={{ justifyContent: 'center', alignItems: 'flex-end', }}>
@@ -305,8 +356,8 @@ export default class ReservationScreen extends Component<any> {
                                 backgroundColor: (this.state.estadiaInicio !== null && this.state.estadiaFin !== null) ? '#ff5d5a' : 'gray',
                             }}
                                 disabled={(this.state.estadiaInicio === null && this.state.estadiaFin === null)}
-                                onPress={() => { }}>
-                                <Text style={{ color: 'white', fontFamily: 'font2' }}>Pagar Reserva</Text>
+                                onPress={() => { this.payReservation() }}>
+                                <Text style={{ color: 'white', fontFamily: 'font2' }} >Pagar Reserva</Text>
                             </TouchableOpacity>
                         </View>
                         : null
