@@ -47,10 +47,10 @@ export default class ReservationScreen extends Component<any> {
 
         //@ts-ignore
         getProductsWithKey(data.$key).then(e => {
-            this.setState({ product: e });
             getClientsByKeyPantallaProducto(e.keyOwner).then(t => {
                 this.setState({
-                    productUser: t
+                    productUser: t,
+                    product: e
                 })
             });
         })
@@ -78,6 +78,7 @@ export default class ReservationScreen extends Component<any> {
 
         inicio = new Date(inicio);
         fin = new Date(fin);
+
         if (type === undefined) {
             this.setState(
                 {
@@ -98,9 +99,15 @@ export default class ReservationScreen extends Component<any> {
 
     calculateDays = () => {
         var f = new Date();
-        var fechaInicio = new Date(this.state.estadiaInicio).getTime();
-        var fechaFin = new Date(this.state.estadiaFin).getTime();
+        let inicio = this.state.estadiaInicio.split('-')[0]
+            + '-' + (Number(this.state.estadiaInicio.split('-')[1]) - 1) + '-'
+            + this.state.estadiaInicio.split('-')[2];
 
+        let fin = this.state.estadiaFin.split('-')[0]
+            + '-' + (Number(this.state.estadiaFin.split('-')[1]) - 1) + '-'
+            + this.state.estadiaFin.split('-')[2];
+        var fechaInicio = new Date(inicio).getTime();
+        var fechaFin = new Date(fin).getTime();
         var diff = fechaFin - fechaInicio;
         return (diff / (1000 * 60 * 60 * 24)).toString();
     }
@@ -110,7 +117,16 @@ export default class ReservationScreen extends Component<any> {
         if (this.state.product.dataReservation === null) {
             this.state.product.dataReservation = [];
         }
-        this.state.product.dataReservation.push(this.state.estadiaInicio + '|' + this.state.estadiaFin);
+
+        let inicio = this.state.estadiaInicio.split('-')[0]
+            + '-' + (Number(this.state.estadiaInicio.split('-')[1]) - 1) + '-'
+            + this.state.estadiaInicio.split('-')[2];
+
+        let fin = this.state.estadiaFin.split('-')[0]
+            + '-' + (Number(this.state.estadiaFin.split('-')[1]) - 1) + '-'
+            + this.state.estadiaFin.split('-')[2];
+        this.state.product.dataReservation.push(inicio + '|' + fin);
+
         updateProduct(this.state.product);
     }
 
@@ -118,17 +134,10 @@ export default class ReservationScreen extends Component<any> {
         if (this.state.product === null) {
             return null;
         }
-        const mesActual = new Date().getMonth();
-        const diaActual = new Date().getDate();
 
         const { selectedStartDate, selectedEndDate } = this.state;
-        const minDate = new Date(); // Today
-        const maxDate = new Date(2017, 6, 3);
         const startDate = selectedStartDate ? selectedStartDate.toString() : '';
         const endDate = selectedEndDate ? selectedEndDate.toString() : '';
-
-        const disableData = new Date(1900, 6, 3);
-
 
         let widthProgress;
         let titleText;
@@ -202,43 +211,54 @@ export default class ReservationScreen extends Component<any> {
                                     previousTitle="Anterior"
                                     nextTitle="Proximo"
                                     disabledDates={date => {
+                                        let dateCalendario = new Date(date);
 
-                                        const dateCalendario = new Date(date);
+                                        dateCalendario = new Date(dateCalendario.getFullYear(), dateCalendario.getMonth(), dateCalendario.getDate());
+
+                                        if (new Date().getMonth() > dateCalendario.getMonth()) {
+                                            return true;
+                                        }
+                                        if (new Date().getMonth() === dateCalendario.getMonth()) {
+                                            if (new Date().getDate() > dateCalendario.getDate()) {
+                                                return true;
+                                            }
+                                        }
+
                                         if (this.state.product.dataReservation !== null) {
-                                            let x = this.state.product.dataReservation.map(e => {
-                                                let a = e.split('|');
-                                                if (new Date(a[0]) <= dateCalendario && dateCalendario <= new Date(a[1])) {
+
+                                            let x = this.state.product.dataReservation.map(eData => {
+                                                let a = eData.split('|');
+                                                // console.log(a[0]);
+                                                console.log(a[0].split('-')[1]);
+                                                let z = new Date(a[0].split('-')[0], a[0].split('-')[1], a[0].split('-')[2]);
+                                                let y = new Date(a[1].split('-')[0], a[1].split('-')[1], a[1].split('-')[2]);
+                                                if (z <= dateCalendario && dateCalendario <= y) {
                                                     return true;
                                                 } else {
                                                     return false;
                                                 }
+
                                             });
-                                            
-                                            let toReturn = false;
+
+                                            let toReturn = null;
                                             x.map(c => {
-                                                if(c){
+                                                if (c) {
                                                     toReturn = true;
                                                 }
                                             })
-                                            if (mesActual === dateCalendario.getMonth()) {
-                                                if (diaActual > dateCalendario.getDate()) {
-                                                    return true;
-                                                } else {
-                                                    return toReturn;
-                                                }
-                                            }
-                                            if (mesActual > dateCalendario.getMonth()) {
-                                                return true;
-                                            } else {
-                                                return toReturn;
-                                            }
-                                            // if (x.length === 1 && x[0] === true) {
-                                            //     return true
+
+                                            return toReturn;
+                                            // if (mesActual === dateCalendario.getMonth()) {
+                                            //     if (diaActual > dateCalendario.getDate()) {
+                                            //         return true;
+                                            //     } else {
+                                            //         return toReturn;
+                                            //     }
                                             // }
 
 
                                         }
-                                        
+
                                     }}
                                     disabledDatesTextStyle={{ color: "#eeeeee" }}
                                     selectedDayTextColor="#FFFFFF"
