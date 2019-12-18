@@ -19,13 +19,10 @@ export default class ReservationScreen extends Component<any> {
         product: null,
         productUser: null,
         switchValue: true,
-
+        user: null,
     }
 
-    _handleToggleSwitch = () =>
-        this.setState(state => ({
-            switchValue: !state.switchValue,
-        }));
+
     constructor(props) {
         super(props);
         this.state = {
@@ -37,6 +34,7 @@ export default class ReservationScreen extends Component<any> {
             estadiaFin: null,
             product: null,
             productUser: null,
+            user: null
         };
         this.onDateChange = this.onDateChange.bind(this);
     }
@@ -44,7 +42,8 @@ export default class ReservationScreen extends Component<any> {
     async componentWillMount() {
         var data = await AsyncStorage.getItem('Selected');
         data = JSON.parse(data);
-
+        const result = await AsyncStorage.getItem('Usuario');
+        this.setState({ user: JSON.parse(result) })
         //@ts-ignore
         getProductsWithKey(data.$key).then(e => {
             getClientsByKeyPantallaProducto(e.keyOwner).then(t => {
@@ -106,8 +105,16 @@ export default class ReservationScreen extends Component<any> {
         let fin = this.state.estadiaFin.split('-')[0]
             + '-' + (Number(this.state.estadiaFin.split('-')[1]) - 1) + '-'
             + this.state.estadiaFin.split('-')[2];
-        var fechaInicio = new Date(inicio).getTime();
-        var fechaFin = new Date(fin).getTime();
+
+        var fechaInicio = new Date(Number(this.state.estadiaInicio.split('-')[0]),
+        (Number(this.state.estadiaInicio.split('-')[1]) - 1),
+         Number(this.state.estadiaInicio.split('-')[2])).getTime();
+
+        var fechaFin = new Date(Number(this.state.estadiaFin.split('-')[0]),
+         (Number(this.state.estadiaFin.split('-')[1]) - 1),
+          Number(this.state.estadiaFin.split('-')[2])).getTime();
+
+        alert(fin)
         var diff = fechaFin - fechaInicio;
         return (diff / (1000 * 60 * 60 * 24)).toString();
     }
@@ -122,10 +129,11 @@ export default class ReservationScreen extends Component<any> {
             + '-' + (Number(this.state.estadiaInicio.split('-')[1]) - 1) + '-'
             + this.state.estadiaInicio.split('-')[2];
 
+
         let fin = this.state.estadiaFin.split('-')[0]
             + '-' + (Number(this.state.estadiaFin.split('-')[1]) - 1) + '-'
             + this.state.estadiaFin.split('-')[2];
-        this.state.product.dataReservation.push(inicio + '|' + fin);
+        this.state.product.dataReservation.push({ date: inicio + '|' + fin, keyOwner: this.state.user.$key });
 
         updateProduct(this.state.product);
     }
@@ -214,8 +222,7 @@ export default class ReservationScreen extends Component<any> {
                                         let dateCalendario = new Date(date);
 
                                         dateCalendario = new Date(dateCalendario.getFullYear(), dateCalendario.getMonth(), dateCalendario.getDate());
-
-                                        if (new Date().getMonth() > dateCalendario.getMonth()) {
+                                        if (new Date().getMonth() > dateCalendario.getMonth() && new Date().getFullYear() >= dateCalendario.getFullYear()) {
                                             return true;
                                         }
                                         if (new Date().getMonth() === dateCalendario.getMonth()) {
@@ -227,9 +234,7 @@ export default class ReservationScreen extends Component<any> {
                                         if (this.state.product.dataReservation !== null) {
 
                                             let x = this.state.product.dataReservation.map(eData => {
-                                                let a = eData.split('|');
-                                                // console.log(a[0]);
-                                                console.log(a[0].split('-')[1]);
+                                                let a = eData.date.split('|');
                                                 let z = new Date(a[0].split('-')[0], a[0].split('-')[1], a[0].split('-')[2]);
                                                 let y = new Date(a[1].split('-')[0], a[1].split('-')[1], a[1].split('-')[2]);
                                                 if (z <= dateCalendario && dateCalendario <= y) {
@@ -248,15 +253,6 @@ export default class ReservationScreen extends Component<any> {
                                             })
 
                                             return toReturn;
-                                            // if (mesActual === dateCalendario.getMonth()) {
-                                            //     if (diaActual > dateCalendario.getDate()) {
-                                            //         return true;
-                                            //     } else {
-                                            //         return toReturn;
-                                            //     }
-                                            // }
-
-
                                         }
 
                                     }}
