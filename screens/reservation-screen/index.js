@@ -114,7 +114,6 @@ export default class ReservationScreen extends Component<any> {
          (Number(this.state.estadiaFin.split('-')[1]) - 1),
           Number(this.state.estadiaFin.split('-')[2])).getTime();
 
-        alert(fin)
         var diff = fechaFin - fechaInicio;
         return (diff / (1000 * 60 * 60 * 24)).toString();
     }
