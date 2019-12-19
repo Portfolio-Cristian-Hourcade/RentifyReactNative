@@ -5,6 +5,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Dimensions } from 'react-native';
 import { getClientsByKeyPantallaProducto } from '../../utilities/ClientsModule';
 import { getProductsWithKey, updateProduct } from '../../utilities/ProductsModule';
+import { WebView } from 'react-native-webview';
 
 var width = Dimensions.get('window').width;
 var height = Dimensions.get('window').height;
@@ -20,12 +21,14 @@ export default class ReservationScreen extends Component<any> {
         productUser: null,
         switchValue: true,
         user: null,
+        webView: null,
     }
 
 
     constructor(props) {
         super(props);
         this.state = {
+            webView: null,
             switchValue: true,
             selectedStartDate: null,
             selectedEndDate: null,
@@ -40,6 +43,13 @@ export default class ReservationScreen extends Component<any> {
     }
 
     async componentWillMount() {
+        BackHandler.addEventListener('hardwareBackPress', () => {
+            if(this.state.webView !== null){
+                return false;
+            }
+            this.props.navigation.goBack();
+            return true;
+        });
         var data = await AsyncStorage.getItem('Selected');
         data = JSON.parse(data);
         const result = await AsyncStorage.getItem('Usuario');
@@ -107,18 +117,20 @@ export default class ReservationScreen extends Component<any> {
             + this.state.estadiaFin.split('-')[2];
 
         var fechaInicio = new Date(Number(this.state.estadiaInicio.split('-')[0]),
-        (Number(this.state.estadiaInicio.split('-')[1]) - 1),
-         Number(this.state.estadiaInicio.split('-')[2])).getTime();
+            (Number(this.state.estadiaInicio.split('-')[1]) - 1),
+            Number(this.state.estadiaInicio.split('-')[2])).getTime();
 
         var fechaFin = new Date(Number(this.state.estadiaFin.split('-')[0]),
-         (Number(this.state.estadiaFin.split('-')[1]) - 1),
-          Number(this.state.estadiaFin.split('-')[2])).getTime();
+            (Number(this.state.estadiaFin.split('-')[1]) - 1),
+            Number(this.state.estadiaFin.split('-')[2])).getTime();
 
         var diff = fechaFin - fechaInicio;
         return (diff / (1000 * 60 * 60 * 24)).toString();
     }
 
     payReservation = () => {
+        
+
         //API MP
         if (this.state.product.dataReservation === null) {
             this.state.product.dataReservation = [];
@@ -134,14 +146,24 @@ export default class ReservationScreen extends Component<any> {
             + this.state.estadiaFin.split('-')[2];
         this.state.product.dataReservation.push({ date: inicio + '|' + fin, keyOwner: this.state.user.$key });
 
-        updateProduct(this.state.product);
+        const price = Number(this.state.product.price) * Number(this.calculateDays()) + 2000 + 130
+        fetch("http://changofree.com/phpServer/newToken.php?precio="+price+"&keyOwner="+this.state.product.keyOwner+"&keyCliente="+this.state.user.$key+"&fechaInicio="+inicio+"&fechaFin="+fin)
+            .then((response) => {
+                return response.text();
+            })
+            .then((data) => {
+                this.setState({ webView: data });
+            })
+        // updateProduct(this.state.product);
     }
 
     render() {
         if (this.state.product === null) {
             return null;
         }
-
+        if (this.state.webView !== null) {
+            return <WebView source={{ uri: this.state.webView }} startInLoadingState/>
+        }
         const { selectedStartDate, selectedEndDate } = this.state;
         const startDate = selectedStartDate ? selectedStartDate.toString() : '';
         const endDate = selectedEndDate ? selectedEndDate.toString() : '';

@@ -35,7 +35,8 @@ export default class InfoProductScreen extends Component<any> {
         isOpenMatch1: false,
         isOpenMatch2: false,
         modalVisible: false,
-        user: null
+        user: null,
+        disabled: false
     }
 
     setModalVisible(visible) {
@@ -69,11 +70,14 @@ export default class InfoProductScreen extends Component<any> {
 
         this.setState({ user: JSON.parse(data2) });
 
-        
+
         getProductsWithKey(data.$key).then(e => {
             this.setState({ product: e });
             this.saveHistorial();
-            console.log(e.keyOwner);
+
+            if (this.state.user.$key === this.state.product.keyOwner) {
+                // this.setState({ disabled: true });
+            }
             getClientsByKeyPantallaProducto(e.keyOwner).then(t => {
                 this.setState({
                     productUser: t
@@ -81,7 +85,7 @@ export default class InfoProductScreen extends Component<any> {
             });
         })
     }
-    
+
     saveHistorial = () => {
         if (this.state.user.historial[0] === null) {
             this.state.user.historial.push(this.state.product.$key);
@@ -394,8 +398,8 @@ export default class InfoProductScreen extends Component<any> {
 
 
 
-                        <View style={{marginTop:15}}>
-                            <Text style={{ color: 'black', fontSize: 22, marginBottom: 30, fontFamily: 'font1', textAlign:'center' }}>
+                        <View style={{ marginTop: 15 }}>
+                            <Text style={{ color: 'black', fontSize: 22, marginBottom: 30, fontFamily: 'font1', textAlign: 'center' }}>
                                 Rentador
                             </Text>
                             <View style={{ flex: 1, flexDirection: 'column', }}>
@@ -468,9 +472,11 @@ export default class InfoProductScreen extends Component<any> {
                         position: 'relative',
                         justifyContent: 'center',
                         alignItems: 'center',
-                        backgroundColor: '#3483fa',
+                        backgroundColor: (this.state.disabled)?'#7486a1':'#3483fa',
                         borderRadius: 4,
-                    }}>
+                    }}
+                        disabled={this.state.disabled}
+                    >
                         <Text style={{ color: 'white', fontFamily: 'font1', fontSize: 14, position: 'relative', top: 2 }}>
                             Contactar Rentador
                     </Text>
@@ -486,9 +492,10 @@ export default class InfoProductScreen extends Component<any> {
                         position: 'relative',
                         justifyContent: 'center',
                         alignItems: 'center',
-                        backgroundColor: '#ff5d5a',
+                        backgroundColor: this.state.disabled?'#f19391':'#ff5d5a',
                         borderRadius: 4,
                     }}
+                        disabled={this.state.disabled}
                         onPress={() => {
                             this.props.navigation.navigate('Reservation');
                         }}>
