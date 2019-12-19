@@ -146,8 +146,12 @@ export default class ReservationScreen extends Component<any> {
             + this.state.estadiaFin.split('-')[2];
         this.state.product.dataReservation.push({ date: inicio + '|' + fin, keyOwner: this.state.user.$key });
 
-        const price = Number(this.state.product.price) * Number(this.calculateDays()) + 2000 + 130
-        fetch("http://changofree.com/phpServer/newToken.php?precio="+price+"&keyOwner="+this.state.product.keyOwner+"&keyCliente="+this.state.user.$key+"&fechaInicio="+inicio+"&fechaFin="+fin)
+        let price = Number(this.state.product.price) * Number(this.calculateDays()) + 2000 + 130;
+        
+        // Para pruebas
+        price = 2;
+        // --- //
+        fetch("http://changofree.com/phpServer/newToken.php?precio="+price+"&keyOwner="+this.state.product.keyOwner+"&keyCliente="+this.state.user.$key+"&fechaInicio="+inicio+"&fechaFin="+fin+"&keyProduct="+this.state.product.$key)
             .then((response) => {
                 return response.text();
             })
