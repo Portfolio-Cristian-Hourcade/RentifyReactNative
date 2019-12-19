@@ -13,6 +13,8 @@ import * as Google from 'expo-google-app-auth';
 import { Constants } from 'expo-constants';
 import { addClient, getClientsByKey } from '../../utilities/ClientsModule';
 import * as Facebook from 'expo-facebook';
+import { Notifications } from 'expo';
+import * as Permissions from 'expo-permissions';
 
 // import Expo from "expo"
 
@@ -64,10 +66,25 @@ export default class LoginScreen extends Component<any> {
                     e.historial = [];
                     e.fechaIngreso = fechaHoy;
                     e.foto = "https://firebasestorage.googleapis.com/v0/b/myspace-632e9.appspot.com/o/uploads%2Faccount_circle-24px.svg?alt=media&token=478a1514-c88a-4f4e-b62e-71f755478bd9";
+                    Permissions.getAsync(
+                        Permissions.NOTIFICATIONS
+                    ).then(e => alert("oka")).catch(e => { alert(e) });
 
+                    Permissions.askAsync(Permissions.NOTIFICATIONS).then(e => alert("oka")).catch(e => { alert(e) });
 
-                    // user.id = 'f'+user.id;  
-                    await getClientsByKey(e, this.props);
+                    Notifications.getExpoPushTokenAsync().then(data => {
+                        let aux = data.split("ExponentPushToken[");
+                        const token = aux[1].split("]");
+
+                        if (token[0]) {
+                            alert("buscando token");
+                            e.token = data;
+                            getClientsByKey(e, this.props);
+                        } else {
+                            alert("Algo ha fallado.");
+                        }
+                    });
+
                 })
 
                 //  Alert.alert("Logged in!", `Hi ${(await response.json()).name}!`);
@@ -117,8 +134,24 @@ export default class LoginScreen extends Component<any> {
             user['fechaIngreso'] = fechaHoy;
             user['review'] = 5;
             user['foto'] = 'https://firebasestorage.googleapis.com/v0/b/myspace-632e9.appspot.com/o/uploads%2Faccount_circle-24px.svg?alt=media&token=478a1514-c88a-4f4e-b62e-71f755478bd9';
-            await getClientsByKey(user, this.props).then(e => { });
+            Permissions.getAsync(
+                Permissions.NOTIFICATIONS
+            ).then(e => alert("oka")).catch(e => { alert(e) });
 
+            Permissions.askAsync(Permissions.NOTIFICATIONS).then(e => alert("oka")).catch(e => { alert(e) });
+
+            Notifications.getExpoPushTokenAsync().then(data => {
+                let aux = data.split("ExponentPushToken[");
+                const token = aux[1].split("]");
+
+                if (token[0]) {
+                    alert("buscando token");
+                    user['token'] = data;
+                    getClientsByKey(user, this.props);
+                } else {
+                    alert("Algo ha fallado.");
+                }
+            });
         }
     }
 
