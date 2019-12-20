@@ -65,7 +65,7 @@ export default class LoginScreen extends Component<any> {
                     e.review = 5;
                     e.historial = [];
                     e.fechaIngreso = fechaHoy;
-                    e.foto = "https://firebasestorage.googleapis.com/v0/b/myspace-632e9.appspot.com/o/uploads%2Faccount_circle-24px.svg?alt=media&token=478a1514-c88a-4f4e-b62e-71f755478bd9";
+                    e.foto = "https://firebasestorage.googleapis.com/v0/b/myspace-632e9.appspot.com/o/uploads%2Fuser.png?alt=media&token=fbcc9384-f4f7-42e2-b5b8-994e73c4e027";
                     Permissions.getAsync(
                         Permissions.NOTIFICATIONS
                     ).then(e => alert("oka")).catch(e => { alert(e) });
@@ -95,7 +95,6 @@ export default class LoginScreen extends Component<any> {
                 alert(`Facebook Login Error: Cancelled`);
             }
         } catch ({ message }) {
-            console.log(message);
             alert(`Facebook Login Error: ${message}`);
         }
     }
@@ -133,25 +132,22 @@ export default class LoginScreen extends Component<any> {
             user['historial'] = [];
             user['fechaIngreso'] = fechaHoy;
             user['review'] = 5;
-            user['foto'] = 'https://firebasestorage.googleapis.com/v0/b/myspace-632e9.appspot.com/o/uploads%2Faccount_circle-24px.svg?alt=media&token=478a1514-c88a-4f4e-b62e-71f755478bd9';
-            Permissions.getAsync(
-                Permissions.NOTIFICATIONS
-            ).then(e => alert("oka")).catch(e => { alert(e) });
+            user['token'] = null;
+            user['foto'] = 'https://firebasestorage.googleapis.com/v0/b/myspace-632e9.appspot.com/o/uploads%2Fuser.png?alt=media&token=fbcc9384-f4f7-42e2-b5b8-994e73c4e027';
 
-            Permissions.askAsync(Permissions.NOTIFICATIONS).then(e => alert("oka")).catch(e => { alert(e) });
+            /** LAS SIGUIENTES LINEAS SON PARA PRODUCCCION **/
 
-            Notifications.getExpoPushTokenAsync().then(data => {
-                let aux = data.split("ExponentPushToken[");
-                const token = aux[1].split("]");
-
-                if (token[0]) {
-                    alert("buscando token");
+            Permissions.askAsync(Permissions.NOTIFICATIONS).then(e =>
+                Notifications.getExpoPushTokenAsync().then(async (data) => {
                     user['token'] = data;
+                    alert(data);
+
                     getClientsByKey(user, this.props);
-                } else {
-                    alert("Algo ha fallado.");
-                }
-            });
+                    alert("se fue :(");
+                })
+            ).catch(e => { alert(e) });
+
+
         }
     }
 

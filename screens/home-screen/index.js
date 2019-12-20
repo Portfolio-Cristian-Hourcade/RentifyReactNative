@@ -94,6 +94,8 @@ export default class HomeScreen extends Component<any> {
 
     async componentDidMount() {
         await Calendar.requestPermissionsAsync();
+        await Permissions.askAsync(Permissions.CAMERA_ROLL);
+
         await this.getListProduct();
         let { status } = await Permissions.askAsync(Permissions.LOCATION);
         if (Constants.platform.ios) {
