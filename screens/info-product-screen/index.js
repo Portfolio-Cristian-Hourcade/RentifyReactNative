@@ -235,7 +235,7 @@ export default class InfoProductScreen extends Component<any> {
                             : null
                     }
                 </Modal>
-                <ScrollView style={{ height: he, position: 'relative' }}>
+                <ScrollView style={{ position: 'relative' }}>
                     {/* <Image style={{ width: width, height: width, borderBottomLeftRadius: 25, borderBottomRightRadius: 25 }} source={{ uri: this.state.product.images[0], cache: 'force-cache' }} /> */}
                     <Carousel
                         sliderWidth={width}
@@ -256,7 +256,7 @@ export default class InfoProductScreen extends Component<any> {
                             <View style={{ flex: 0.4, justifyContent: 'flex-start', alignContent: 'flex-start', position: 'relative' }}>
                                 <TouchableOpacity
                                     onPress={() => { this.saveFav() }}
-                                    style={{ backgroundColor: '#ff5d5a', borderRadius: 50, height: 60, width: 60, justifyContent: 'center', alignItems: 'center', position: 'absolute', top: -15, right: 0 }}>
+                                    style={{ backgroundColor: '#ff5d5a', borderRadius: 50, height: 60, width: 60, justifyContent: 'center', alignItems: 'center', position: 'absolute', top: 5, right: 0 }}>
                                     <Image source={
                                         (this.state.user.favs.indexOf(this.state.product.$key) === -1) ?
                                             require('../../assets/heart.png')
@@ -472,12 +472,16 @@ export default class InfoProductScreen extends Component<any> {
                         position: 'relative',
                         justifyContent: 'center',
                         alignItems: 'center',
-                        backgroundColor: (this.state.disabled)?'#7486a1':'#3483fa',
+                        backgroundColor: (this.state.disabled) ? '#7486a1' : '#3483fa',
                         borderRadius: 4,
                     }}
                         disabled={this.state.disabled}
                     >
-                        <Text style={{ color: 'white', fontFamily: 'font1', fontSize: 14, position: 'relative', top: 2 }}>
+                        <Text style={{
+                            color: 'white', fontFamily: 'font1', textAlign: 'center',
+                            fontSize: (width < 370) ? 10 : 14,
+                            position: 'relative', top: 2
+                        }}>
                             Contactar Rentador
                     </Text>
                     </TouchableOpacity>
@@ -492,20 +496,24 @@ export default class InfoProductScreen extends Component<any> {
                         position: 'relative',
                         justifyContent: 'center',
                         alignItems: 'center',
-                        backgroundColor: this.state.disabled?'#f19391':'#ff5d5a',
+                        backgroundColor: this.state.disabled ? '#f19391' : '#ff5d5a',
                         borderRadius: 4,
                     }}
                         disabled={this.state.disabled}
                         onPress={() => {
                             this.props.navigation.navigate('Reservation');
                         }}>
-                        <Text style={{ color: 'white', fontFamily: 'font1', fontSize: 14, position: 'relative', top: 2 }}>
+                        <Text style={{
+                            color: 'white', fontFamily: 'font1', textAlign: 'center',
+                            fontSize: (width < 370) ? 10 : 14,
+                            position: 'relative', top: 2
+                        }}>
                             Reservar propiedad
                     </Text>
                     </TouchableOpacity>
                 </View>
 
-            </View>
+            </View >
         );
     }
 }

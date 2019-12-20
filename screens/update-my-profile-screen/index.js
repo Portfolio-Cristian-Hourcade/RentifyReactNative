@@ -114,7 +114,7 @@ export default class UpdateMyProfileScreen extends Component<any> {
                         visible={(this.state.loading) ? true : false}
                         textContent={''} />
                     : null}
-                <ScrollView style={{ height: height }}>
+                <ScrollView>
                     <View style={styles.containerData}>
                         <View style={{ marginTop: 30, marginLeft: 30, marginRight: 30 }}>
                             <Text style={{ fontSize: 28, fontFamily: 'font2', textAlign: 'center' }}>Completá tu perfil</Text>

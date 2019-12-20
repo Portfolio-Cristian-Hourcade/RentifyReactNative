@@ -38,7 +38,7 @@ export default class MyAccountScreen extends Component<any> {
         }
         return (
             <View>
-                <ScrollView style={{ height: height }}>
+                <ScrollView>
                     <View style={styles.containerData}>
                         <View style={{ marginTop: 45, marginLeft: 30, marginRight: 30, justifyContent: 'center', alignItems: 'center' }}>
                             <Image source={{ uri: this.state.user.foto }} style={{ height: 135, width: 135, borderRadius: 8 }} />
