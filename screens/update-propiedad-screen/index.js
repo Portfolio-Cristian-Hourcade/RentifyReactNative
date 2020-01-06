@@ -261,7 +261,7 @@ export default class UpdatePropiedadScreen extends Component<any> {
                         </TouchableOpacity>
                     </View>
                 </Modal>
-                <ScrollView style={{ height: he - 45, width: width + 30, marginLeft: 15, marginTop: 45, }}>
+                <ScrollView >
                     <View style={{ width: width }}>
 
                         <View>

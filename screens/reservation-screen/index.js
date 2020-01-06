@@ -6,6 +6,7 @@ import { Dimensions } from 'react-native';
 import { getClientsByKeyPantallaProducto } from '../../utilities/ClientsModule';
 import { getProductsWithKey, updateProduct } from '../../utilities/ProductsModule';
 import { WebView } from 'react-native-webview';
+var mercadopago = require('mercadopago');
 
 var width = Dimensions.get('window').width;
 var height = Dimensions.get('window').height;
@@ -43,8 +44,28 @@ export default class ReservationScreen extends Component<any> {
     }
 
     async componentWillMount() {
+        mercadopago.configure({
+            access_token: 'APP_USR-2427548015768286-110601-97433936a0d80e0baca1c61dc8a9a3df-242652951'
+        });
+        mercadopago.payment.create({
+            description: 'Buying a PS4',
+            transaction_amount: 10500,
+            payment_method_id: 'rapipago',
+            payer: {
+                email: 'test_user_3931694@testuser.com',
+                identification: {
+                    type: 'DNI',
+                    number: '34123123'
+                }
+            }
+        }).then(function (mpResponse) {
+            console.log(mpResponse);
+        }).catch(function (mpError) {
+            console.log(mpError);
+        });
+
         BackHandler.addEventListener('hardwareBackPress', () => {
-            if(this.state.webView !== null){
+            if (this.state.webView !== null) {
                 return false;
             }
             this.props.navigation.goBack();
@@ -129,7 +150,7 @@ export default class ReservationScreen extends Component<any> {
     }
 
     payReservation = () => {
-        
+
 
         //API MP
         if (this.state.product.dataReservation === null) {
@@ -147,11 +168,11 @@ export default class ReservationScreen extends Component<any> {
         this.state.product.dataReservation.push({ date: inicio + '|' + fin, keyOwner: this.state.user.$key });
 
         let price = Number(this.state.product.price) * Number(this.calculateDays()) + 2000 + 130;
-        
+
         // Para pruebas
         price = 2;
         // --- //
-        fetch("http://changofree.com/phpServer/newToken.php?precio="+price+"&keyOwner="+this.state.product.keyOwner+"&keyCliente="+this.state.user.$key+"&fechaInicio="+inicio+"&fechaFin="+fin+"&keyProduct="+this.state.product.$key)
+        fetch("http://changofree.com/phpServer/newToken.php?precio=" + price + "&keyOwner=" + this.state.product.keyOwner + "&keyCliente=" + this.state.user.$key + "&fechaInicio=" + inicio + "&fechaFin=" + fin + "&keyProduct=" + this.state.product.$key)
             .then((response) => {
                 return response.text();
             })
@@ -166,7 +187,7 @@ export default class ReservationScreen extends Component<any> {
             return null;
         }
         if (this.state.webView !== null) {
-            return <WebView source={{ uri: this.state.webView }} startInLoadingState/>
+            return <WebView source={{ uri: this.state.webView }} startInLoadingState />
         }
         const { selectedStartDate, selectedEndDate } = this.state;
         const startDate = selectedStartDate ? selectedStartDate.toString() : '';
@@ -232,13 +253,16 @@ export default class ReservationScreen extends Component<any> {
                             <View style={{
                                 width: width - 30,
                                 marginLeft: 15,
-                                marginTop: 30
+                                marginTop: 30,
+                                borderRadius: 8,
+                                marginBottom: 45
                             }}>
 
                                 <CalendarPicker
                                     allowRangeSelection={true}
                                     selectedDayColor="#ff5d5a"
                                     minDate={1}
+                                    weekdays={['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab']}
                                     months={['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
                                         'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']}
                                     previousTitle="Anterior"

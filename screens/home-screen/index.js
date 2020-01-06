@@ -175,8 +175,8 @@ export default class HomeScreen extends Component<any> {
                 <ScrollView>
                     <View style={styles.containerData}>
                         <View style={{ marginTop: 15, marginLeft: 30, marginRight: 30 }}>
-                            <Text style={{ fontSize: 28, fontFamily: 'font2', textAlign: 'center' }}>Encontrá el alquiler</Text>
-                            <Text style={{ fontSize: 28, fontFamily: 'font2', textAlign: 'center' }}> de tus sueños</Text>
+                            <Text style={{ fontSize: width < 370 ? 24 : 28, fontFamily: 'font2', textAlign: 'center' }}>Encontrá el alquiler</Text>
+                            <Text style={{ fontSize: width < 370 ? 24 : 28, fontFamily: 'font2', textAlign: 'center' }}> de tus sueños</Text>
                         </View>
                         <View style={styles.buscadorGroup}>
                             <Image source={require('../../assets/lupa.png')} style={styles.searchIcon} />
@@ -188,10 +188,11 @@ export default class HomeScreen extends Component<any> {
                     <View style={{ flex: 1, flexDirection: 'row' }}>
                         <View style={{ flex: 0.5 }}>
                             <TouchableOpacity style={styles.btnGuardados} onPress={() => { this.props.navigation.navigate('Favs') }}>
+                                <Image source={require('../../assets/icons/heart.png')}
+                                    style={{ width: 15, height: 15, top: 25-7.5, marginRight: 8, position: 'absolute', left: width<370?20:35 }} />
                                 <View style={styles.btnIcons}>
-                                    <Image source={require('../../assets/icons/heart.png')}
-                                        style={{ width: 15, height: 15, marginRight: 8, position: 'relative', top: 0.5 }} />
-                                    <Text style={{ color: 'white', fontFamily: 'font2', position: 'relative', top: 1 }}>GUARDADOS</Text>
+
+                                    <Text style={{ color: 'white', fontFamily: 'font2', position: 'relative', top: 1, fontSize: width < 370 ? 11 : 14 }}>GUARDADOS</Text>
                                 </View>
                             </TouchableOpacity>
                         </View>
@@ -199,7 +200,7 @@ export default class HomeScreen extends Component<any> {
                             <TouchableOpacity style={styles.btnMapa} onPress={() => this.props.navigation.navigate('Maps')}>
                                 <View style={styles.btnIcons}>
                                     <Image source={require('../../assets/icons/placeholder.png')} style={{ width: 15, height: 15, marginRight: 8 }} />
-                                    <Text style={{ color: '#ff5d5a', fontFamily: 'font2', position: 'relative', top: 1 }} >BUSCAR EN EL MAPA</Text>
+                                    <Text style={{ color: '#ff5d5a', fontFamily: 'font2', position: 'relative', top: 1, fontSize: width < 370 ? 11 : 14 }} >BUSCAR EN EL MAPA</Text>
                                 </View>
                             </TouchableOpacity>
                         </View>
@@ -305,6 +306,7 @@ const styles = StyleSheet.create({
     },
     btnGuardados: {
         backgroundColor: '#ff5d5a',
+        position:'relative',
         marginLeft: 15,
         marginRight: 5,
         height: 50,
@@ -316,6 +318,7 @@ const styles = StyleSheet.create({
     },
     btnIcons: {
         flex: 1,
+        position: 'relative',
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
@@ -432,6 +435,7 @@ const styles = StyleSheet.create({
         height: 50,
         width: width,
         padding: 15,
+        fontSize: width < 370 ? 10 : 14,
         backgroundColor: '#eee',
         borderRadius: 5,
     },
